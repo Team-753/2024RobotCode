@@ -1,0 +1,29 @@
+{
+    "RobotDimensions": {
+        "trackWidth": 1,
+        "wheelBase": 1,
+        "wheelDiameter": 3
+    },
+    "SwerveModules": {
+        "frontLeft": {
+            "driveMotorID": 1,
+            "turnMotorID": 2,
+            "encoderOffset": 0
+          },
+          "frontRight": {
+            "driveMotorID": 3,
+            "turnMotorID": 4,
+            "encoderOffset": 0
+          },
+          "rearRight": {
+            "driveMotorID": 5,
+            "turnMotorID": 6,
+            "encoderOffset": 0
+          },
+          "rearLeft": {
+            "driveMotorID": 7,
+            "turnMotorID": 8,
+            "encoderOffset": 0
+          }
+    }
+}
