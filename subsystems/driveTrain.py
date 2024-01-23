@@ -1,10 +1,20 @@
 import commands2
+from wpimath import estimator, geometry
 
 class DriveTrainSubsystem(commands2.Subsystem):
+    stateStdDevs = 0.1, 0.1, 0.1
+    visionMeasurementStdDevs = 0.9, 0.9, 0.9 * math.pi
+
     
     def __init__(self, config: dict) -> None:
         super().__init__()
         self.config = config # inhereting the robot config json from the robot container
+        poseEstimator = estimator.SwerveDrive4PoseEstimator(self.KINEMATICS, 
+                                                                self.getNAVXRotation2d(), 
+                                                                self.getSwerveModulePositions(), 
+                                                                geometry.Pose2d(0, 0, geometry.Rotation2d(math.pi)), 
+                                                                self.stateStdDevs,
+                                                                self.visionMeasurementStdDevs)
         
     def periodic(self) -> None:
         if self.llTable.getNumber('getpipe', 0) == 0: # 0 being our apriltag pipeline
