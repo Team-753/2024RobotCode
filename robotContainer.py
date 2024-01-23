@@ -1,12 +1,9 @@
 import os
 import json
-from networktables import NetworkTables
 import commands2
 
 class RobotContainer:
     """ Basically does everything. Yeah... """
-    
-    NetworkTables.initialize() # you use networktables to access limelight data
     
     def __init__(self) -> None:
         # importing our JSON settings and converting it to global python dictionary.
@@ -14,7 +11,7 @@ class RobotContainer:
         filePath = os.path.join(folderPath, 'config.json')
         with open (filePath, "r") as f1:
             self.config = json.load(f1)
-        self.LimelightTable = NetworkTables.getTable('limelight') # giving us access to the limelight's data as a variable
+        
         
     def configureButtonBindings(self):
         """ Sets up the button command bindings for the controllers. """
