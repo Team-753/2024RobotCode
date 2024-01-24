@@ -13,7 +13,8 @@ make sure all numbers are in meters
 driving gear teeth: 66ish
 turning gear teeth: 12.8
 wheel diameter: 0.0762
-encoder ticks: 2048'''
+encoder ticks: 2048
+frame: 26" by 27" '''
 
 class SwerveModule:
     
@@ -32,29 +33,54 @@ class SwerveModule:
 
 
     def getAbsolutePositionRadians (self):
-        return (self.absoluteEncoder() * math.tau)
+        return (self.turnMotor.TelemetryID.kPosition * math.tau)
     
     def getWheelAngleRadians (self):
-        adjustedRelValueDegrees = ((self.absoluteEncoder.getAbsolutePosition() % (self.countsPerRotation * self.turningGearRatio))* math.tau) / (self.countsPerRotation * self.turningGearRatio) # might not return the number of spins of the motor, might be the point in the wheel rotation that we're at
+        adjustedRelValueDegrees = ((self.turnMotor.TelemetryID.kPosition % (self.countsPerRotation * self.turningGearRatio))* math.tau) / (self.countsPerRotation * self.turningGearRatio) # might not return the number of spins of the motor, might be the point in the wheel rotation that we're at
         return adjustedRelValueDegrees 
    
     def getTurnWheelState (self):
         return geometry.Rotation2d(self.getWheelAngleRadians())
 
     def getSwerveModulePosition(self):
-        distanceMeters = self.absoluteEncoder.getAbsolutePosition() * self.wheelDiameter * math.pi / (self.countsPerRotation * self.drivingGearRatio)
+        distanceMeters = self.turnMotor.TelemetryID.kPosition * self.wheelDiameter * math.pi / (self.countsPerRotation * self.drivingGearRatio)
         angle = self.getTurnWheelState()
         return kinematics.SwerveModulePosition(distanceMeters, angle)
 
     def getSwerveModuleState (self):
-        velocityMetersPerSecond = (self.absoluteEncoder() * 10 * self.wheelDiameter * math.pi) / (self.countsPerRotation * self.drivingGearRatio)
+        velocityMetersPerSecond = (self.driveMotor.TelemetryID.kVelocity * 10 * self.wheelDiameter * math.pi) / (self.countsPerRotation * self.drivingGearRatio)
         angle = self.getTurnWheelState()
         return kinematics.SwerveModuleState(velocityMetersPerSecond, angle)
 
     def setStateTurnOnly(self, desiredStateAngle):
+
+        desiredAngleRadians = angle.radians()
+        if desiredStateAngle > 0:
+            desiredStateAngle -= math.pi
+        else:
+            desiredStateAngle += math.pi
+        
+        angle = geometry.Rotation2d(math.radians(desiredStateAngle))
+        if desiredAngleRadians < 0:
+            desiredAngleRadians += math.tau
+        motorEncoderTickTarget = (self.turnMotor.TelemetryID.kPosition - (self.turnMotor.TelemetryID.kPosition() % (self.countsPerRotation * self.turningGearRatio))) + desiredAngleRadians * self.countsPerRotation * self.turningGearRatio / math.tau
+        self.turnMotor.set (rev.CANSparkLowLevel.ControlType.kPosition, motorEncoderTickTarget)
         
 
     def setState (self, state: kinematics.SwerveModuleState): 
         state = kinematics.SwerveModuleState.optimize (state)
-        state.angle.rotateBy(geometry.Rotation2d(math.pi))
-        velocity = state.speed 
+        desiredStateAngle = state.angle()
+        #state.angle.rotateBy(geometry.Rotation2d(math.pi)) Migt be worth testing, but I don't know what's happening here
+        if desiredStateAngle > 0:
+            desiredStateAngle -= math.pi
+        else:
+            desiredStateAngle += math.pi
+        state.angle = geometry.Rotation2d(desiredStateAngle)
+        if abs(state.speed) < self.wheelVelocityThreshold:
+            self.driveMotor.set(rev.CANSparkLowLevel.ControlType.kVelocity, 0)
+            self.driveMotor.setIdleMode(rev._rev.CANSparkBase.setIdleMode)
+        else:
+            velocity = (state.speed * self.drivingGearRatio * self.countsPerRotation) / (self.wheelDiameter * math.pi * 10) # make sure that this is the correct number of ticks per secs
+            
+            self.driveMotor.set(rev._rev.CANSparkLowLevel.ControlType.kVelocity, velocity)
+         
