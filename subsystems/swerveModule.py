@@ -1,5 +1,4 @@
 import rev
-from phoenix5 import _ctre as ctre
 from wpimath import kinematics, geometry
 import math
 import wpilib
