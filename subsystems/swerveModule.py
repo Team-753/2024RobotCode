@@ -20,6 +20,10 @@ class SwerveModule:
     
     countsPerRotation = 2048
     wheelDiameter = 0.0762
+    drivingGearRatio = 1
+    turningGearRatio = 1
+    motorEncoderConversionFactor = 1
+    wheelVelocityThreshold = 0.1
     
     def __init__(self, config: dict, moduleName: str ) -> None:
         self.driveMotor = rev.CANSparkMax(config["drivemotorID"], rev._rev.CANSparkLowLevel.MotorType.kBrushless) # defines the motor that drives the wheel, will need to be changed if we get krakens
@@ -29,6 +33,11 @@ class SwerveModule:
         self.encoderOffeset = config["encoderOffest"]
         self.turningGearRatio = 1
         self.drivingGearRatio = 1
+        self.driveMotor.getEncoder (rev._rev.CANSparkBase, rev._rev.SparkMaxRelativeEncoder.Type, countsPerRev = 42)
+        self.turnMotor.getEncoder (rev._rev.CANSparkBase, rev._rev.SparkMaxRelativeEncoder.Type, countsPerRev = 42)
+        self.driveMotor.setIdleMode (rev._rev.CANSparkBase.IdleMode.kCoast)
+        self.turnMotor.setIdleMode (rev._rev.CANSparkBase.IdleMode.kCoast)
+        
 
 
 
@@ -81,6 +90,22 @@ class SwerveModule:
             self.driveMotor.setIdleMode(rev._rev.CANSparkBase.setIdleMode)
         else:
             velocity = (state.speed * self.drivingGearRatio * self.countsPerRotation) / (self.wheelDiameter * math.pi * 10) # make sure that this is the correct number of ticks per secs
-            
             self.driveMotor.set(rev._rev.CANSparkLowLevel.ControlType.kVelocity, velocity)
-         
+        
+        desiredAngleRadians = state.angle
+        if desiredAngleRadians < 0:
+            desiredAngleRadians += math.tau
+        motorEncoderTickTarget = (self.turnMotor.TelemetryID.kPosition() - (self.turnMotor.TelemetryID.kPosition() % (self.countsPerRotation * self.turningGearRatio))) + desiredAngleRadians * self.countsPerRotation * self.turningGearRatio / math.tau
+        self.turnMotor.set(rev._rev.CANSparkLowLevel.ControlType.kPosition, motorEncoderTickTarget)
+        
+    def setNeutralMode (self, mode):
+        self.driveMotor.setIdleMode (mode)
+        self.turnMotor.setIdleMode (mode)
+
+    def stop (self):
+        self.driveMotor.set(rev._rev.CANSparkLowLevel.ControlType.kVoltage, 0)
+        self.turnMotor.set(rev._rev.CANSparkLowLevel.ControlType.kVoltage, 0)
+
+    '''def reZeroMotors (self):
+        self.driveMotor.set (rev._rev.CAN)
+        self.turnMotor.set ()'''
