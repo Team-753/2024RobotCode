@@ -1,20 +1,8 @@
 import rev
+from phoenix5 import _ctre as ctre
 from wpimath import kinematics, geometry
 import math
 import wpilib
-
-'''Things to do:
-Get gear ratios
-MAKE SURE WE USE THE THRIFTYBOT ENCODERS OR REPLACE ENCODER TICKS VALUES!!!
-figure out tick ratios
-get wheel diameters
-make sure all numbers are in meters
-
-driving gear teeth: 66ish
-turning gear teeth: 12.8
-wheel diameter: 0.0762
-encoder ticks: 2048
-frame: 26" by 27" '''
 
 class SwerveModule:
     
