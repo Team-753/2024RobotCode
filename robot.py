@@ -34,7 +34,8 @@ class MyRobot(commands2.TimedCommandRobot):
     
     def disabledExit(self) -> None:
         """ Runs once when the robot exits disabled mode, so essentially runs when entering any mode. """
-        self.robotContainer.disabledExit()
+        #self.robotContainer.disabledExit()
+        pass
         
     def autonomousPeriodic(self):
         """ Loops during autonomous, nothing should really go here as autonomous is all auto-commnand based. """
@@ -57,7 +58,8 @@ class MyRobot(commands2.TimedCommandRobot):
     
     def disabledPeriodic(self):
         ''' Runs while the robot is idle '''
-        self.robotContainer.disabledPeriodic()
+        #self.robotContainer.disabledPeriodic()
+        pass
         
     def disabledInit(self) -> None:
         '''self.driveTrain.coast()'''

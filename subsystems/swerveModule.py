@@ -13,15 +13,16 @@ class SwerveModule:
     wheelVelocityThreshold = 0.1
     
     def __init__(self, config: dict, moduleName: str ) -> None:
+        self.moduleName = moduleName
         self.driveMotor = rev.CANSparkMax(config["driveMotorID"], rev._rev.CANSparkLowLevel.MotorType.kBrushless) # defines the motor that drives the wheel, will need to be changed if we get krakens
         self.turnMotor = rev.CANSparkMax(config["turnMotorID"], rev._rev.CANSparkLowLevel.MotorType.kBrushless) # defines the motor that turns the wheel
         wpilib.AnalogInput(config["encoderID"]).setSampleRate(125)
-        self.absoluteEncoder = wpilib.AnalogEncoder(config['encoderID'])
+        self.absoluteEncoder = rev.SparkMaxAbsoluteEncoder(config['encoderID'])
         self.encoderOffeset = config["encoderOffest"]
         self.turningGearRatio = 1
         self.drivingGearRatio = 1
         self.driveMotor.getEncoder (rev._rev.CANSparkBase, rev._rev.SparkMaxRelativeEncoder.Type, countsPerRev = 42)
-        self.turnMotor.getEncoder (rev._rev.CANSparkBase, rev._rev.SparkMaxRelativeEncoder.Type, countsPerRev = 42)
+        self.turnMotor.getEncoder (rev._rev.CANSparkBase, rev._rev.SparkMaxAbsoluteEncoder.Type, countsPerRev = 42)
         self.driveMotor.setIdleMode (rev._rev.CANSparkBase.IdleMode.kCoast)
         self.turnMotor.setIdleMode (rev._rev.CANSparkBase.IdleMode.kCoast)
         
@@ -47,7 +48,7 @@ class SwerveModule:
 
     def setStateTurnOnly(self, desiredStateAngle):
 
-        desiredAngleRadians = angle.radians()
+        desiredAngleRadians = angle
         if desiredStateAngle > 0:
             desiredStateAngle -= math.pi
         else:
