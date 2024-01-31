@@ -13,8 +13,8 @@ class SwerveModule:
     wheelVelocityThreshold = 0.1
     
     def __init__(self, config: dict, moduleName: str ) -> None:
-        self.driveMotor = rev.CANSparkMax(config["drivemotorID"], rev._rev.CANSparkLowLevel.MotorType.kBrushless) # defines the motor that drives the wheel, will need to be changed if we get krakens
-        self.turnMotor = rev.CANSparkMax(config["turnmotorID"], rev._rev.CANSparkLowLevel.MotorType.kBrushless) # defines the motor that turns the wheel
+        self.driveMotor = rev.CANSparkMax(config["driveMotorID"], rev._rev.CANSparkLowLevel.MotorType.kBrushless) # defines the motor that drives the wheel, will need to be changed if we get krakens
+        self.turnMotor = rev.CANSparkMax(config["turnMotorID"], rev._rev.CANSparkLowLevel.MotorType.kBrushless) # defines the motor that turns the wheel
         wpilib.AnalogInput(config["encoderID"]).setSampleRate(125)
         self.absoluteEncoder = wpilib.AnalogEncoder(config['encoderID'])
         self.encoderOffeset = config["encoderOffest"]
@@ -25,9 +25,6 @@ class SwerveModule:
         self.driveMotor.setIdleMode (rev._rev.CANSparkBase.IdleMode.kCoast)
         self.turnMotor.setIdleMode (rev._rev.CANSparkBase.IdleMode.kCoast)
         
-
-
-
     def getAbsolutePositionRadians (self):
         return (self.turnMotor.TelemetryID.kPosition * math.tau)
     

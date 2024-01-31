@@ -44,6 +44,7 @@ class MyRobot(commands2.TimedCommandRobot):
         """ Runs once when autonomous mode is ended. """
         if (self.autoCommand != commands2.Command()):
             self.autoCommand.cancel()
+            
         
     def teleopInit(self):
         """ Runs once when teleop is started """
