@@ -45,7 +45,7 @@ class DriveTrainSubsystem(commands2.Subsystem):
         self.alliance = wpilib.DriverStation.Alliance.kBlue
 
         self.KINEMATICS = kinematics.SwerveDrive2Kinematics( geometry.Translation2d (self.trackWidth / 2, self.wheelBase / 2), geometry.Translation2d (self.trackWidth / 2, -self.wheelBase / 2), geometry.Translation2d(-self.trackWidth / 2, self.wheelBase / 2), geometry.Translation2d (-self.trackWidth / 2, -self.wheelBase /2))
-        poseEstimator = estimator.SwerveDrive4PoseEstimator(self.KINEMATICS, 
+        self.poseEstimator = estimator.SwerveDrive4PoseEstimator(self.KINEMATICS, 
                                                                 self.getNAVXRotation2d(), 
                                                                 self.getSwerveModulePositions(), 
                                                                 geometry.Pose2d(0, 0, geometry.Rotation2d(math.pi)), 
@@ -107,12 +107,13 @@ class DriveTrainSubsystem(commands2.Subsystem):
         else:
             self.setSwerveStates(xSpeed, ySpeed, angularVelocityFF + zSpeed, currentPose, False)
 
-    def setSwerveStates(self, xSpeed: float, ySpeed: float, zSpeed: float, currentPose: geometry.Pose2d, fieldOrient = True):
+    def setSwerveStates(self, xSpeed: float, ySpeed: float, zSpeed: float, fieldOrient = True):
         if fieldOrient:
-            swerveModuleStates = self.KINEMATICS.toSwerveModuleStates(kinematics.ChassisSpeeds.fromFieldRelativeSpeeds(kinematics.ChassisSpeeds(xSpeed, ySpeed, zSpeed), currentPose.rotation()))
+            swerveModuleStates = self.KINEMATICS.toSwerveModuleStates(kinematics.ChassisSpeeds.fromFieldRelativeSpeeds(kinematics.ChassisSpeeds(xSpeed, ySpeed, zSpeed), self.getCurrentPose().rotation()))
         else:
             swerveModuleStates = self.KINEMATICS.toSwerveModuleStates(kinematics.ChassisSpeeds(xSpeed, ySpeed, zSpeed))
         
+        self.KINEMATICS.desaturateWheelSpeeds(swerveModuleStates, self.kMaxSpeed)
         self.frontLeft.setState(swerveModuleStates[0])
         self.frontRight.setState(swerveModuleStates[1])
         self.rearLeft.setState(swerveModuleStates[2])
@@ -146,6 +147,9 @@ class DriveTrainSubsystem(commands2.Subsystem):
     def actualChassisSpeeds(self):
         states = (self.frontLeft.getSwerveModuleState(), self.frontRight.getSwerveModuleState(), self.rearLeft.getSwerveModuleState(), self.rearRight.getSwerveModuleState())
         return self.KINEMATICS.toChassisSpeeds(states[0], states[1], states[2], states[3])
+    
+    def getCurrentPose(self):
+        return self.poseEstimator.getEstimatedPosition()
 
     def periodic(self) -> None:
         if self.LimelightTable.getNumber('getpipe', 0) == 0: # 0 being our apriltag pipeline
