@@ -9,8 +9,8 @@ class SwerveModule:
     kWheelDiameterMeters = 0.0762
     kDrivingMotorPinionTeeth = 14
     kDrivingMotorReduction = (45 * 22) / (kDrivingMotorPinionTeeth * 15)
-    kDrivingEncoderPositionFactor = (kWheelDiameterMeters * math.PI) / kDrivingMotorReduction # meters
-    kDrivingEncoderVelocityFactor = ((kWheelDiameterMeters * math.PI) / kDrivingMotorReduction) / 60 # meters per second
+    kDrivingEncoderPositionFactor = (kWheelDiameterMeters * math.pi) / kDrivingMotorReduction # meters
+    kDrivingEncoderVelocityFactor = ((kWheelDiameterMeters * math.pi) / kDrivingMotorReduction) / 60 # meters per second
     
     kTurningEncoderPositionFactor = math.tau # radians
     kTurningEncoderVelocityFactor = math.tau / 60 # radians per second

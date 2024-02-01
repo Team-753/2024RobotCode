@@ -1,7 +1,7 @@
 from networktables import NetworkTables
 import commands2
 from commands2 import button
-from swerveModule import SwerveModule
+from subsystems.swerveModule import SwerveModule
 import wpilib 
 import math
 import navx
@@ -44,7 +44,7 @@ class DriveTrainSubsystem(commands2.Subsystem):
         self.poseTolerance = geometry.Pose2d(geometry.Translation2d(x=teleopConstants["xPoseToleranceMeters"], y=teleopConstants["yPoseToleranceMeters"]), geometry.Rotation2d(teleopConstants["thetaPoseToleranceRadians"]))
         self.alliance = wpilib.DriverStation.Alliance.kBlue
 
-        self.KINEMATICS = kinematics.SwerveDrive2Kinematics( geometry.Translation2d (self.trackWidth / 2, self.wheelBase / 2), geometry.Translation2d (self.trackWidth / 2, -self.wheelBase / 2), geometry.Translation2d(-self.trackWidth / 2, self.wheelBase / 2), geometry.Translation2d (-self.trackWidth / 2, -self.wheelBase /2))
+        self.KINEMATICS = kinematics.SwerveDrive4Kinematics(geometry.Translation2d(self.trackWidth / 2, self.wheelBase / 2), geometry.Translation2d(self.trackWidth / 2, -self.wheelBase / 2), geometry.Translation2d(-self.trackWidth / 2, self.wheelBase / 2), geometry.Translation2d(-self.trackWidth / 2, -self.wheelBase / 2))
         self.poseEstimator = estimator.SwerveDrive4PoseEstimator(self.KINEMATICS, 
                                                                 self.getNAVXRotation2d(), 
                                                                 self.getSwerveModulePositions(), 
@@ -52,7 +52,7 @@ class DriveTrainSubsystem(commands2.Subsystem):
                                                                 self.stateStdDevs,
                                                                 self.visionMeasurementStdDevs)
     
-    def getNavxRotation2d(self):
+    def getNAVXRotation2d(self):
         return self.navx.getRotation2d
     
     def getJoystickInput(self) -> tuple[float]:
@@ -119,7 +119,7 @@ class DriveTrainSubsystem(commands2.Subsystem):
         self.rearLeft.setState(swerveModuleStates[2])
         self.rearRight.setState(swerveModuleStates[3])
 
-    def stationary(self):
+    """    def stationary(self):
         #better to not use this as it is unhealthy for the motors and the drivetrain
         self.frontLeft.setNeutralMode(rev._rev.CANSparkBase.IdleMode.kBrake)
         self.frontLeft.stop
@@ -138,11 +138,10 @@ class DriveTrainSubsystem(commands2.Subsystem):
         self.rearLeft.setNeutralMode(rev._rev.CANSparkBase.IdleMode.kCoast)
         self.rearLeft.stop
         self.rearRight.setNeutralMode(rev._rev.CANSparkBase.IdleMode.kCoast)
-        self.rearRight.stop
+        self.rearRight.stop"""
 
     def getSwerveModulePositions (self):
-        positions = (self.frontLeft.getSwerveModulePosition(), self.frontRight.getSwerveModulePosition(), self.rearLeft.getSwerveModulePosition(), self.rearRight.getSwerveModulePosition())
-        return positions
+        return self.frontLeft.getPosition(), self.frontRight.getPosition(), self.rearLeft.getPosition(), self.rearRight.getPosition()
     
     def actualChassisSpeeds(self):
         states = (self.frontLeft.getSwerveModuleState(), self.frontRight.getSwerveModuleState(), self.rearLeft.getSwerveModuleState(), self.rearRight.getSwerveModuleState())
