@@ -1,8 +1,7 @@
 {
     "RobotDimensions": {
-        "trackWidth": 1,
-        "wheelBase": 1,
-        "wheelDiameter": 3
+        "trackWidth": 0.5715,
+        "wheelBase": 0.5969
     },
     "SwerveModules": {
         "frontLeft": {
@@ -29,5 +28,18 @@
             "encoderOffset": 0,
             "encoderID": 3
           }
+    },
+    "DriveConstants": {
+      "Joystick": {
+        "USB_ID": 0,
+        "xDeadband": 0.1,
+        "yDeadband": 0.1,
+        "thetaDeadband": 0.15
+      },
+      "RobotSpeeds": {
+        "maxSpeed": 5,
+        "maxAcceleration": 5,
+        "manualRotationSpeedFactor": 1
+      }
     }
 }

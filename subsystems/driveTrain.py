@@ -1,26 +1,31 @@
 from networktables import NetworkTables
 import commands2
+from commands2 import button
 from swerveModule import SwerveModule
 import wpilib 
 import math
 import navx
 from wpimath import geometry, kinematics, estimator, controller
+import wpimath
+import wpiutil
 import rev
 
 class DriveTrainSubsystem(commands2.Subsystem):
 
     stateStdDevs = 0.1, 0.1, 0.1
     visionMeasurementStdDevs = 0.9, 0.9, 0.9 * math.pi
-    def __init__(self, config: dict) -> None:
+    def __init__(self, config: dict, joystick: button.CommandJoystick) -> None:
         super().__init__()
+        
         self.config = config # inhereting the robot config json from the robot container
+        self.joystick = joystick
         NetworkTables.initialize() # you use networktables to access limelight data
         self.LimelightTable = NetworkTables.getTable('limelight') # giving us access to the limelight's data as a variable
 
         self.navx = navx.AHRS.create_spi(update_rate_hz=100)
 
-        self.kMaxSpeed = self.config ["RobotDefaultSettings"]["wheelVelocityLimit"]
-        self.kmaxAutoSpeed = self.config ["autonomousSettings"]["autoVelLimit"]
+        self.kMaxSpeed = self.config["DriveConstants"]["maxSpeed"]
+        self.kMaxAngularVelocity = self.config["DriveConstants"]["maxSpeed"] / math.hypot(self.config["RobotDimensions"]["trackWidth"] / 2, self.config["RobotDimensions"]["wheelBase"] / 2)
         self.wheelBase = self.config["RobotDimensions"]["wheelBase"]
         self.trackWidth = self.config["RobotDimensions"]["trackWidth"]
 
@@ -31,7 +36,7 @@ class DriveTrainSubsystem(commands2.Subsystem):
 
         teleopConstants = self.config["driverStation"]["teleoperatedRobotConstants"]
 
-        #self.maxAngularVelocity = teleopConstants["teleopVelLimit"] / math.hypot(self.config["RobotDimensions"]["trackWidth"] / 2, self.config["RobotDimensions"]["wheelBase"] / 2) #about 11 rads per second
+        
         rotationConstants = self.config["autonomousSettings"]["rotationPIDConstants"]
         self.rotationPID = controller.PIDController(rotationConstants["kP"], rotationConstants["kI"], rotationConstants["kD"], rotationConstants["period"])
         self.rotationPID.enableContinuousInput(-math.pi, math.pi)
@@ -50,6 +55,16 @@ class DriveTrainSubsystem(commands2.Subsystem):
     def getNavxRotation2d(self):
         return self.navx.getRotation2d
     
+    def getJoystickInput(self) -> tuple[float]:
+        """ Returns all 3 axes on a scale from -1 to 1, if the robot driving 
+        is inverted, make all these values positive instead of negative. """
+        constants = self.config["DriveConstants"]["Joystick"]
+        return (
+            -wpimath.applyDeadband(self.joystick.getX(), constants["xDeadband"]),
+            -wpimath.applyDeadband(self.joystick.getY(), constants["yDeadband"]),
+            -wpimath.applyDeadband(self.joystick.getZ(), constants["thetaDeadband"])
+        )
+    
     def autoDrive(self, chassisSpeeds: kinematics.ChassisSpeeds, currentPose: geometry.Pose2d, fieldRelative = True):
         if chassisSpeeds == kinematics.ChassisSpeeds(0, 0, 0):
             self.stationary()
@@ -66,13 +81,12 @@ class DriveTrainSubsystem(commands2.Subsystem):
             self.rearLeft(swerveModuleStates[2])
             self.rearRight(swerveModuleStates[3])
 
-    def joystickDrive (self, inputs: list, currentPose: geometry.Pose2d):
-        xSpeed, ySpeed, zSpeed = inputs [0], inputs[1], inputs[2]
-        if xSpeed == 0 and ySpeed == 0 and zSpeed == 0:
-            self.stationary()
-        else:
-            self.setSwerveStates (xSpeed, ySpeed, zSpeed)
-    
+    def joystickDrive(self, inputs: tuple[float]) -> None:
+        xSpeed, ySpeed, zSpeed = (inputs[0] * self.kMaxSpeed, 
+                                  inputs[1] * self.kMaxSpeed, 
+                                  inputs[2] * self.kMaxAngularVelocity * self.config["DriveConstants"]["RobotSpeeds"]["manualRotationSpeedFactor"])
+        self.setSwerveStates(xSpeed, ySpeed, zSpeed)
+            
     #this was used for the auto place last yeaer, I think, so we might not use this, but it could be good for an auto score function
     def joystickDriveThetaOverride (self, inputs: list, currentPose: geometry.Pose2d, rotationOverride: geometry.Rotation2d, inverted = False):
         rotationOverridePose = geometry.Pose2d(geometry.Translation2d(), rotationOverride)
@@ -93,7 +107,7 @@ class DriveTrainSubsystem(commands2.Subsystem):
         else:
             self.setSwerveStates(xSpeed, ySpeed, angularVelocityFF + zSpeed, currentPose, False)
 
-    def setSwerveStates (self, xSpeed: float, ySpeed: float, zSpeed: float, currentPose: geometry.Pose2d, fieldOrient = True):
+    def setSwerveStates(self, xSpeed: float, ySpeed: float, zSpeed: float, currentPose: geometry.Pose2d, fieldOrient = True):
         if fieldOrient:
             swerveModuleStates = self.KINEMATICS.toSwerveModuleStates(kinematics.ChassisSpeeds.fromFieldRelativeSpeeds(kinematics.ChassisSpeeds(xSpeed, ySpeed, zSpeed), currentPose.rotation()))
         else:
