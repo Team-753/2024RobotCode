@@ -1,6 +1,7 @@
 import rev
 from wpimath import kinematics, geometry
 import math
+from rev import _rev
 
 class SwerveModule:
     """ The Swerve Module class. Pretty much all the code here was directly translated from the following github: 
@@ -22,8 +23,8 @@ class SwerveModule:
         self.desiredState = kinematics.SwerveModuleState(0.0, geometry.Rotation2d())
         
         # initializing main motors
-        self.driveMotor = rev.CANSparkMax(config["driveMotorID"], rev._rev.CANSparkLowLevel.MotorType.kBrushless) # defines the motor that drives the wheel, will need to be changed if we get krakens
-        self.turnMotor = rev.CANSparkMax(config["turnMotorID"], rev._rev.CANSparkLowLevel.MotorType.kBrushless) # defines the motor that turns the wheel
+        self.driveMotor = _rev.CANSparkMax(config["driveMotorID"], _rev.CANSparkLowLevel.MotorType.kBrushless) # defines the motor that drives the wheel, will need to be changed if we get krakens
+        self.turnMotor = _rev.CANSparkMax(config["turnMotorID"], _rev.CANSparkLowLevel.MotorType.kBrushless) # defines the motor that turns the wheel
         
         # Factory reset, just in case a motor or module is swapped out
         self.driveMotor.restoreFactoryDefaults()
@@ -31,7 +32,7 @@ class SwerveModule:
         
         # Setup encoders and PID controllers for the driving and turning SPARK MAX(s)
         self.drivingEncoder = self.driveMotor.getEncoder()
-        self.turningEncoder = self.turnMotor.getAbsoluteEncoder(rev.SparkAbsoluteEncoder.Type.kDutyCycle)
+        self.turningEncoder = self.turnMotor.getAbsoluteEncoder(_rev.SparkAbsoluteEncoder.Type.kDutyCycle)
         self.drivingPIDController = self.driveMotor.getPIDController()
         self.turningPIDController = self.turnMotor.getPIDController()
         self.drivingPIDController.setFeedbackDevice(self.drivingEncoder)
@@ -79,22 +80,22 @@ class SwerveModule:
         self.drivingPIDController.setI(0)
         self.drivingPIDController.setD(0)
         self.drivingPIDController.setFF(1)
-        self.drivingPIDControllerPIDController.setOutputRange(-1, 1)
+        self.drivingPIDController.setOutputRange(-1, 1)
         
         """
         Set the PID gains for the turning motor. These are example PID gains and actual values will need to be obtained from testing.
         """
         
-        self.turningPIDControllerPIDController.setP(1)
-        self.turningPIDControllerPIDController.setI(0)
-        self.turningPIDControllerPIDController.setD(0)
-        self.turningPIDControllerPIDController.setFF(0)
+        self.turningPIDController.setP(1)
+        self.turningPIDController.setI(0)
+        self.turningPIDController.setD(0)
+        self.turningPIDController.setFF(0)
         self.turningPIDController.setOutputRange(-1, 1)
         
         # additional tuning of settings.
         
-        self.driveMotor.setIdleMode(rev._rev.CANSparkBase.IdleMode.kCoast)
-        self.turnMotor.setIdleMode(rev._rev.CANSparkBase.IdleMode.kCoast)
+        self.driveMotor.setIdleMode(_rev.CANSparkBase.IdleMode.kCoast)
+        self.turnMotor.setIdleMode(_rev.CANSparkBase.IdleMode.kCoast)
         self.driveMotor.setSmartCurrentLimit(50) # amps
         self.turnMotor.setSmartCurrentLimit(20) # amps
         
@@ -126,15 +127,15 @@ class SwerveModule:
         optimizedDesiredState = kinematics.SwerveModuleState.optimize(desiredState, 
                                                                       geometry.Rotation2d(self.turningEncoder.getPosition()))
         # Command driving and turning SPARKS MAX towards their respective setpoints.
-        self.drivingPIDController.setReference(optimizedDesiredState.speed, rev.CANSparkMax.ControlType.kVelocity)
-        self.turningPIDController.setReference(optimizedDesiredState.angle.radians(), rev.CANSparkMax.ControlType.kPosition)
+        self.drivingPIDController.setReference(optimizedDesiredState.speed, _rev.CANSparkMax.ControlType.kVelocity)
+        self.turningPIDController.setReference(optimizedDesiredState.angle.radians(), _rev.CANSparkMax.ControlType.kPosition)
         self.desiredState = desiredState
         
     def resetEncoders(self) -> None:
         """ Resets the driving encoder position, useful for testing multiple autos. """
         self.drivingEncoder.setPosition(0)
         
-"""    def getAbsolutePositionRadians (self):
+    '''def getAbsolutePositionRadians (self):
         return (self.turnMotor.TelemetryID.kPosition * math.tau)
     
     def getWheelAngleRadians (self):
@@ -166,7 +167,7 @@ class SwerveModule:
         if desiredAngleRadians < 0:
             desiredAngleRadians += math.tau
         motorEncoderTickTarget = (self.turnMotor.TelemetryID.kPosition - (self.turnMotor.TelemetryID.kPosition() % (self.countsPerRotation * self.turningGearRatio))) + desiredAngleRadians * self.countsPerRotation * self.turningGearRatio / math.tau
-        self.turnMotor.set (rev.CANSparkLowLevel.ControlType.kPosition, motorEncoderTickTarget)
+        self.turnMotor.set (_rev.CANSparkLowLevel.ControlType.kPosition, motorEncoderTickTarget)
         
 
     def setState (self, state: kinematics.SwerveModuleState): 
@@ -189,16 +190,16 @@ class SwerveModule:
         if desiredAngleRadians < 0:
             desiredAngleRadians += math.tau
         motorEncoderTickTarget = (self.turnMotor.TelemetryID.kPosition() - (self.turnMotor.TelemetryID.kPosition() % (self.countsPerRotation * self.turningGearRatio))) + desiredAngleRadians * self.countsPerRotation * self.turningGearRatio / math.tau
-        self.turnMotor.set(rev._rev.CANSparkLowLevel.ControlType.kPosition, motorEncoderTickTarget)
+        self.turnMotor.set(rev._rev.CANSparkLowLevel.ControlType.kPosition, motorEncoderTickTarget)'''
         
     def setNeutralMode (self, mode):
         self.driveMotor.setIdleMode (mode)
         self.turnMotor.setIdleMode (mode)
 
     def stop (self):
-        self.driveMotor.set(rev._rev.CANSparkLowLevel.ControlType.kVoltage, 0)
-        self.turnMotor.set(rev._rev.CANSparkLowLevel.ControlType.kVoltage, 0)
-"""
-'''def reZeroMotors (self):
-    self.driveMotor.set (rev._rev.CAN)
-    self.turnMotor.set ()'''
+        self.driveMotor.set(_rev.CANSparkLowLevel.ControlType.kVoltage, 0)
+        self.turnMotor.set(_rev.CANSparkLowLevel.ControlType.kVoltage, 0)
+
+    '''def reZeroMotors (self):
+        self.driveMotor.set (rev._rev.CAN)
+        self.turnMotor.set ()'''

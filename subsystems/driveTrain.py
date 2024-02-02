@@ -8,7 +8,7 @@ import navx
 from wpimath import geometry, kinematics, estimator, controller
 import wpimath
 import wpiutil
-import rev
+from rev import _rev
 
 class DriveTrainSubsystem(commands2.Subsystem):
 
@@ -75,7 +75,7 @@ class DriveTrainSubsystem(commands2.Subsystem):
             else:
                 swerveModuleStates = self.KINEMATICS.toSwerveModuleStates(chassisSpeeds)
 
-            self.KINEMATICS.desaturateWheelSpeeds(swerveModuleStates, self.kmaxAutoSpeed)
+            #self.KINEMATICS.desaturateWheelSpeeds(swerveModuleStates, self.kmaxAutoSpeed)
             self.frontLeft(swerveModuleStates[0])
             self.frontRight(swerveModuleStates[1])
             self.rearLeft(swerveModuleStates[2])
@@ -119,26 +119,26 @@ class DriveTrainSubsystem(commands2.Subsystem):
         self.rearLeft.setState(swerveModuleStates[2])
         self.rearRight.setState(swerveModuleStates[3])
 
-    """    def stationary(self):
-        #better to not use this as it is unhealthy for the motors and the drivetrain
-        self.frontLeft.setNeutralMode(rev._rev.CANSparkBase.IdleMode.kBrake)
-        self.frontLeft.stop
-        self.frontRight.setNeutralMode(rev._rev.CANSparkBase.IdleMode.kBrake)
-        self.frontRight.stop
-        self.rearLeft.setNeutralMode(rev._rev.CANSparkBase.IdleMode.kBrake)
-        self.rearLeft.stop
-        self.rearRight.setNeutralMode(rev._rev.CANSparkBase.IdleMode.kBrake)
-        self.rearRight.stop
+    def stationary(self):
+         #better to not use this as it is unhealthy for the motors and the drivetrain
+        self.frontLeft.setNeutralMode(_rev.CANSparkBase.IdleMode.kBrake)
+        self.frontLeft.stop()
+        self.frontRight.setNeutralMode(_rev.CANSparkBase.IdleMode.kBrake)
+        self.frontRight.stop()
+        self.rearLeft.setNeutralMode(_rev.CANSparkBase.IdleMode.kBrake)
+        self.rearLeft.stop()
+        self.rearRight.setNeutralMode(_rev.CANSparkBase.IdleMode.kBrake)
+        self.rearRight.stop()
     
     def coast (self):
-        self.frontLeft.setNeutralMode(rev._rev.CANSparkBase.IdleMode.kCoast)
-        self.frontLeft.stop
-        self.frontRight.setNeutralMode(rev._rev.CANSparkBase.IdleMode.kCoast)
-        self.frontRight.stop
-        self.rearLeft.setNeutralMode(rev._rev.CANSparkBase.IdleMode.kCoast)
-        self.rearLeft.stop
-        self.rearRight.setNeutralMode(rev._rev.CANSparkBase.IdleMode.kCoast)
-        self.rearRight.stop"""
+         self.frontLeft.setNeutralMode(_rev.CANSparkBase.IdleMode.kCoast)
+         self.frontLeft.stop
+         self.frontRight.setNeutralMode(_rev.CANSparkBase.IdleMode.kCoast)
+         self.frontRight.stop
+         self.rearLeft.setNeutralMode(_rev.CANSparkBase.IdleMode.kCoast)
+         self.rearLeft.stop
+         self.rearRight.setNeutralMode(_rev.CANSparkBase.IdleMode.kCoast)
+         self.rearRight.stop()
 
     def getSwerveModulePositions (self):
         return self.frontLeft.getPosition(), self.frontRight.getPosition(), self.rearLeft.getPosition(), self.rearRight.getPosition()
