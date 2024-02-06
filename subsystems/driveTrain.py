@@ -1,4 +1,4 @@
-from networktables import NetworkTables
+from ntcore import _ntcore
 import commands2
 from commands2 import button
 from subsystems.swerveModule import SwerveModule
@@ -19,8 +19,7 @@ class DriveTrainSubsystem(commands2.Subsystem):
         
         self.config = config # inhereting the robot config json from the robot container
         self.joystick = joystick
-        NetworkTables.initialize() # you use networktables to access limelight data
-        self.LimelightTable = NetworkTables.getTable('limelight') # giving us access to the limelight's data as a variable
+        self.LimelightTable = _ntcore.NetworkTable().getSubTable("limelight")
 
         self.navx = navx.AHRS.create_spi(update_rate_hz=100)
 
