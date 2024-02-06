@@ -83,11 +83,11 @@ class DriveTrainSubsystem(commands2.Subsystem):
             self.rearLeft(swerveModuleStates[2])
             self.rearRight(swerveModuleStates[3])
 
-    def joystickDrive(self, inputs: tuple[float], currentPose: geometry.Pose2d) -> None:
+    def joystickDrive(self, inputs: tuple[float]) -> None:
         xSpeed, ySpeed, zSpeed = (inputs[0] * self.kMaxSpeed, 
                                   inputs[1] * self.kMaxSpeed, 
                                   inputs[2] * self.kMaxAngularVelocity * self.config["DriveConstants"]["RobotSpeeds"]["manualRotationSpeedFactor"])
-        self.setSwerveStates(xSpeed, ySpeed, zSpeed, currentPose)
+        self.setSwerveStates(xSpeed, ySpeed, zSpeed, self.poseEstimator.getEstimatedPosition())
             
     #this was used for the auto place last yeaer, I think, so we might not use this, but it could be good for an auto score function
     def joystickDriveThetaOverride (self, inputs: list, currentPose: geometry.Pose2d, rotationOverride: geometry.Rotation2d, inverted = False):
