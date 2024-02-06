@@ -62,8 +62,8 @@ class DriveTrainSubsystem(commands2.Subsystem):
         is inverted, make all these values positive instead of negative. """
         constants = self.config["DriveConstants"]["Joystick"]
         return (
-            -wpimath.applyDeadband(self.joystick.getX(), constants["xDeadband"]),
             -wpimath.applyDeadband(self.joystick.getY(), constants["yDeadband"]),
+            -wpimath.applyDeadband(self.joystick.getX(), constants["xDeadband"]),
             -wpimath.applyDeadband(self.joystick.getZ(), constants["thetaDeadband"])
         )
     
