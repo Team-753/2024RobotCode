@@ -37,8 +37,8 @@
         "thetaDeadband": 0.15
       },
       "RobotSpeeds": {
-        "maxSpeed": 5,
-        "maxAcceleration": 5,
+        "maxSpeed": 4.8,
+        "maxAcceleration": 4,
         "manualRotationSpeedFactor": 1
       },
       "PoseConstants": {

@@ -10,6 +10,10 @@ import wpimath
 import wpiutil
 from rev import _rev
 
+from pathplannerlib.auto import AutoBuilder
+from pathplannerlib.config import HolonomicPathFollowerConfig, ReplanningConfig, PIDConstants
+from wpilib import DriverStation
+
 class DriveTrainSubsystem(commands2.Subsystem):
 
     stateStdDevs = 0.1, 0.1, 0.1
@@ -52,9 +56,39 @@ class DriveTrainSubsystem(commands2.Subsystem):
                                                                 geometry.Pose2d(0, 0, geometry.Rotation2d(math.pi)), 
                                                                 self.stateStdDevs,
                                                                 self.visionMeasurementStdDevs)
+        
+        # i just stole this from here verbatum: https://pathplanner.dev/pplib-build-an-auto.html#configure-autobuilder
+        
+        AutoBuilder.configureHolonomic(
+            self.getPose, # Robot pose supplier
+            self.resetPose, # Method to reset odometry (will be called if your auto has a starting pose)
+            self.getRobotRelativeChassisSpeeds, # ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+            self.autoDrive, # Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+            HolonomicPathFollowerConfig( # HolonomicPathFollowerConfig, this should likely live in your Constants class
+                PIDConstants(5.0, 0.0, 0.0), # Translation PID constants
+                PIDConstants(5.0, 0.0, 0.0), # Rotation PID constants
+                self.kMaxSpeed, # Max module speed, in m/s
+                math.sqrt(self.trackWidth**2 + self.wheelBase**2), # Drive base radius in meters. Distance from robot center to furthest module.
+                ReplanningConfig() # Default path replanning config. See the API for the options here
+            ),
+            self.shouldFlipPath, # Supplier to control path flipping based on alliance color
+            self # Reference to this subsystem to set requirements
+        )
     
     def getNAVXRotation2d(self):
         return self.navx.getRotation2d()
+    
+    def getPose(self):
+        return self.poseEstimator.getEstimatedPosition()
+    
+    def resetPose(self, poseToset: geometry.Pose2d) -> None:
+        self.poseEstimator.resetPosition(self.getNAVXRotation2d(), self.getSwerveModulePositions(), poseToset)
+    
+    def shouldFlipPath():
+        # Boolean supplier that controls when the path will be mirrored for the red alliance
+        # This will flip the path being followed to the red side of the field.
+        # THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+        return DriverStation.getAlliance() == DriverStation.Alliance.kRed
     
     
     def getJoystickInput(self) -> tuple[float]:
@@ -67,21 +101,12 @@ class DriveTrainSubsystem(commands2.Subsystem):
             -wpimath.applyDeadband(self.joystick.getZ(), constants["thetaDeadband"])
         )
     
-    def autoDrive(self, chassisSpeeds: kinematics.ChassisSpeeds, fieldRelative = True):
-        if chassisSpeeds == kinematics.ChassisSpeeds(0, 0, 0):
-            self.stationary()
-        else:
-            #chassisSpeeds.omega = -chassisSpeeds.omega (this inverts it, we might not need to use it)
-            if fieldRelative:
-                swerveModuleStates = self.KINEMATICS.toSwerveModuleStates(kinematics.ChassisSpeeds.fromFieldRelativeSpeeds(chassisSpeeds.vx, chassisSpeeds.vy, chassisSpeeds.omega, self.poseEstimator.getEstimatedPosition().rotation())) #might need to invert vx
-            else:
-                swerveModuleStates = self.KINEMATICS.toSwerveModuleStates(chassisSpeeds)
-
-            #self.KINEMATICS.desaturateWheelSpeeds(swerveModuleStates, self.kmaxAutoSpeed)
-            self.frontLeft(swerveModuleStates[0])
-            self.frontRight(swerveModuleStates[1])
-            self.rearLeft(swerveModuleStates[2])
-            self.rearRight(swerveModuleStates[3])
+    def autoDrive(self, chassisSpeeds: kinematics.ChassisSpeeds):
+        swerveModuleStates = self.KINEMATICS.toSwerveModuleStates(chassisSpeeds)
+        self.frontLeft.setState(swerveModuleStates[0])
+        self.frontRight.setState(swerveModuleStates[1])
+        self.rearLeft.setState(swerveModuleStates[2])
+        self.rearRight.setState(swerveModuleStates[3])
 
     def joystickDrive(self, inputs: tuple[float]) -> None:
         xSpeed, ySpeed, zSpeed = (inputs[0] * self.kMaxSpeed, 
@@ -145,7 +170,7 @@ class DriveTrainSubsystem(commands2.Subsystem):
     def getSwerveModulePositions (self):
         return self.frontLeft.getPosition(), self.frontRight.getPosition(), self.rearLeft.getPosition(), self.rearRight.getPosition()
     
-    def actualChassisSpeeds(self):
+    def getRobotRelativeChassisSpeeds(self):
         states = (self.frontLeft.getState(), self.frontRight.getState(), self.rearLeft.getState(), self.rearRight.getState())
         return self.KINEMATICS.toChassisSpeeds(states)
     
