@@ -40,6 +40,42 @@
         "maxSpeed": 5,
         "maxAcceleration": 5,
         "manualRotationSpeedFactor": 1
+      },
+      "PoseConstants": {
+        "translationPIDConstants" : {
+          "kP" : 5.0,
+          "kI" : 0.0,
+          "kD" : 0.0,
+          "period" : 0.025
+        },
+        "rotationPIDConstants" : {
+          "kP" : 1.0,
+          "kI" : 0.0,
+          "kD" : 0.0,
+          "period": 0.025
+        },
+        "xPoseToleranceMeters" : 0.05,
+        "yPoseToleranceMeters" : 0.05,
+        "thetaPoseToleranceRadians" : 0.01745,
+        "teleopVelLimit" : 4.25,
+        "teleopAccelLimit" : 3
+
+
+      },
+      "thetaPIDConstants": {
+        "autoVelLimit" : 2,
+        "autoAccelLimit" : 2,
+        "xPoseToleranceMeters" : 0.03,
+        "yPoseToleranceMeters" : 0.03,
+        "thetaPoseToleranceRadians" : 0.004363,
+        "translationPIDConstants" : {
+          "kP" : 3.0,
+          "kI" : 0.0,
+          "kD" : 0.0,
+          "period" : 0.05
+        }
       }
+
+
     }
 }

@@ -140,17 +140,17 @@ class SwerveModule:
     
     def getWheelAngleRadians (self):
         adjustedRelValueDegrees = ((self.turnMotor.TelemetryID.kPosition % (self.countsPerRotation * self.turningGearRatio))* math.tau) / (self.countsPerRotation * self.turningGearRatio) # might not return the number of spins of the motor, might be the point in the wheel rotation that we're at
-        return adjustedRelValueDegrees 
+        return adjustedRelValueDegrees '''
    
-    def getTurnWheelState (self):
+    '''def getTurnWheelState (self):
         return geometry.Rotation2d(self.getWheelAngleRadians())
 
     def getSwerveModulePosition(self):
         distanceMeters = self.turnMotor.TelemetryID.kPosition * self.wheelDiameter * math.pi / (self.countsPerRotation * self.drivingGearRatio)
         angle = self.getTurnWheelState()
-        return kinematics.SwerveModulePosition(distanceMeters, angle)
+        return kinematics.SwerveModulePosition(distanceMeters, angle)'''
 
-    def getSwerveModuleState (self):
+    '''def getSwerveModuleState (self):
         velocityMetersPerSecond = (self.driveMotor.TelemetryID.kVelocity * 10 * self.wheelDiameter * math.pi) / (self.countsPerRotation * self.drivingGearRatio)
         angle = self.getTurnWheelState()
         return kinematics.SwerveModuleState(velocityMetersPerSecond, angle)

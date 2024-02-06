@@ -11,5 +11,5 @@ class DefaultDriveCommand(commands2.Command):
     
     
     def execute(self):
-        self.driveTrain.joystickDrive(self.driveTrain.getJoystickInput())
+        self.driveTrain.joystickDrive(self.driveTrain.getJoystickInput(), self.driveTrain.getCurrentPose)
     

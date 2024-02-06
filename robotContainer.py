@@ -1,6 +1,6 @@
 import os
 import json
-import commands2
+#import commands2
 from commands2 import button, cmd
 from subsystems.driveTrain import DriveTrainSubsystem
 
@@ -39,13 +39,13 @@ class RobotContainer:
         pass
     
     def autonomousInit(self):
-        self.driveTrain.setDefaultCommand(cmd.run(lambda: None [self.driveTrain])) # otherwise the robot will respond to joystick inputs during autonomous
+        self.driveTrain.setDefaultCommand(cmd.run(lambda: None, [self.driveTrain])) # otherwise the robot will respond to joystick inputs during autonomous
     
     def autonomousPeriodic(self):
         pass
     
     def teleopInit(self):
-        self.driveTrain.setDefaultCommand(DefaultDriveCommand(self.driveTrain))
+        self.driveTrain.setDefaultCommand(DefaultDriveCommand(self.driveTrain))     
     
     def teleopPeriodic(self):
         pass

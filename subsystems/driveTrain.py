@@ -1,4 +1,4 @@
-from networktables import NetworkTables
+#from networktables import NetworkTables
 import commands2
 from commands2 import button
 from subsystems.swerveModule import SwerveModule
@@ -13,39 +13,40 @@ from rev import _rev
 class DriveTrainSubsystem(commands2.Subsystem):
 
     stateStdDevs = 0.1, 0.1, 0.1
-    visionMeasurementStdDevs = 0.9, 0.9, 0.9 * math.pi
+    visionMeasurementStdDevs = 0.9, 0.9, 0.9 * float(math.pi)
     def __init__(self, config: dict, joystick: button.CommandJoystick) -> None:
         super().__init__()
         
         self.config = config # inhereting the robot config json from the robot container
         self.joystick = joystick
-        NetworkTables.initialize() # you use networktables to access limelight data
-        self.LimelightTable = NetworkTables.getTable('limelight') # giving us access to the limelight's data as a variable
+        '''NetworkTables.initialize() # you use networktables to access limelight data
+        self.LimelightTable = NetworkTables.getTable('limelight')''' # giving us access to the limelight's data as a variable
 
         self.navx = navx.AHRS.create_spi(update_rate_hz=100)
 
-        self.kMaxSpeed = self.config["DriveConstants"]["maxSpeed"]
-        self.kMaxAngularVelocity = self.config["DriveConstants"]["maxSpeed"] / math.hypot(self.config["RobotDimensions"]["trackWidth"] / 2, self.config["RobotDimensions"]["wheelBase"] / 2)
+        self.kMaxSpeed = self.config["DriveConstants"]["RobotSpeeds"]["maxSpeed"]
+        self.kMaxAngularVelocity = self.config["DriveConstants"]["RobotSpeeds"]["maxSpeed"] / math.hypot(self.config["RobotDimensions"]["trackWidth"] / 2, self.config["RobotDimensions"]["wheelBase"] / 2)
         self.wheelBase = self.config["RobotDimensions"]["wheelBase"]
         self.trackWidth = self.config["RobotDimensions"]["trackWidth"]
 
-        self.frontLeft = SwerveModule(self.config ["swerveModules"]['frontLeft'], "frontLeft")
-        self.frontRight = SwerveModule(self.config ["swerveModules"]['frontRight'], 'frontRight')
-        self.rearLeft = SwerveModule(self.config ["serveModules"]['rearLeft'], 'rearLeft')
-        self.rearRight = SwerveModule(self.config ["swerveModules"]["rearRight"], "rearRight")
+        self.frontLeft = SwerveModule(self.config ["SwerveModules"]['frontLeft'], "frontLeft")
+        self.frontRight = SwerveModule(self.config ["SwerveModules"]['frontRight'], 'frontRight')
+        self.rearLeft = SwerveModule(self.config ["SwerveModules"]['rearLeft'], 'rearLeft')
+        self.rearRight = SwerveModule(self.config ["SwerveModules"]["rearRight"], "rearRight")
 
-        teleopConstants = self.config["driverStation"]["teleoperatedRobotConstants"]
+        teleopConstants = self.config["DriveConstants"]["PoseConstants"]
 
         
-        rotationConstants = self.config["autonomousSettings"]["rotationPIDConstants"]
+        rotationConstants = self.config["DriveConstants"]["thetaPIDConstants"]["translationPIDConstants"]
         self.rotationPID = controller.PIDController(rotationConstants["kP"], rotationConstants["kI"], rotationConstants["kD"], rotationConstants["period"])
         self.rotationPID.enableContinuousInput(-math.pi, math.pi)
 
         self.poseTolerance = geometry.Pose2d(geometry.Translation2d(x=teleopConstants["xPoseToleranceMeters"], y=teleopConstants["yPoseToleranceMeters"]), geometry.Rotation2d(teleopConstants["thetaPoseToleranceRadians"]))
         self.alliance = wpilib.DriverStation.Alliance.kBlue
 
-        self.KINEMATICS = kinematics.SwerveDrive4Kinematics(geometry.Translation2d(self.trackWidth / 2, self.wheelBase / 2), geometry.Translation2d(self.trackWidth / 2, -self.wheelBase / 2), geometry.Translation2d(-self.trackWidth / 2, self.wheelBase / 2), geometry.Translation2d(-self.trackWidth / 2, -self.wheelBase / 2))
-        self.poseEstimator = estimator.SwerveDrive4PoseEstimator(self.KINEMATICS, 
+        #self.KINEMATICS2 = kinematics._kinematics.SwerveDrive4KinematicsBase(geometry.Translation2d(self.trackWidth / 2, self.wheelBase / 2), geometry.Translation2d(self.trackWidth / 2, -self.wheelBase / 2), geometry.Translation2d(-self.trackWidth / 2, self.wheelBase / 2), geometry.Translation2d(-self.trackWidth / 2, -self.wheelBase / 2))
+        self.KINEMATICS = kinematics.SwerveDrive4Kinematics(geometry.Translation2d(float(self.trackWidth / 2), float(self.wheelBase / 2)), geometry.Translation2d(float(self.trackWidth / 2), float(-self.wheelBase / 2)), geometry.Translation2d(float(-self.trackWidth / 2), float(self.wheelBase / 2)), geometry.Translation2d(float(-self.trackWidth / 2), float(-self.wheelBase / 2)))
+        self.poseEstimator = estimator.SwerveDrive4PoseEstimator(kinematics._kinematics.SwerveDrive4Kinematics(geometry.Translation2d(self.trackWidth / 2, self.wheelBase / 2), geometry.Translation2d(self.trackWidth / 2, -self.wheelBase / 2), geometry.Translation2d(-self.trackWidth / 2, self.wheelBase / 2), geometry.Translation2d(-self.trackWidth / 2, -self.wheelBase / 2)), 
                                                                 self.getNAVXRotation2d(), 
                                                                 self.getSwerveModulePositions(), 
                                                                 geometry.Pose2d(0, 0, geometry.Rotation2d(math.pi)), 
@@ -53,7 +54,8 @@ class DriveTrainSubsystem(commands2.Subsystem):
                                                                 self.visionMeasurementStdDevs)
     
     def getNAVXRotation2d(self):
-        return self.navx.getRotation2d
+        return self.navx.getRotation2d()
+    
     
     def getJoystickInput(self) -> tuple[float]:
         """ Returns all 3 axes on a scale from -1 to 1, if the robot driving 
@@ -81,11 +83,11 @@ class DriveTrainSubsystem(commands2.Subsystem):
             self.rearLeft(swerveModuleStates[2])
             self.rearRight(swerveModuleStates[3])
 
-    def joystickDrive(self, inputs: tuple[float]) -> None:
+    def joystickDrive(self, inputs: tuple[float], currentPose: geometry.Pose2d) -> None:
         xSpeed, ySpeed, zSpeed = (inputs[0] * self.kMaxSpeed, 
                                   inputs[1] * self.kMaxSpeed, 
                                   inputs[2] * self.kMaxAngularVelocity * self.config["DriveConstants"]["RobotSpeeds"]["manualRotationSpeedFactor"])
-        self.setSwerveStates(xSpeed, ySpeed, zSpeed)
+        self.setSwerveStates(xSpeed, ySpeed, zSpeed, currentPose)
             
     #this was used for the auto place last yeaer, I think, so we might not use this, but it could be good for an auto score function
     def joystickDriveThetaOverride (self, inputs: list, currentPose: geometry.Pose2d, rotationOverride: geometry.Rotation2d, inverted = False):
@@ -105,15 +107,15 @@ class DriveTrainSubsystem(commands2.Subsystem):
         if xSpeed == 0 and ySpeed == 0 and zSpeed == 0:
             self.stationary()
         else:
-            self.setSwerveStates(xSpeed, ySpeed, angularVelocityFF + zSpeed, currentPose, False)
+            self.setSwerveStates(xSpeed, ySpeed, angularVelocityFF + zSpeed, False)
 
-    def setSwerveStates(self, xSpeed: float, ySpeed: float, zSpeed: float, fieldOrient = True):
+    def setSwerveStates(self, xSpeed: float, ySpeed: float, zSpeed: float, currentPose: geometry.Pose2d, fieldOrient = True):
         if fieldOrient:
-            swerveModuleStates = self.KINEMATICS.toSwerveModuleStates(kinematics.ChassisSpeeds.fromFieldRelativeSpeeds(kinematics.ChassisSpeeds(xSpeed, ySpeed, zSpeed), self.getCurrentPose().rotation()))
+            swerveModuleStates = self.KINEMATICS.toSwerveModuleStates(kinematics.ChassisSpeeds.fromFieldRelativeSpeeds(kinematics.ChassisSpeeds(xSpeed, ySpeed, zSpeed), currentPose.rotation()))
         else:
             swerveModuleStates = self.KINEMATICS.toSwerveModuleStates(kinematics.ChassisSpeeds(xSpeed, ySpeed, zSpeed))
         
-        self.KINEMATICS.desaturateWheelSpeeds(swerveModuleStates, self.kMaxSpeed)
+        #self.KINEMATICS.desaturateWheelSpeeds(swerveModuleStates, self.kMaxSpeed)
         self.frontLeft.setState(swerveModuleStates[0])
         self.frontRight.setState(swerveModuleStates[1])
         self.rearLeft.setState(swerveModuleStates[2])
@@ -132,11 +134,11 @@ class DriveTrainSubsystem(commands2.Subsystem):
     
     def coast (self):
          self.frontLeft.setNeutralMode(_rev.CANSparkBase.IdleMode.kCoast)
-         self.frontLeft.stop
+         self.frontLeft.stop()
          self.frontRight.setNeutralMode(_rev.CANSparkBase.IdleMode.kCoast)
-         self.frontRight.stop
+         self.frontRight.stop()
          self.rearLeft.setNeutralMode(_rev.CANSparkBase.IdleMode.kCoast)
-         self.rearLeft.stop
+         self.rearLeft.stop()
          self.rearRight.setNeutralMode(_rev.CANSparkBase.IdleMode.kCoast)
          self.rearRight.stop()
 
@@ -144,13 +146,13 @@ class DriveTrainSubsystem(commands2.Subsystem):
         return self.frontLeft.getPosition(), self.frontRight.getPosition(), self.rearLeft.getPosition(), self.rearRight.getPosition()
     
     def actualChassisSpeeds(self):
-        states = (self.frontLeft.getSwerveModuleState(), self.frontRight.getSwerveModuleState(), self.rearLeft.getSwerveModuleState(), self.rearRight.getSwerveModuleState())
+        states = (self.frontLeft.getState(), self.frontRight.getState(), self.rearLeft.getState(), self.rearRight.getState())
         return self.KINEMATICS.toChassisSpeeds(states[0], states[1], states[2], states[3])
     
     def getCurrentPose(self):
         return self.poseEstimator.getEstimatedPosition()
 
-    def periodic(self) -> None:
+    '''def periodic(self) -> None:
         if self.LimelightTable.getNumber('getpipe', 0) == 0: # 0 being our apriltag pipeline
             if self.LimelightTable.getNumber('tv', 0) == 1: # are there any valid targets
                 if self.alliance == wpilib.DriverStation.Alliance.kBlue:
@@ -162,4 +164,4 @@ class DriveTrainSubsystem(commands2.Subsystem):
                 self.poseEstimator.addVisionMeasurement(botPose2D, latency)
         self.poseEstimator.update(
             self.getNAVXRotation2d(),
-            self.getSwerveModulePositions())
+            self.getSwerveModulePositions())'''
