@@ -67,13 +67,13 @@ class DriveTrainSubsystem(commands2.Subsystem):
             -wpimath.applyDeadband(self.joystick.getZ(), constants["thetaDeadband"])
         )
     
-    def autoDrive(self, chassisSpeeds: kinematics.ChassisSpeeds, currentPose: geometry.Pose2d, fieldRelative = True):
+    def autoDrive(self, chassisSpeeds: kinematics.ChassisSpeeds, fieldRelative = True):
         if chassisSpeeds == kinematics.ChassisSpeeds(0, 0, 0):
             self.stationary()
         else:
             #chassisSpeeds.omega = -chassisSpeeds.omega (this inverts it, we might not need to use it)
             if fieldRelative:
-                swerveModuleStates = self.KINEMATICS.toSwerveModuleStates(kinematics.ChassisSpeeds.fromFieldRelativeSpeeds(chassisSpeeds.vx, chassisSpeeds.vy, chassisSpeeds.omega, currentPose.rotation())) #might need to invert vx
+                swerveModuleStates = self.KINEMATICS.toSwerveModuleStates(kinematics.ChassisSpeeds.fromFieldRelativeSpeeds(chassisSpeeds.vx, chassisSpeeds.vy, chassisSpeeds.omega, self.poseEstimator.getEstimatedPosition().rotation())) #might need to invert vx
             else:
                 swerveModuleStates = self.KINEMATICS.toSwerveModuleStates(chassisSpeeds)
 
@@ -109,9 +109,9 @@ class DriveTrainSubsystem(commands2.Subsystem):
         else:
             self.setSwerveStates(xSpeed, ySpeed, angularVelocityFF + zSpeed, False)
 
-    def setSwerveStates(self, xSpeed: float, ySpeed: float, zSpeed: float, currentPose: geometry.Pose2d, fieldOrient = True):
+    def setSwerveStates(self, xSpeed: float, ySpeed: float, zSpeed: float, fieldOrient = True):
         if fieldOrient:
-            swerveModuleStates = self.KINEMATICS.toSwerveModuleStates(kinematics.ChassisSpeeds.fromFieldRelativeSpeeds(kinematics.ChassisSpeeds(xSpeed, ySpeed, zSpeed), currentPose.rotation()))
+            swerveModuleStates = self.KINEMATICS.toSwerveModuleStates(kinematics.ChassisSpeeds.fromFieldRelativeSpeeds(kinematics.ChassisSpeeds(xSpeed, ySpeed, zSpeed), self.poseEstimator.getEstimatedPosition().rotation()))
         else:
             swerveModuleStates = self.KINEMATICS.toSwerveModuleStates(kinematics.ChassisSpeeds(xSpeed, ySpeed, zSpeed))
         
@@ -147,7 +147,7 @@ class DriveTrainSubsystem(commands2.Subsystem):
     
     def actualChassisSpeeds(self):
         states = (self.frontLeft.getState(), self.frontRight.getState(), self.rearLeft.getState(), self.rearRight.getState())
-        return self.KINEMATICS.toChassisSpeeds(states[0], states[1], states[2], states[3])
+        return self.KINEMATICS.toChassisSpeeds(states)
     
     def getCurrentPose(self):
         return self.poseEstimator.getEstimatedPosition()
