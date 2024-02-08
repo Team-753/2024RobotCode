@@ -1,5 +1,4 @@
 import commands2
-from commands2 import button
 from subsystems.driveTrain import DriveTrainSubsystem
 
 class DefaultDriveCommand(commands2.Command):

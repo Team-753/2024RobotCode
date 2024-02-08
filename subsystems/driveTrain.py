@@ -2,6 +2,7 @@
 import commands2
 from commands2 import button
 from subsystems.swerveModule import SwerveModule
+import RobotConfig
 import wpilib 
 import math
 import navx
@@ -18,34 +19,32 @@ class DriveTrainSubsystem(commands2.Subsystem):
 
     stateStdDevs = 0.1, 0.1, 0.1
     visionMeasurementStdDevs = 0.9, 0.9, 0.9 * float(math.pi)
-    def __init__(self, config: dict, joystick: button.CommandJoystick) -> None:
+    def __init__(self, joystick: button.CommandJoystick) -> None:
         super().__init__()
         
-        self.config = config # inhereting the robot config json from the robot container
         self.joystick = joystick
         '''NetworkTables.initialize() # you use networktables to access limelight data
         self.LimelightTable = NetworkTables.getTable('limelight')''' # giving us access to the limelight's data as a variable
 
         self.navx = navx.AHRS.create_spi(update_rate_hz=100)
 
-        self.kMaxSpeed = self.config["DriveConstants"]["RobotSpeeds"]["maxSpeed"]
-        self.kMaxAngularVelocity = self.config["DriveConstants"]["RobotSpeeds"]["maxSpeed"] / math.hypot(self.config["RobotDimensions"]["trackWidth"] / 2, self.config["RobotDimensions"]["wheelBase"] / 2)
-        self.wheelBase = self.config["RobotDimensions"]["wheelBase"]
-        self.trackWidth = self.config["RobotDimensions"]["trackWidth"]
+        self.kMaxSpeed = RobotConfig.DriveConstants.RobotSpeeds.maxSpeed
+        self.kMaxAngularVelocity = RobotConfig.DriveConstants.RobotSpeeds.maxSpeed / math.hypot(RobotConfig.RobotDimensions.trackWidth / 2, RobotConfig.RobotDimensions.wheelBase / 2)
+        self.wheelBase = RobotConfig.RobotDimensions.wheelBase
+        self.trackWidth = RobotConfig.RobotDimensions.trackWidth
 
-        self.frontLeft = SwerveModule(self.config ["SwerveModules"]['frontLeft'], "frontLeft")
-        self.frontRight = SwerveModule(self.config ["SwerveModules"]['frontRight'], 'frontRight')
-        self.rearLeft = SwerveModule(self.config ["SwerveModules"]['rearLeft'], 'rearLeft')
-        self.rearRight = SwerveModule(self.config ["SwerveModules"]["rearRight"], "rearRight")
+        self.frontLeft = SwerveModule(RobotConfig.SwerveModules.frontLeft)
+        self.frontRight = SwerveModule(RobotConfig.SwerveModules.frontRight)
+        self.rearLeft = SwerveModule(RobotConfig.SwerveModules.rearLeft)
+        self.rearRight = SwerveModule(RobotConfig.SwerveModules.rearRight)
 
-        teleopConstants = self.config["DriveConstants"]["PoseConstants"]
-
+        teleopConstants = RobotConfig.DriveConstants.PoseConstants
         
-        rotationConstants = self.config["DriveConstants"]["thetaPIDConstants"]["translationPIDConstants"]
-        self.rotationPID = controller.PIDController(rotationConstants["kP"], rotationConstants["kI"], rotationConstants["kD"], rotationConstants["period"])
+        rotationConstants = RobotConfig.DriveConstants.thetaPIDConstants.translationPIDConstants
+        self.rotationPID = controller.PIDController(rotationConstants.kP, rotationConstants.kI, rotationConstants.kD, rotationConstants.period)
         self.rotationPID.enableContinuousInput(-math.pi, math.pi)
 
-        self.poseTolerance = geometry.Pose2d(geometry.Translation2d(x=teleopConstants["xPoseToleranceMeters"], y=teleopConstants["yPoseToleranceMeters"]), geometry.Rotation2d(teleopConstants["thetaPoseToleranceRadians"]))
+        self.poseTolerance = geometry.Pose2d(geometry.Translation2d(x=teleopConstants.xPoseToleranceMeters, y=teleopConstants.yPoseToleranceMeters), geometry.Rotation2d(teleopConstants.thetaPoseToleranceRadians))
         self.alliance = wpilib.DriverStation.Alliance.kBlue
 
         #self.KINEMATICS2 = kinematics._kinematics.SwerveDrive4KinematicsBase(geometry.Translation2d(self.trackWidth / 2, self.wheelBase / 2), geometry.Translation2d(self.trackWidth / 2, -self.wheelBase / 2), geometry.Translation2d(-self.trackWidth / 2, self.wheelBase / 2), geometry.Translation2d(-self.trackWidth / 2, -self.wheelBase / 2))
@@ -94,11 +93,11 @@ class DriveTrainSubsystem(commands2.Subsystem):
     def getJoystickInput(self) -> tuple[float]:
         """ Returns all 3 axes on a scale from -1 to 1, if the robot driving 
         is inverted, make all these values positive instead of negative. """
-        constants = self.config["DriveConstants"]["Joystick"]
+        constants = RobotConfig.DriveConstants.Joystick
         return (
-            -wpimath.applyDeadband(self.joystick.getY(), constants["yDeadband"]),
-            -wpimath.applyDeadband(self.joystick.getX(), constants["xDeadband"]),
-            -wpimath.applyDeadband(self.joystick.getZ(), constants["thetaDeadband"])
+            -wpimath.applyDeadband(self.joystick.getY(), constants.yDeadband),
+            -wpimath.applyDeadband(self.joystick.getX(), constants.xDeadband),
+            -wpimath.applyDeadband(self.joystick.getZ(), constants.thetaDeadband)
         )
     
     def autoDrive(self, chassisSpeeds: kinematics.ChassisSpeeds):
@@ -111,7 +110,7 @@ class DriveTrainSubsystem(commands2.Subsystem):
     def joystickDrive(self, inputs: tuple[float]) -> None:
         xSpeed, ySpeed, zSpeed = (inputs[0] * self.kMaxSpeed, 
                                   inputs[1] * self.kMaxSpeed, 
-                                  inputs[2] * self.kMaxAngularVelocity * self.config["DriveConstants"]["RobotSpeeds"]["manualRotationSpeedFactor"])
+                                  inputs[2] * self.kMaxAngularVelocity * RobotConfig.DriveConstants.RobotSpeeds.manualRotationSpeedFactor)
         self.setSwerveStates(xSpeed, ySpeed, zSpeed, self.poseEstimator.getEstimatedPosition())
             
     #this was used for the auto place last yeaer, I think, so we might not use this, but it could be good for an auto score function

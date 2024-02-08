@@ -1,5 +1,4 @@
-import os
-import json
+import RobotConfig
 #import commands2
 from commands2 import button, cmd
 from subsystems.driveTrain import DriveTrainSubsystem
@@ -11,17 +10,12 @@ class RobotContainer:
     
     def __init__(self) -> None:
         # importing our JSON settings and converting it to global python dictionary.
-        folderPath = os.path.dirname(os.path.abspath(__file__))
-        filePath = os.path.join(folderPath, 'config.json')
-        with open (filePath, "r") as f1:
-            self.config = json.load(f1)
         
         # initializing controllers
-        self.joystick = button.CommandJoystick(self.config["DriveConstants"]["Joystick"]["USB_ID"])
+        self.joystick = button.CommandJoystick(RobotConfig.DriveConstants.Joystick.USB_ID)
         
         # initializing subsystems
-        self.driveTrain = DriveTrainSubsystem(self.config, self.joystick)    
-        
+        self.driveTrain = DriveTrainSubsystem(self.joystick)    
         """
         Setting our default commands, these are commands similar to the "periodic()" functions that 
         are ran every loop but only when another command IS NOT running on the subsystem hence the
