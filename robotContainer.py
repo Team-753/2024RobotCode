@@ -2,9 +2,10 @@ import RobotConfig
 #import commands2
 from commands2 import button, cmd
 from subsystems.driveTrain import DriveTrainSubsystem
-
+from subsystems.arm import ArmSubsystem
 from commands.defaultDriveCommand import DefaultDriveCommand
-
+from subsystems.arm import ArmSubsystem
+from commands.ArmCommands import ArmSpeaker
 class RobotContainer:
     """ Basically does everything. Yeah... """
     
@@ -13,7 +14,7 @@ class RobotContainer:
         
         # initializing controllers
         self.joystick = button.CommandJoystick(RobotConfig.DriveConstants.Joystick.USB_ID)
-        
+        self.auxController = button.CommandXboxController(RobotConfig.DriveConstants.XBOX.USB_ID)
         # initializing subsystems
         self.driveTrain = DriveTrainSubsystem(self.joystick)    
         """
@@ -25,6 +26,7 @@ class RobotContainer:
         
     def configureButtonBindings(self):
         """ Sets up the button command bindings for the controllers. """
+        self.auxController.a().onTrue(ArmSpeaker.execute(self))
         
     def getAutonomousCommand(self):
         """ Logic for what will run in autonomous mode. Returning anything but a command will result in nothing happening in autonomous. """
