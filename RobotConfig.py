@@ -24,6 +24,8 @@ class SwerveModules:
 class Arm:
     leftMotorCanID = 9
     rightMotorCanID = 10
+    limitSwitch1RIO = 0
+    limitSwitch2RIO = 1
 
 class DriveConstants:
     class Joystick:
@@ -31,7 +33,9 @@ class DriveConstants:
         xDeadband = 0.1
         yDeadband = 0.1
         thetaDeadband = 0.15
-        
+    class XBOX:
+        USB_ID = 1
+        # TODO: Add needed information  
     class RobotSpeeds:
         maxSpeed = 4.8
         maxAcceleration = 4
@@ -74,3 +78,11 @@ class FieldConstants:
     speakerYMeters = 5.548
     speakerZMeters = 2.05
     speakerXMeters = 0.225
+class armConstants:
+    speaker = 80
+    amp = 90
+    home = 0
+    source = 70
+class grabber:
+    bottomMotorCANID = 11
+    topMotorCANID = 12
