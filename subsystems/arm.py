@@ -24,10 +24,15 @@ class ArmSubsystem(commands2.Subsystem):
             # TODO: Add code here
             # Do something based on button
             pass
+        def goToSpeaker(self) -> None:
+            # Code that raises arm to speaker height from RobotConfig.py
+            pass
+        """Doesn't work
         self.auxControl.A(function("A"))
         self.auxControl.B(function("B"))
         self.auxControl.X(function("X"))
         self.auxControl.Y(function("Y"))
+        """
         # Inverts and controls left arm motor based on what right arm is doing.
         self.rightArm
         self.leftArm.follow(self.rightArm, True)
