@@ -3,7 +3,7 @@ import RobotConfig
 from commands2 import button, cmd
 from subsystems.driveTrain import DriveTrainSubsystem
 
-from commands.drivetrain.defaultDriveCommand import DefaultDriveCommand
+from commands.defaultDriveCommand import DefaultDriveCommand
 
 class RobotContainer:
     """ Basically does everything. Yeah... """

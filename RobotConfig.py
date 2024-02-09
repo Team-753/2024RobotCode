@@ -1,3 +1,5 @@
+from wpimath import geometry
+
 class RobotDimensions:
     trackWidth = 0.5715
     wheelBase = 0.5969
@@ -65,3 +67,10 @@ class DriveConstants:
             kI = 0.0
             kD = 0.0
             period = 0.05
+
+class FieldConstants:
+    fieldWidthMeters = 16.54
+    fieldLengthMeters = 8.21
+    speakerYMeters = 5.548
+    speakerZMeters = 2.05
+    speakerXMeters = 0.225
