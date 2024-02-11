@@ -6,6 +6,7 @@ from subsystems.arm import ArmSubsystem
 from commands.defaultDriveCommand import DefaultDriveCommand
 from subsystems.arm import ArmSubsystem
 from commands.ArmCommands import ArmSpeaker
+from commands.ArmCommands import grabberEvents
 class RobotContainer:
     """ Basically does everything. Yeah... """
     
@@ -27,6 +28,11 @@ class RobotContainer:
     def configureButtonBindings(self):
         """ Sets up the button command bindings for the controllers. """
         self.auxController.a().onTrue(ArmSpeaker.execute(self))
+        self.auxController.b().onTrue(ArmSpeaker.execute(self))
+        self.auxController.x().onTrue(ArmSpeaker.execute(self))
+        self.auxController.y().onTrue(ArmSpeaker.execute(self))
+        self.auxController.leftTrigger().onTrue(grabberEvents.empty(self))
+        self.auxController.rightTrigger().onTrue(grabberEvents.grab(self))
         
     def getAutonomousCommand(self):
         """ Logic for what will run in autonomous mode. Returning anything but a command will result in nothing happening in autonomous. """
