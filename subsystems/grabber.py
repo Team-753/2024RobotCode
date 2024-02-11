@@ -12,6 +12,7 @@ class grabberSubsystem(commands2.Subsystem):
         # sets motors for grabber. For CAN IDs, use RobotConfig
         self.bottomMotor = rev.CANSparkMax(RobotConfig.grabber.bottomMotorCANID, _rev.CANSparkMax.MotorType.kBrushless)
         self.topMotor = rev.CANSparkMax(RobotConfig.grabber.topMotorCANID, _rev.CANSparkMax.MotorType.kBrushless)
+        self.sensor = wpilib.DigitalInput(RobotConfig.grabber.sensorDIOID)
     def periodic(self) -> None:
         # TODO: code to get commands from drive station joysticks
         # sets bottom motor position and tells top motor to follow. Top motor IS inverted.
@@ -20,7 +21,21 @@ class grabberSubsystem(commands2.Subsystem):
         return super().periodic()
     def intake(self) -> None:
         # TODO: Code to intake ring
-        pass
+        self.bottomMotor.set(RobotConfig.grabber.intake)
+        self.topMotor.follow(self.bottomMotor, True)
+        if(self.sensor.get() != False):
+            while(self.sensor.get() != False):
+                # Stop inputting
+                self.bottomMotor.set(RobotConfig.grabber.idle)
+                self.topMotor.follow(self.bottomMotor, True)
+        else:
+            # Stop inputting
+            self.bottomMotor.set(RobotConfig.grabber.idle)
+            self.topMotor.follow(self.bottomMotor, True)
     def outtake(self) -> None:
         # TODO: Code to shoot the ring based on command speed
-        pass
+        self.bottomMotor.set(RobotConfig.grabber.outtake)
+        self.topMotor.follow(self.bottomMotor, True)
+    def idle(self) -> None:
+        self.bottomMotor.set(RobotConfig.grabber.idle)
+        self.topMotor.follow(self.bottomMotor, True)
