@@ -33,10 +33,10 @@ class DriveTrainSubsystem(commands2.Subsystem):
         self.wheelBase = RobotConfig.RobotDimensions.wheelBase
         self.trackWidth = RobotConfig.RobotDimensions.trackWidth
 
-        self.frontLeft = SwerveModule(RobotConfig.SwerveModules.frontLeft)
-        self.frontRight = SwerveModule(RobotConfig.SwerveModules.frontRight)
-        self.rearLeft = SwerveModule(RobotConfig.SwerveModules.rearLeft)
-        self.rearRight = SwerveModule(RobotConfig.SwerveModules.rearRight)
+        self.frontLeft = SwerveModule(RobotConfig.SwerveModules.frontLeft.driveMotorID, RobotConfig.SwerveModules.frontLeft.turnMotorID)
+        self.frontRight = SwerveModule(RobotConfig.SwerveModules.frontLeft.driveMotorID, RobotConfig.SwerveModules.frontLeft.turnMotorID)
+        self.rearLeft = SwerveModule(RobotConfig.SwerveModules.frontLeft.driveMotorID, RobotConfig.SwerveModules.frontLeft.turnMotorID)
+        self.rearRight = SwerveModule(RobotConfig.SwerveModules.frontLeft.driveMotorID, RobotConfig.SwerveModules.frontLeft.turnMotorID)
 
         teleopConstants = RobotConfig.DriveConstants.PoseConstants
         
