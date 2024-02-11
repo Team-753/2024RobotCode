@@ -16,5 +16,7 @@ class grabberEvents(commands2.Command):
         self.grabber.intake(self)
     def empty(self) -> None:
         self.grabber.outtake(self)
+    def idle(self) -> None:
+        self.grabber.idle(self)
     
         
