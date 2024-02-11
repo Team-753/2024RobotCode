@@ -79,10 +79,10 @@ class FieldConstants:
     speakerZMeters = 2.05
     speakerXMeters = 0.225
 class armConstants:
-    speaker = 80
-    amp = 90
-    home = 0
-    source = 70
+    Speaker = 80
+    Amp = 90
+    Home = 5
+    Source = 70
 class grabber:
     bottomMotorCANID = 11
     topMotorCANID = 12

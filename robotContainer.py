@@ -17,7 +17,8 @@ class RobotContainer:
         self.joystick = button.CommandJoystick(RobotConfig.DriveConstants.Joystick.USB_ID)
         self.auxController = button.CommandXboxController(RobotConfig.DriveConstants.XBOX.USB_ID)
         # initializing subsystems
-        self.driveTrain = DriveTrainSubsystem(self.joystick)    
+        self.driveTrain = DriveTrainSubsystem(self.joystick)
+        self.arm = ArmSubsystem    
         """
         Setting our default commands, these are commands similar to the "periodic()" functions that 
         are ran every loop but only when another command IS NOT running on the subsystem hence the
@@ -27,14 +28,19 @@ class RobotContainer:
         
     def configureButtonBindings(self):
         """ Sets up the button command bindings for the controllers. """
-        self.auxController.a().onTrue(ArmSpeaker.execute(self))
-        self.auxController.b().onTrue(ArmSpeaker.execute(self))
-        self.auxController.x().onTrue(ArmSpeaker.execute(self))
-        self.auxController.y().onTrue(ArmSpeaker.execute(self))
         self.auxController.leftTrigger().onTrue(grabberEvents.empty(self))
         self.auxController.rightTrigger().onTrue(grabberEvents.grab(self))
         self.auxController.leftTrigger().onFalse(grabberEvents.idle(self))
         self.auxController.rightTrigger().onFalse(grabberEvents.idle(self))
+        # TODO: Check presets
+        # For now, arm uses A for Amp preset
+        self.auxController.a().onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Amp)))
+        # For now, arm uses B for Home preset
+        self.auxController.b().onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Home)))
+        # For now, arm uses X for Speaker preset
+        self.auxController.x().onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Speaker)))
+        # For now, arm uses Y for Source preset
+        self.auxController.y().onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Source)))
         
     def getAutonomousCommand(self):
         """ Logic for what will run in autonomous mode. Returning anything but a command will result in nothing happening in autonomous. """
