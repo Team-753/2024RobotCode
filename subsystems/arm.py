@@ -20,13 +20,6 @@ class ArmSubsystem(commands2.Subsystem):
         self.auxControl = wpilib.XboxController(DriveConstants.XBOX.USB_ID)
     def periodic(self) -> None:
         # TODO: Get XBOX control response to set arm. Add this to the "self.rightArm"
-        def function(button):
-            # TODO: Add code here
-            # Do something based on button
-            pass
-        def goToSpeaker(self) -> None:
-            # Code that raises arm to speaker height from RobotConfig.py
-            pass
         """Doesn't work
         self.auxControl.A(function("A"))
         self.auxControl.B(function("B"))
@@ -38,4 +31,12 @@ class ArmSubsystem(commands2.Subsystem):
         self.leftArm.follow(self.rightArm, True)
         """ Put code you want to be looped in here. Nothing is returned here either."""
         return super().periodic()
+    def function(button):
+    # TODO: Add code here
+        # Do something based on button
+        pass
+    def goToSpeaker(self) -> None:
+        # Code that raises arm to speaker height from RobotConfig.py
+        pass
+
     

@@ -18,3 +18,9 @@ class grabberSubsystem(commands2.Subsystem):
         self.bottomMotor
         self.topMotor.follow(self.bottomMotor, True)
         return super().periodic()
+    def intake(self) -> None:
+        # TODO: Code to intake ring
+        pass
+    def outtake(self) -> None:
+        # TODO: Code to shoot the ring based on command speed
+        pass
