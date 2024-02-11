@@ -86,3 +86,7 @@ class armConstants:
 class grabber:
     bottomMotorCANID = 11
     topMotorCANID = 12
+    intake = -0.5
+    outtake = 0.5
+    idle = 0
+    sensorDIOID = 3

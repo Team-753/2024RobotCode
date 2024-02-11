@@ -33,6 +33,8 @@ class RobotContainer:
         self.auxController.y().onTrue(ArmSpeaker.execute(self))
         self.auxController.leftTrigger().onTrue(grabberEvents.empty(self))
         self.auxController.rightTrigger().onTrue(grabberEvents.grab(self))
+        self.auxController.leftTrigger().onFalse(grabberEvents.idle(self))
+        self.auxController.rightTrigger().onFalse(grabberEvents.idle(self))
         
     def getAutonomousCommand(self):
         """ Logic for what will run in autonomous mode. Returning anything but a command will result in nothing happening in autonomous. """
