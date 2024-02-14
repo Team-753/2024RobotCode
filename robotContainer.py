@@ -18,7 +18,7 @@ class RobotContainer:
         self.auxController = button.CommandXboxController(RobotConfig.DriveConstants.XBOX.USB_ID)
         # initializing subsystems
         self.driveTrain = DriveTrainSubsystem(self.joystick)
-        self.arm = ArmSubsystem    
+        self.arm = ArmSubsystem()
         """
         Setting our default commands, these are commands similar to the "periodic()" functions that 
         are ran every loop but only when another command IS NOT running on the subsystem hence the

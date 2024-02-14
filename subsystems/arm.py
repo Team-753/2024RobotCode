@@ -32,8 +32,8 @@ class ArmSubsystem(commands2.Subsystem):
         
         self.rightArm.restoreFactoryDefaults()
         self.rightArm.setIdleMode(_rev.CANSparkMax.IdleMode.kCoast) # change to brake in final
+        self.rightArm.setInverted(True)
         self.rightEncoder = self.rightArm.getEncoder()
-        self.rightEncoder.setInverted(True)
         self.rightEncoder.setPositionConversionFactor(self.kMotorToArmDegrees)
         self.rightEncoder.setVelocityConversionFactor(self.kMotorToArmDegreeVelocity)
         self.rightPIDController = self.rightArm.getPIDController()
@@ -55,7 +55,8 @@ class ArmSubsystem(commands2.Subsystem):
         '''self.leftPIDController.setReference(self.desiredAngle, _rev.CANSparkMax.ControlType.kPosition)
         self.rightPIDController.setReference(self.desiredAngle, _rev.CANSparkMax.ControlType.kPosition)'''
         
-        wpilib.SmartDashboard.putNumber("Arm Angle Degrees: ", self.leftEncoder.getPosition())
+        wpilib.SmartDashboard.putNumber("Left Motor Angle Degrees: ", self.leftEncoder.getPosition())
+        wpilib.SmartDashboard.putNumber("Right Motor Angle Degrees: ", self.rightEncoder.getPosition())
     
     def setDesiredAngle(self, kDesiredAngle: float):
         self.desiredAngle = kDesiredAngle
