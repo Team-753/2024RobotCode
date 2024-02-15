@@ -27,6 +27,10 @@ class Arm:
     limitSwitch1RIO = 0
     limitSwitch2RIO = 1
 
+class Climber:
+    leftMotorCanID = 11
+    rightMotorCanID = 12
+
 class DriveConstants:
     class Joystick:
         USB_ID = 0
