@@ -6,6 +6,7 @@ from subsystems.arm import ArmSubsystem
 from commands.defaultDriveCommand import DefaultDriveCommand
 from subsystems.arm import ArmSubsystem
 from commands.ArmCommands import ArmSpeaker
+from commands.ArmCommands import armEvents
 from commands.ArmCommands import grabberEvents
 class RobotContainer:
     """ Basically does everything. Yeah... """
@@ -34,13 +35,13 @@ class RobotContainer:
         self.auxController.rightTrigger().onFalse(grabberEvents.idle(self))
         # TODO: Check presets
         # For now, arm uses A for Amp preset
-        self.auxController.a().onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Amp)))
+        self.auxController.a().onTrue(armEvents.amp(self))
         # For now, arm uses B for Home preset
-        self.auxController.b().onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Home)))
+        self.auxController.b().onTrue(armEvents.home(self))
         # For now, arm uses X for Speaker preset
-        self.auxController.x().onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Speaker)))
+        self.auxController.x().onTrue(armEvents.speaker(self))
         # For now, arm uses Y for Source preset
-        self.auxController.y().onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Source)))
+        self.auxController.y().onTrue(armEvents.source(self))
         
     def getAutonomousCommand(self):
         """ Logic for what will run in autonomous mode. Returning anything but a command will result in nothing happening in autonomous. """
