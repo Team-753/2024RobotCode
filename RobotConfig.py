@@ -28,8 +28,9 @@ class Arm:
     limitSwitch2RIO = 1
 
 class Climber:
-    leftMotorCanID = 11
-    rightMotorCanID = 12
+    leftMotorCanID = 13
+    rightMotorCanID = 14
+    limitSwitchID = 0
 
 class DriveConstants:
     class Joystick:
@@ -94,3 +95,22 @@ class grabber:
     outtake = 0.5
     idle = 0
     sensorDIOID = 3
+
+class climberPIDs:
+    class leftMotorPIDs:
+        kP = 0.1
+        kI = 0
+        kD = 0
+        kF = 0
+        izone = 0
+        error = 4 #check this later
+        currentLimit = 40
+
+    class rightMotorPIDs:
+        kP = 0.1
+        kI = 0
+        kD = 0
+        kF = 0
+        izone = 0
+        error = 4 # check this later
+        currentLimit = 40
