@@ -10,9 +10,9 @@ class ArmSpeaker(commands2.Command):
         #self.arm.goToSpeaker(self)
         pass
 class grab(commands2.Command):
-    def __init__(self) -> None:
+    def __init__(self, GrabberSubsystem: grabberSubsystem) -> None:
         super().__init__()
-        self.grabber = grabberSubsystem
+        self.grabber = GrabberSubsystem
     def initialize(self) -> None:
         pass
     def execute(self) -> None:
@@ -20,7 +20,7 @@ class grab(commands2.Command):
     def end(self, interuppted: bool) -> None:
         self.grabber.idle()
 class empty(commands2.Command):
-    def __init__(self) -> None:
+    def __init__(self, GrabberSubsystem: grabberSubsystem) -> None:
         super().__init__()
         self.grabber = grabberSubsystem
     def initialize(self) -> None:
