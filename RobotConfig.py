@@ -22,8 +22,8 @@ class SwerveModules:
         turnMotorID = 8
 
 class Arm:
-    leftMotorCanID = 11
-    rightMotorCanID = 12
+    #leftMotorCanID = 11
+    #rightMotorCanID = 12
     limitSwitch1RIO = 0
     limitSwitch2RIO = 1
 
@@ -35,6 +35,9 @@ class DriveConstants:
         thetaDeadband = 0.15
     class XBOX:
         USB_ID = 1
+        xDeadband = 0.1
+        yDeadband = 0.1
+        thetaDeadband = 0.15
         # TODO: Add needed information  
     class RobotSpeeds:
         maxSpeed = 4.8

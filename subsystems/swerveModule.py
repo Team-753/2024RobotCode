@@ -17,14 +17,14 @@ class SwerveModule:
     kTurningEncoderPositionFactor = math.tau # radians
     kTurningEncoderVelocityFactor = math.tau / 60 # radians per second
     
-    def __init__(self, driveID: int, turnID: int) -> None:
+    def __init__(self, config) -> None:
         
         # creating an empty, default desired state
         self.desiredState = kinematics.SwerveModuleState(0.0, geometry.Rotation2d())
         
         # initializing main motors
-        self.driveMotor = _rev.CANSparkMax(driveID, _rev.CANSparkLowLevel.MotorType.kBrushless) # defines the motor that drives the wheel, will need to be changed if we get krakens
-        self.turnMotor = _rev.CANSparkMax(turnID, _rev.CANSparkLowLevel.MotorType.kBrushless) # defines the motor that turns the wheel
+        self.driveMotor = _rev.CANSparkMax(config.driveMotorID, _rev.CANSparkLowLevel.MotorType.kBrushless) # defines the motor that drives the wheel, will need to be changed if we get krakens
+        self.turnMotor = _rev.CANSparkMax(config.turnMotorID, _rev.CANSparkLowLevel.MotorType.kBrushless) # defines the motor that turns the wheel
         
         # Factory reset, just in case a motor or module is swapped out
         self.driveMotor.restoreFactoryDefaults()
