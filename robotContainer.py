@@ -8,8 +8,9 @@ from commands.defaultDriveCommand import DefaultDriveCommand
 from commands.ArmCommands import ArmSpeaker
 from commands.ArmCommands import armEvents
 from commands.ArmCommands import grab, empty
+from commands import GrabberCommands
 import wpilib
-from subsystems.grabber import grabberSubsystem
+from subsystems.grabber import GrabberSubsystem
 class RobotContainer:
     """ Basically does everything. Yeah... """
     
@@ -21,7 +22,7 @@ class RobotContainer:
         #self.auxController =  wpilib.XboxController(RobotConfig.DriveConstants.XBOX.USB_ID)
         # initializing subsystems
         self.driveTrain = DriveTrainSubsystem(self.joystick)
-        self.grabber = grabberSubsystem()
+        self.grabber = GrabberSubsystem()
         #self.arm = ArmSubsystem()
         """
         Setting our default commands, these are commands similar to the "periodic()" functions that 
@@ -32,10 +33,10 @@ class RobotContainer:
         
     def configureButtonBindings(self):
         """ Sets up the button command bindings for the controllers. """
-        self.auxController.leftTrigger().whileTrue(empty())
-        self.auxController.rightTrigger().whileTrue(grab())
-        #self.auxController.leftTrigger().onFalse(grabberEvents.idle())
-        #self.auxController.rightTrigger().onFalse(grabberEvents.idle())
+        self.auxController.leftTrigger().whileTrue(GrabberCommands.Intake(self.grabber))
+        self.auxController.rightTrigger().whileTrue(GrabberCommands.SlowEject(self.grabber)) 
+        #self.auxController.leftTrigger().onFalse(grabberEvents.idle()) NOTE: These are not necessary
+        #self.auxController.rightTrigger().onFalse(grabberEvents.idle()) NOTE: These are not necessary
         # TODO: Check presets
         # For now, arm uses A for Amp preset
         '''

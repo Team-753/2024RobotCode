@@ -86,7 +86,7 @@ class armConstants:
     Amp = 0.5
     Home = -0.5
     Source = -1
-class grabber:
+class GrabberConfig:
     bottomMotorCANID = 11
     topMotorCANID = 12
     intake = -0.5
