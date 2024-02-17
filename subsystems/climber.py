@@ -87,6 +87,14 @@ class ClimberSubsystem(commands2.Subsystem):
         else:
             self.rightMotor.set_control(self.rightMotorController.with_position(self.targetValue/self.gearRatio))
 
+    def goUp(self):
+        self.leftMotor.set(phoenix5.ControlMode.PercentOutput, 0.2)  
+        self.rightMotor.set_control(self.rightMotorController.with_velocity(0.2)) #assuming this is not too fast and positive is up
+
+    def goDown(self):
+        self.leftMotor.set(phoenix5.ControlMode.PercentOutput, -0.2)
+        self.rightMotor.set_control(self.rightMotorController.with_velocity(-0.2))
+
     def reZero(self):
         self.zeroed = False
 
