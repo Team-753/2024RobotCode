@@ -1,10 +1,12 @@
 import RobotConfig
-#import commands2
+import commands2
 from commands2 import button, cmd
 from subsystems.driveTrain import DriveTrainSubsystem
 from subsystems.arm import ArmSubsystem
 from commands.defaultDriveCommand import DefaultDriveCommand
 from subsystems.arm import ArmSubsystem
+from subsystems.climber import ClimberSubsystem
+from commands.climberCommands import climberEvents
 from commands.ArmCommands import ArmSpeaker
 from commands.ArmCommands import grabberEvents
 class RobotContainer:
@@ -19,6 +21,7 @@ class RobotContainer:
         # initializing subsystems
         self.driveTrain = DriveTrainSubsystem(self.joystick)
         self.arm = ArmSubsystem()
+        self.climber = ClimberSubsystem()
         """
         Setting our default commands, these are commands similar to the "periodic()" functions that 
         are ran every loop but only when another command IS NOT running on the subsystem hence the
@@ -41,6 +44,9 @@ class RobotContainer:
         self.auxController.x().onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Speaker)))
         # For now, arm uses Y for Source preset
         self.auxController.y().onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Source)))
+        #temporary climber controls
+        self.auxController.rightBumper().whileTrue(climberEvents.climberGoesUp())
+        #self.auxController.leftBumper().whileTrue(climberEvents.climberGoesDown())
         
     def getAutonomousCommand(self):
         """ Logic for what will run in autonomous mode. Returning anything but a command will result in nothing happening in autonomous. """
