@@ -12,8 +12,8 @@ class ArmSubsystem(commands2.Subsystem):
         """ This is ran once, it returns NOTHING """
         super().__init__()
         # Sets motors for arm commands
-        self.leftArm = rev.CANSparkMax(RobotConfig.Arm.leftMotorCanID, _rev.CANSparkLowLevel.MotorType.kBrushless)
-        self.rightArm = rev.CANSparkMax(RobotConfig.Arm.rightMotorCanID, _rev.CANSparkLowLevel.MotorType.kBrushless)
+        self.leftArm = _rev.CANSparkMax(RobotConfig.Arm.leftMotorCanID, _rev.CANSparkLowLevel.MotorType.kBrushless)
+        self.rightArm = _rev.CANSparkMax(RobotConfig.Arm.rightMotorCanID, _rev.CANSparkLowLevel.MotorType.kBrushless)
         
         self.leftArm.restoreFactoryDefaults()
         self.leftArm.setIdleMode(_rev.CANSparkMax.IdleMode.kCoast)
