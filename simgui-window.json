@@ -14,11 +14,19 @@
       "ypos": "-1"
     }
   },
+  "Table": {
+    "0xE56EC1C2,4": {
+      "Column 0  Weight": "1.0000",
+      "Column 1  Weight": "1.0000",
+      "Column 2  Weight": "1.0000",
+      "Column 3  Weight": "1.0000"
+    }
+  },
   "Window": {
     "###FMS": {
       "Collapsed": "0",
       "Pos": "7,810",
-      "Size": "235,244"
+      "Size": "388,176"
     },
     "###Joysticks": {
       "Collapsed": "0",

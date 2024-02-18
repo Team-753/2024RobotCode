@@ -46,7 +46,7 @@ class RobotContainer:
         self.auxController.y().onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Source)))
         #temporary climber controls
         self.auxController.rightBumper().whileTrue(climberEvents.climberGoesUp())
-        #self.auxController.leftBumper().whileTrue(climberEvents.climberGoesDown())
+        self.auxController.leftBumper().whileTrue(climberEvents.climberGoesDown())
         
     def getAutonomousCommand(self):
         """ Logic for what will run in autonomous mode. Returning anything but a command will result in nothing happening in autonomous. """

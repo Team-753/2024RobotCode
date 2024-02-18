@@ -2,7 +2,7 @@
 import commands2
 from subsystems.climber import ClimberSubsystem
 
-class climberEvents(commands2.command):
+class climberEvents(commands2.Command):
     def __init__(self):
         super().__init__()
         self.climber = ClimberSubsystem
