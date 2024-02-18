@@ -22,28 +22,28 @@ class RobotContainer:
         self.driveTrain = DriveTrainSubsystem(self.joystick)
         self.arm = ArmSubsystem()
         self.climber = ClimberSubsystem()
+        self.grabber = grabberSubsystem()
         """
         Setting our default commands, these are commands similar to the "periodic()" functions that 
         are ran every loop but only when another command IS NOT running on the subsystem hence the
         "default" keyword.
         """
-        
+        self.configureButtonBindings()
         
     def configureButtonBindings(self):
         """ Sets up the button command bindings for the controllers. """
-        self.auxController.leftTrigger().onTrue(grabberEvents.empty(self))
-        self.auxController.rightTrigger().onTrue(grabberEvents.grab(self))
-        self.auxController.leftTrigger().onFalse(grabberEvents.idle(self))
-        self.auxController.rightTrigger().onFalse(grabberEvents.idle(self))
+        self.auxController.leftTrigger().whileTrue(empty(self.grabber))
+        self.auxController.rightTrigger().whileTrue(grab(self.grabber))
         # TODO: Check presets
         # For now, arm uses A for Amp preset
-        self.auxController.a().onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Amp)))
+        self.auxController.A().onTrue(armEvents.amp())
+        #self.auxController.A(armEvents.amp(self))
         # For now, arm uses B for Home preset
-        self.auxController.b().onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Home)))
+        self.auxController.B().onTrue(armEvents.home())
         # For now, arm uses X for Speaker preset
-        self.auxController.x().onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Speaker)))
+        self.auxController.X().onTrue(armEvents.speaker())
         # For now, arm uses Y for Source preset
-        self.auxController.y().onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Source)))
+        self.auxController.Y().onTrue(armEvents.source())
         #temporary climber controls
         self.auxController.rightBumper().whileTrue(climberEvents.climberGoesUp())
         self.auxController.leftBumper().whileTrue(climberEvents.climberGoesDown())
