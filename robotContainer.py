@@ -40,13 +40,24 @@ class RobotContainer:
         # TODO: Check presets
         # For now, arm uses A for Amp preset
       #  self.auxController.a().onTrue(armEvents.amp())
+        self.buttonA = self.auxController.a()
+        self.buttonA.onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Amp)))
         #self.auxController.A(armEvents.amp(self))
         # For now, arm uses B for Home preset
       #  self.auxController.b().onTrue(armEvents.home())
+        self.buttonB = self.auxController.b()
+        self.buttonB.onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Home)))
+        
         # For now, arm uses X for Speaker preset
       #  self.auxController.x().onTrue(armEvents.speaker())
+        self.buttonX = self.auxController.x()
+        self.buttonX.onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Speaker)))
+        
         # For now, arm uses Y for Source preset
       #  self.auxController.y().onTrue(armEvents.source())
+        self.buttonY = self.auxController.y()
+        self.buttonY.onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Source)))
+        
         #temporary climber controls
         #self.joystickButtonFour.whileTrue(command.RepeatCommand(climberEvents.climberGoesUp()))
         #self.joystickButtonFive.whileTrue(command.RepeatCommand(climberEvents.climberGoesDown()))
