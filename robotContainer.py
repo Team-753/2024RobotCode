@@ -35,8 +35,9 @@ class RobotContainer:
         
     def configureButtonBindings(self):
         """ Sets up the button command bindings for the controllers. """
-        #self.auxController.leftTrigger().whileTrue(empty(self.grabber))
-        #self.auxController.rightTrigger().whileTrue(grab(self.grabber))
+        self.auxController.leftTrigger().whileTrue(empty(self.grabber))
+        self.auxController.leftBumper().whileTrue(emptySlow(self.grabber))
+        self.auxController.rightTrigger().whileTrue(grab(self.grabber))
         # TODO: Check presets
         # For now, arm uses A for Amp preset
       #  self.auxController.a().onTrue(armEvents.amp())
