@@ -35,18 +35,18 @@ class RobotContainer:
         
     def configureButtonBindings(self):
         """ Sets up the button command bindings for the controllers. """
-        self.auxController.leftTrigger().whileTrue(empty(self.grabber))
-        self.auxController.rightTrigger().whileTrue(grab(self.grabber))
+        #self.auxController.leftTrigger().whileTrue(empty(self.grabber))
+        #self.auxController.rightTrigger().whileTrue(grab(self.grabber))
         # TODO: Check presets
         # For now, arm uses A for Amp preset
-        self.auxController.A().onTrue(armEvents.amp())
+      #  self.auxController.a().onTrue(armEvents.amp())
         #self.auxController.A(armEvents.amp(self))
         # For now, arm uses B for Home preset
-        self.auxController.B().onTrue(armEvents.home())
+      #  self.auxController.b().onTrue(armEvents.home())
         # For now, arm uses X for Speaker preset
-        self.auxController.X().onTrue(armEvents.speaker())
+      #  self.auxController.x().onTrue(armEvents.speaker())
         # For now, arm uses Y for Source preset
-        self.auxController.Y().onTrue(armEvents.source())
+      #  self.auxController.y().onTrue(armEvents.source())
         #temporary climber controls
         #self.joystickButtonFour.whileTrue(command.RepeatCommand(climberEvents.climberGoesUp()))
         #self.joystickButtonFive.whileTrue(command.RepeatCommand(climberEvents.climberGoesDown()))

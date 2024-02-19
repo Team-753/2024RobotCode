@@ -29,7 +29,7 @@ class empty(commands2.Command):
         self.grabber.outtake()
     def end(self, interuppted: bool) -> None:
         self.grabber.idle()    
-class armEvents(commands2.Command):
+'''class armEvents(commands2.Command):
     def __init__(self):
         super().__init__()
         self.arm = ArmSubsystem
@@ -40,5 +40,5 @@ class armEvents(commands2.Command):
     def source(self) -> None:
         self.arm.source()
     def amp(self) -> None:
-        self.arm.amp()
+        self.arm.amp()'''
         
