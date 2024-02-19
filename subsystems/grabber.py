@@ -13,6 +13,10 @@ class grabberSubsystem(commands2.Subsystem):
         self.bottomMotor = _rev.CANSparkMax(RobotConfig.grabber.bottomMotorCANID, _rev.CANSparkMax.MotorType.kBrushless)
         self.topMotor = _rev.CANSparkMax(RobotConfig.grabber.topMotorCANID, _rev.CANSparkMax.MotorType.kBrushless)
         self.sensor = wpilib.DigitalInput(RobotConfig.grabber.sensorDIOID)
+        self.bottomMotor = rev.CANSparkMax(RobotConfig.grabber.bottomMotorCANID, _rev.CANSparkMax.MotorType.kBrushless)
+        self.topMotor = rev.CANSparkMax(RobotConfig.grabber.topMotorCANID, _rev.CANSparkMax.MotorType.kBrushless)
+        self.topMotor.follow(self.bottomMotor, True)
+        #self.sensor = wpilib.DigitalInput(RobotConfig.grabber.sensorDIOID)
     def periodic(self) -> None:
         # TODO: code to get commands from drive station joysticks
         # sets bottom motor position and tells top motor to follow. Top motor IS inverted.
