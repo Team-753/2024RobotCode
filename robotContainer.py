@@ -9,23 +9,35 @@ from subsystems.grabber import grabberSubsystem
 from subsystems.climber import ClimberSubsystem
 from commands.climberCommands import climberGoesDown, climberGoesUp
 from commands.ArmCommands import ArmSpeaker
-from commands.ArmCommands import grabberEvents
+#from commands.ArmCommands import grabberEvents
 class RobotContainer:
     """ Basically does everything. Yeah... """
     
     def __init__(self) -> None:
         # importing our JSON settings and converting it to global python dictionary.
+        #debugging code
+        print( RobotConfig.grabber.bottomMotorCANID)
+        print(RobotConfig.Arm.leftMotorCanID)
+        print(RobotConfig.Arm.rightMotorCanID)
+        print(RobotConfig.grabber.topMotorCANID)
+        print(RobotConfig.SwerveModules.frontLeft.driveMotorID)
+        print(RobotConfig.SwerveModules.frontRight.driveMotorID)
+        print(RobotConfig.SwerveModules.rearLeft.driveMotorID)
+        print(RobotConfig.SwerveModules.rearRight.driveMotorID)
+        print(RobotConfig.SwerveModules.frontLeft.turnMotorID)
+        print(RobotConfig.SwerveModules.frontRight.turnMotorID)
+        print(RobotConfig.SwerveModules.rearLeft.turnMotorID)
+        print(RobotConfig.SwerveModules.rearRight.turnMotorID)
         
         # initializing controllers
         self.joystick = button.CommandJoystick(RobotConfig.DriveConstants.Joystick.USB_ID)
         self.auxController = button.CommandXboxController(RobotConfig.DriveConstants.XBOX.USB_ID)
         # initializing subsystems
+        self.grabber = grabberSubsystem()
         self.driveTrain = DriveTrainSubsystem(self.joystick)
         self.arm = ArmSubsystem()
-        self.grabber = grabberSubsystem()
         self.climber = ClimberSubsystem()
         self.configureButtonBindings()
-        self.grabber = grabberSubsystem()
         """
         Setting our default commands, these are commands similar to the "periodic()" functions that 
         are ran every loop but only when another command IS NOT running on the subsystem hence the
@@ -35,9 +47,9 @@ class RobotContainer:
         
     def configureButtonBindings(self):
         """ Sets up the button command bindings for the controllers. """
-        self.auxController.leftTrigger().whileTrue(empty(self.grabber))
+        '''self.auxController.leftTrigger().whileTrue(empty(self.grabber))
         self.auxController.leftBumper().whileTrue(emptySlow(self.grabber))
-        self.auxController.rightTrigger().whileTrue(grab(self.grabber))
+        self.auxController.rightTrigger().whileTrue(grab(self.grabber))'''
         # TODO: Check presets
         # For now, arm uses A for Amp preset
       #  self.auxController.a().onTrue(armEvents.amp())
