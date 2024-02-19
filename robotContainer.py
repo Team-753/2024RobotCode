@@ -1,12 +1,13 @@
 import RobotConfig
 import commands2
-from commands2 import button, cmd
+from commands2 import button, cmd, command
 from subsystems.driveTrain import DriveTrainSubsystem
 from subsystems.arm import ArmSubsystem
 from commands.defaultDriveCommand import DefaultDriveCommand
 from subsystems.arm import ArmSubsystem
+from subsystems.grabber import grabberSubsystem
 from subsystems.climber import ClimberSubsystem
-from commands.climberCommands import climberEvents
+from commands.climberCommands import climberGoesDown, climberGoesUp
 from commands.ArmCommands import ArmSpeaker
 from commands.ArmCommands import grabberEvents
 class RobotContainer:
@@ -21,7 +22,9 @@ class RobotContainer:
         # initializing subsystems
         self.driveTrain = DriveTrainSubsystem(self.joystick)
         self.arm = ArmSubsystem()
+        self.grabber = grabberSubsystem()
         self.climber = ClimberSubsystem()
+        self.configureButtonBindings()
         """
         Setting our default commands, these are commands similar to the "periodic()" functions that 
         are ran every loop but only when another command IS NOT running on the subsystem hence the
@@ -31,10 +34,12 @@ class RobotContainer:
         
     def configureButtonBindings(self):
         """ Sets up the button command bindings for the controllers. """
-        self.auxController.leftTrigger().onTrue(grabberEvents.empty(self))
-        self.auxController.rightTrigger().onTrue(grabberEvents.grab(self))
-        self.auxController.leftTrigger().onFalse(grabberEvents.idle(self))
-        self.auxController.rightTrigger().onFalse(grabberEvents.idle(self))
+        #self.joystickButtonFour = button.JoystickButton(self.joystick, 4)
+        #self.joystickButtonFive = button.JoystickButton(self.joystick, 5)
+        '''self.auxController.leftTrigger().onTrue(grabberEvents.empty(self.grabber))
+        self.auxController.rightTrigger().onTrue(grabberEvents.grab(self.grabber))
+        self.auxController.leftTrigger().onFalse(grabberEvents.idle(self.grabber))
+        self.auxController.rightTrigger().onFalse(grabberEvents.idle(self.grabber))'''
         # TODO: Check presets
         # For now, arm uses A for Amp preset
         self.auxController.a().onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Amp)))
@@ -45,8 +50,16 @@ class RobotContainer:
         # For now, arm uses Y for Source preset
         self.auxController.y().onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Source)))
         #temporary climber controls
-        self.auxController.rightBumper().whileTrue(climberEvents.climberGoesUp())
-        self.auxController.leftBumper().whileTrue(climberEvents.climberGoesDown())
+        #self.joystickButtonFour.whileTrue(command.RepeatCommand(climberEvents.climberGoesUp()))
+        #self.joystickButtonFive.whileTrue(command.RepeatCommand(climberEvents.climberGoesDown()))
+
+        #self.joystickButtonFour.whileTrue(climberGoesUp())
+        #self.joystickButtonFive.whileTrue(climberGoesDown())
+
+        self.auxController.a().whileTrue(climberGoesDown(ClimberSubsystem))
+        self.auxController.b().whileTrue(climberGoesUp(ClimberSubsystem))
+        #self.auxController.a().whileTrue(cmd.run(lambda: self.climber.goDown(ClimberSubsystem)))
+        #self.auxController.b().whileTrue(cmd.run(lambda: self.climber.goUp(ClimberSubsystem)))
         
     def getAutonomousCommand(self):
         """ Logic for what will run in autonomous mode. Returning anything but a command will result in nothing happening in autonomous. """

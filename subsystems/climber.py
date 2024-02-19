@@ -1,15 +1,13 @@
 # assuming that we are using the krakens
 import wpilib
-import phoenix5
 import phoenix6
-from phoenix5.sensors import AbsoluteSensorRange
 import commands2
 import RobotConfig
 
 class ClimberSubsystem(commands2.Subsystem):
 
     #motorRatio = 4:1
-    zeroed = False
+    #zeroed = False
 
     def __init__(self):
         super().__init__()
@@ -79,7 +77,7 @@ class ClimberSubsystem(commands2.Subsystem):
 
     def periodic (self):
         wpilib.SmartDashboard.putBoolean("Climber Limit Switch", self.limitSwitch.get())
-        if not self.zeroed:
+        '''if not self.zeroed:
             if self.limitSwitch.get():
                 self.leftMotor.set_control(self.leftMotorController.with_velocity(0))
                 self.rightMotor.set_control(self.rightMotorController.with_velocity(0))
@@ -89,21 +87,21 @@ class ClimberSubsystem(commands2.Subsystem):
             else:
                 self.leftMotor.set_control(self.leftMotorController.with_velocity (-0.2))
                 self.rightMotor.set_control(self.rightMotorController.with_velocity(-0.2))
-                #self.rightMotor.set(phoenix5.ControlMode.PercentOutput, -0.2)
-        else:
-            self.rightMotor.set_control(self.rightMotorController.with_position(self.targetValue/self.gearRatio))
-            self.leftMotor.set_control(self.leftMotorController.with_position(self.targetValue/self.gearRatio))
+                #self.rightMotor.set(phoenix5.ControlMode.PercentOutput, -0.2)'''
+        #else:
+        self.rightMotor.set_control(self.rightMotorController.with_position(self.targetValue/self.gearRatio))
+        self.leftMotor.set_control(self.leftMotorController.with_position(self.targetValue/self.gearRatio))
 
     def goUp(self):
-        self.leftMotor.set_control(self.leftMotorController.with_velocity (0.2))
-        self.rightMotor.set_control(self.rightMotorController.with_velocity(0.2)) #assuming this is not too fast and positive is up
+        self.leftMotor.set_control(self.leftMotorController.with_velocity (0.5))
+        self.rightMotor.set_control(self.rightMotorController.with_velocity(0.5)) #assuming this is not too fast and positive is up
 
     def goDown(self):
-        self.leftMotor.set_control(self.leftMotorController.with_velocity (-0.2))
-        self.rightMotor.set_control(self.rightMotorController.with_velocity(-0.2))
+        self.leftMotor.set_control(self.leftMotorController.with_velocity (-0.5))
+        self.rightMotor.set_control(self.rightMotorController.with_velocity(-0.5))
 
-    def reZero(self):
-        self.zeroed = False
+    '''def reZero(self):
+        self.zeroed = False'''
 
     def setPosition(self):
         pass

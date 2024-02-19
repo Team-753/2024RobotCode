@@ -10,8 +10,8 @@ class grabberSubsystem(commands2.Subsystem):
     def __init__(self) -> None:
         super().__init__()
         # sets motors for grabber. For CAN IDs, use RobotConfig
-        self.bottomMotor = rev.CANSparkMax(RobotConfig.grabber.bottomMotorCANID, _rev.CANSparkMax.MotorType.kBrushless)
-        self.topMotor = rev.CANSparkMax(RobotConfig.grabber.topMotorCANID, _rev.CANSparkMax.MotorType.kBrushless)
+        self.bottomMotor = _rev.CANSparkMax(RobotConfig.grabber.bottomMotorCANID, _rev.CANSparkMax.MotorType.kBrushless)
+        self.topMotor = _rev.CANSparkMax(RobotConfig.grabber.topMotorCANID, _rev.CANSparkMax.MotorType.kBrushless)
         self.sensor = wpilib.DigitalInput(RobotConfig.grabber.sensorDIOID)
     def periodic(self) -> None:
         # TODO: code to get commands from drive station joysticks
