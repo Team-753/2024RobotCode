@@ -53,3 +53,4 @@ class grabberSubsystem(commands2.Subsystem):
         self.bottomMotor.set(RobotConfig.grabber.outtakeF)
     def idle(self) -> None:
         self.bottomMotor.set(RobotConfig.grabber.idle)
+        

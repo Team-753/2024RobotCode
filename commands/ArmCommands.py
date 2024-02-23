@@ -19,26 +19,40 @@ class grab(commands2.Command):
         self.grabber.intake()
     def end(self, interuppted: bool) -> None:
         self.grabber.idle()
-class empty(commands2.Command):
+class emptyFast(commands2.Command):
     def __init__(self, kGrabber: grabberSubsystem) -> None:
         super().__init__()
         self.grabber = kGrabber
     def initialize(self) -> None:
         pass
     def execute(self) -> None:
-        self.grabber.outtake()
+        self.grabber.outtakeFast()
     def end(self, interuppted: bool) -> None:
         self.grabber.idle()    
-'''class armEvents(commands2.Command):
+class emptySlow(commands2.Command):
+    def __init__(self, kGrabber: grabberSubsystem) -> None:
+        super().__init__()
+        self.grabber = kGrabber
+    def initialize(self) -> None:
+        pass
+    def execute(self) -> None:
+        self.grabber.outtakeSlow()
+    def end(self, interuppted: bool) -> None:
+        self.grabber.idle()    
+class armEvents(commands2.Command):
     def __init__(self):
         super().__init__()
         self.arm = ArmSubsystem
     def home(self) -> None:
         self.arm.home()
+        print("arm home")
     def speaker(self) -> None:
         self.arm.speaker()
+        print("arm speaker")
     def source(self) -> None:
         self.arm.source()
+        print("arm source")
     def amp(self) -> None:
-        self.arm.amp()'''
+        self.arm.amp()
+        print('arm amp')
         
