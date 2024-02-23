@@ -61,16 +61,4 @@ class ArmSubsystem(commands2.Subsystem):
     def setDesiredAngle(self, kDesiredAngle: float):
         self.desiredAngle = kDesiredAngle
 
-    def home(self):
-        self.setDesiredAngle(RobotConfig.armConstants.Home)
-
-    def source(self):
-        self.setDesiredAngle(RobotConfig.armConstants.Source)
-
-    def speaker(self):
-        self.setDesiredAngle(RobotConfig.armConstants.Speaker)
-
-    def amp(self):
-        self.setDesiredAngle(RobotConfig.armConstants.Amp)
-
     
