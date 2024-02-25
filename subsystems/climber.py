@@ -20,8 +20,10 @@ class ClimberSubsystem(commands2.Subsystem):
         #self.xboxController = xboxController
         self.limitSwitch = wpilib.DigitalInput(self.config.Climber.limitSwitchID)
         self.rightMotor = phoenix6.hardware.TalonFX(self.config.Climber.rightMotorCanID)
-        self.rightMotorController = phoenix6.controls.PositionVoltage(0)
-        self.leftMotorController = phoenix6.controls.PositionVoltage(0)
+        self.rightMotorPIDController = phoenix6.controls.PositionVoltage(0)
+        self.leftMotorPIDController = phoenix6.controls.PositionVoltage(0)
+        self.rightMotorController = phoenix6.controls.DutyCycleOut(0)
+        self.leftMotorController = phoenix6.controls.DutyCycleOut(0)
         self.motorCoaster = phoenix6.controls.CoastOut()
         self.leftMotor = phoenix6.hardware.TalonFX(self.config.Climber.leftMotorCanID)
         motorFeedbackConfigs = phoenix6.configs.talon_fx_configs.FeedbackConfigs()
@@ -53,7 +55,7 @@ class ClimberSubsystem(commands2.Subsystem):
 
         motorCurrentConfig = phoenix6.configs.talon_fx_configs.CurrentLimitsConfigs()
         motorOuputConfig = phoenix6.configs.talon_fx_configs.MotorOutputConfigs()
-        #motorOuputConfig.neutral_mode = 
+        motorOuputConfig.neutral_mode = 0
         motorCurrentConfig.supply_current_limit = pidConfig.rightMotorPIDs.currentLimit
 
         #leftMotorConfig.supplyCurrLimit = leftMotorCurrentConfig
@@ -61,14 +63,16 @@ class ClimberSubsystem(commands2.Subsystem):
 
         motorConfig.with_feedback(motorFeedbackConfigs)
 
+        motorConfig.with_motor_output(motorOuputConfig)
+
         #self.leftMotor.setNeutralMode(phoenix5.NeutralMode.Brake)
         '''self.rightMotor.set_control(phoenix6.controls.CoastOut)
         self.leftMotor.set_control(phoenix6.controls.CoastOut)'''
 
-        self.rightMotor.set_control(self.rightMotorController.with_velocity(0))
+        self.rightMotor.set_control(self.rightMotorController.with_output(0))
         self.rightMotor.set_control(self.motorCoaster)
 
-        self.leftMotor.set_control(self.leftMotorController.with_velocity(0))
+        self.leftMotor.set_control(self.leftMotorController.with_output(0))
         self.leftMotor.set_control(self.motorCoaster)
         #self.rightMotor.setNeutralMode(phoenix5.NeutralMode.Brake)
         
@@ -79,15 +83,15 @@ class ClimberSubsystem(commands2.Subsystem):
 
         # TODO add zeroing code
         if self.limitSwitch.get():
-            self.leftMotor.set_control(self.leftMotorController.with_velocity(0))
-            self.rightMotor.set_control(self.rightMotorController.with_velocity(0))
-            self.leftMotor.set_control(self.leftMotorController.with_position(self.targetValue/self.gearRatio))
-            self.rightMotor.set_control(self.rightMotorController.with_position(self.targetValue/self.gearRatio))
+            self.leftMotor.set_control(self.leftMotorController.with_output(0))
+            self.rightMotor.set_control(self.rightMotorController.with_output(0))
+            #self.leftMotor.set_control(self.leftMotorController.with_output(self.targetValue/self.gearRatio))
+            #self.rightMotor.set_control(self.rightMotorController.with_output(self.targetValue/self.gearRatio))
             self.zeroed = True
         
         else:
-            self.leftMotor.set_control(self.leftMotorController.with_velocity (-0.2))
-            self.rightMotor.set_control(self.rightMotorController.with_velocity(-0.2))
+            self.leftMotor.set_control(self.leftMotorController.with_output(0.2))
+            self.rightMotor.set_control(self.rightMotorController.with_output(-0.2))
             #self.rightMotor.set(phoenix5.ControlMode.PercentOutput, -0.2)''' 
 
     def periodic (self):
@@ -99,24 +103,24 @@ class ClimberSubsystem(commands2.Subsystem):
                 self.rightMotor.set_control(self.rightMotorController.with_velocity(-0.2))
                 #self.rightMotor.set(phoenix5.ControlMode.PercentOutput, -0.2)'''
         #else:
-        self.rightMotor.set_control(self.rightMotorController.with_position(self.targetValue/self.gearRatio))
-        self.leftMotor.set_control(self.leftMotorController.with_position(self.targetValue/self.gearRatio))
+        self.rightMotor.set_control(self.rightMotorController.with_output(self.targetValue/self.gearRatio))
+        self.leftMotor.set_control(self.leftMotorController.with_output(self.targetValue/self.gearRatio))
 
     def goUp(self):
         #print (self.leftMotorController.with_velocity(10))
         # TODO add solenoid code
-        self.Position += 10.0
-        print (str(self.Position) + "from up")
-        self.rightMotor.set_control(self.rightMotorController.with_velocity(0.01))
-        self.rightMotor.set_control(self.rightMotorController.with_position(self.Position))
+        #self.Position += 10.0
+        #print (str(self.Position) + "from up")
+        self.rightMotor.set_control(self.rightMotorController.with_output(0.5))
+        #self.rightMotor.set_control(self.rightMotorController.with_position(self.Position))
         print(str(self.rightMotor.get_position))
         #self.rightMotor.set_control(self.rightMotorController.with_position(self.Position)) #assuming this is not too fast and positive is up
 
     def goDown(self):
-        self.Position -= 10.0
-        print(str(self.Position) + "from down")
-        self.leftMotor.set_control(self.leftMotorController.with_position(self.Position))
-        self.rightMotor.set_control(self.rightMotorController.with_position(self.Position))
+        #self.Position -= 10.0
+        #print(str(self.Position) + "from down")
+        self.leftMotor.set_control(self.leftMotorController.with_output(self.Position))
+        self.rightMotor.set_control(self.rightMotorController.with_output(self.Position))
 
     def getPosition(self):
         print(self.Position)
@@ -124,8 +128,8 @@ class ClimberSubsystem(commands2.Subsystem):
         return self.Position
     
     def stationary(self):
-        self.rightMotor.set_control(self.rightMotorController.with_velocity(0.01))
-        self.leftMotor.set_control(self.leftMotorController.with_velocity(0))
+        self.rightMotor.set_control(phoenix6.controls.NeutralOut)
+        self.leftMotor.set_control(self.leftMotorController.with_output(0))
         self.Position = self.getPosition()
 
     '''def reZero(self):

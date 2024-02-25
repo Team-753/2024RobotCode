@@ -51,7 +51,7 @@ class ArmSubsystem(commands2.Subsystem):
         self.rightEncoder.setPosition(self.desiredAngle / self.kMotorToArmDegrees)
         
     def periodic(self) -> None:
-        # updates the PID controllers to go to the wanted position
+        # updates the PID controllers to go to the wanted position, be careful might be funky before we get the limit switch calibrated
         self.leftPIDController.setReference(self.desiredAngle, _rev.CANSparkMax.ControlType.kPosition)
         self.rightPIDController.setReference(self.desiredAngle, _rev.CANSparkMax.ControlType.kPosition)
         
