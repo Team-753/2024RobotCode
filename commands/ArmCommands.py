@@ -2,7 +2,10 @@ import wpilib
 import commands2
 from subsystems.arm import ArmSubsystem
 from subsystems.grabber import grabberSubsystem
+import RobotConfig
+
 class ArmSpeaker(commands2.Command):
+    ''' This command is completely broken, don't use '''
     def __init__(self):
         super().__init__()
         self.arm = ArmSubsystem
@@ -40,6 +43,9 @@ class emptySlow(commands2.Command):
     def end(self, interuppted: bool) -> None:
         self.grabber.idle()    
 class armEvents(commands2.Command):
+    '''
+    This command is completely broken for a multitude of reasons, do not attempt to use it. 
+    '''
     def __init__(self):
         super().__init__()
         self.arm = ArmSubsystem
@@ -56,3 +62,16 @@ class armEvents(commands2.Command):
         self.arm.amp()
         print('arm amp')
         
+class VariableSetArmPositionCommand(commands2.Command):
+    '''
+    Compatible with the angle-based arm position control logic, 
+    pass in an angle in degrees you want the arm to go to, and in theory, it will go there.
+    '''
+    
+    def __init__(self, kArm: ArmSubsystem, kAngleToSet: float):
+        super().__init__()
+        self.arm = kArm
+        self.angleToSet = kAngleToSet
+        
+    def initialize(self):
+        self.arm.setDesiredAngle(self.angleToSet)
