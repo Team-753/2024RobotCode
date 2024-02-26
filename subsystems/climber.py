@@ -3,6 +3,7 @@ import wpilib
 import phoenix6
 import commands2
 import RobotConfig
+from phoenix6 import controls
 
 class ClimberSubsystem(commands2.Subsystem):
 
@@ -80,6 +81,9 @@ class ClimberSubsystem(commands2.Subsystem):
         self.rightMotor.configurator.apply(motorConfig)
         self.leftMotor.configurator.apply(motorConfig)
         #self.rightMotor.configAllSettings(rightMotorConfig, 50)
+        
+        # trying something new here
+        self.request = controls.PositionVoltage(0).with_slot(0)
 
         # TODO add zeroing code
         if self.limitSwitch.get():
@@ -103,8 +107,8 @@ class ClimberSubsystem(commands2.Subsystem):
                 self.rightMotor.set_control(self.rightMotorController.with_velocity(-0.2))
                 #self.rightMotor.set(phoenix5.ControlMode.PercentOutput, -0.2)'''
         #else:
-        self.rightMotor.set_control(self.rightMotorController.with_output(self.targetValue/self.gearRatio))
-        self.leftMotor.set_control(self.leftMotorController.with_output(self.targetValue/self.gearRatio))
+        self.rightMotor.set_control(self.request.with_position(self.targetValue * self.gearRatio))
+        self.leftMotorMotor.set_control(self.request.with_position(self.targetValue * self.gearRatio))
 
     def goUp(self):
         #print (self.leftMotorController.with_velocity(10))
