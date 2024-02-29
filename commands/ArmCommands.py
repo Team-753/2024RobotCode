@@ -2,10 +2,7 @@ import wpilib
 import commands2
 from subsystems.arm import ArmSubsystem
 from subsystems.grabber import grabberSubsystem
-import RobotConfig
-
 class ArmSpeaker(commands2.Command):
-    ''' This command is completely broken, don't use '''
     def __init__(self):
         super().__init__()
         self.arm = ArmSubsystem
@@ -20,58 +17,61 @@ class grab(commands2.Command):
         pass
     def execute(self) -> None:
         self.grabber.intake()
+        print("intaking")
     def end(self, interuppted: bool) -> None:
         self.grabber.idle()
-class emptyFast(commands2.Command):
+class empty(commands2.Command):
     def __init__(self, kGrabber: grabberSubsystem) -> None:
         super().__init__()
         self.grabber = kGrabber
     def initialize(self) -> None:
         pass
     def execute(self) -> None:
+        print("empty")
         self.grabber.outtakeFast()
     def end(self, interuppted: bool) -> None:
-        self.grabber.idle()    
+        self.grabber.idle()  
 class emptySlow(commands2.Command):
     def __init__(self, kGrabber: grabberSubsystem) -> None:
         super().__init__()
-        self.grabber = kGrabber
-    def initialize(self) -> None:
+        self.grabber= kGrabber
+    def initialize(self):
         pass
-    def execute(self) -> None:
+    def execute(self):
         self.grabber.outtakeSlow()
+        print("empty slow")
     def end(self, interuppted: bool) -> None:
-        self.grabber.idle()    
+        self.grabber.idle()
+class stop(commands2.Command):
+    def __init__(self, kGrabber: grabberSubsystem) -> None:
+        super().__init__()
+        self.grabber = kGrabber
+    def initialize(self):
+        pass
+    def execute(self):
+        self.grabber.idle()
+    def end(self):
+        pass
+class up(commands2.Command):
+    def __init__(self, kArm: ArmSubsystem) -> None:
+        super().__init__()
+        self.arm = kArm
+    def initialize(self):
+        pass
+    def execute(self):
+        self.arm.onA()
+    def end(self, interuppted: bool) -> None:
+        self.arm.stop()
+'''
 class armEvents(commands2.Command):
-    '''
-    This command is completely broken for a multitude of reasons, do not attempt to use it. 
-    '''
     def __init__(self):
         super().__init__()
         self.arm = ArmSubsystem
     def home(self) -> None:
         self.arm.home()
-        print("arm home")
     def speaker(self) -> None:
         self.arm.speaker()
-        print("arm speaker")
     def source(self) -> None:
         self.arm.source()
-        print("arm source")
     def amp(self) -> None:
-        self.arm.amp()
-        print('arm amp')
-        
-class VariableSetArmPositionCommand(commands2.Command):
-    '''
-    Compatible with the angle-based arm position control logic, 
-    pass in an angle in degrees you want the arm to go to, and in theory, it will go there.
-    '''
-    
-    def __init__(self, kArm: ArmSubsystem, kAngleToSet: float):
-        super().__init__()
-        self.arm = kArm
-        self.angleToSet = kAngleToSet
-        
-    def initialize(self):
-        self.arm.setDesiredAngle(self.angleToSet)
+        self.arm.amp()'''      

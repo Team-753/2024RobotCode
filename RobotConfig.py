@@ -8,7 +8,7 @@ class SwerveModules:
     class frontLeft:
         driveMotorID = 1
         turnMotorID = 2
-        
+
     class frontRight:
         driveMotorID = 3
         turnMotorID = 4
@@ -27,11 +27,6 @@ class Arm:
     limitSwitch1RIO = 0
     limitSwitch2RIO = 1
 
-class Climber:
-    leftMotorCanID = 13
-    rightMotorCanID = 14
-    limitSwitchID = 0
-
 class DriveConstants:
     class Joystick:
         USB_ID = 0
@@ -40,6 +35,9 @@ class DriveConstants:
         thetaDeadband = 0.15
     class XBOX:
         USB_ID = 1
+        xDeadband = 0.1
+        yDeadband = 0.1
+        thetaDeadband = 0.15
         # TODO: Add needed information  
     class RobotSpeeds:
         maxSpeed = 4.8
@@ -84,10 +82,10 @@ class FieldConstants:
     speakerZMeters = 2.05
     speakerXMeters = 0.225
 class armConstants:
-    Speaker = 80
-    Amp = 90
+    Speaker = 90
+    Amp = 65
     Home = 5
-    Source = 70
+    Source = 45
 class grabber:
     bottomMotorCANID = 11
     topMotorCANID = 12
@@ -95,23 +93,4 @@ class grabber:
     outtakeS = 0.5
     outtakeF = 1
     idle = 0
-    sensorDIOID = 3
-
-class climberPIDs:
-    class leftMotorPIDs:
-        kP = 0.1
-        kI = 0
-        kD = 0
-        kF = 0
-        izone = 0
-        error = 4 #check this later
-        currentLimit = 40
-
-    class rightMotorPIDs:
-        kP = 0.1
-        kI = 0
-        kD = 0
-        kF = 0
-        izone = 0
-        error = 4 # check this later
-        currentLimit = 40
+    #sensorDIOID = 3

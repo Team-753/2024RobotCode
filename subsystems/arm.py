@@ -6,15 +6,16 @@ import rev
 from rev import _rev
 
 class ArmSubsystem(commands2.Subsystem):
-    kMotorToArmDegrees = 360 / (2.5 * 20) # each rotation of the motor is 7.2 degrees
+    
+    '''kMotorToArmDegrees = 360 / (2.5 * 20) # each rotation of the motor is 7.2 degrees
     kMotorToArmDegreeVelocity = kMotorToArmDegrees / 60 # each rotation of the motor is 7.2 degrees
     def __init__(self) -> None:
         """ This is ran once, it returns NOTHING """
         super().__init__()
         # Sets motors for arm commands
-        self.leftArm = _rev.CANSparkMax(RobotConfig.Arm.leftMotorCanID, _rev.CANSparkLowLevel.MotorType.kBrushless)
-        self.rightArm = _rev.CANSparkMax(RobotConfig.Arm.rightMotorCanID, _rev.CANSparkLowLevel.MotorType.kBrushless)
-        
+        self.leftArm = _rev.CANSparkMax(RobotConfig.Arm.leftMotorCanID, rev.CANSparkMax.MotorType.kBrushless)
+        self.rightArm = _rev.CANSparkMax(RobotConfig.Arm.rightMotorCanID, _rev.CANSparkMax.MotorType.kBrushless)
+        #self.rightArm.follow(self.leftArm, True)
         self.leftArm.restoreFactoryDefaults()
         self.leftArm.setIdleMode(_rev.CANSparkMax.IdleMode.kCoast)
         self.leftEncoder = self.leftArm.getEncoder()
@@ -51,7 +52,7 @@ class ArmSubsystem(commands2.Subsystem):
         self.rightEncoder.setPosition(self.desiredAngle / self.kMotorToArmDegrees)
         
     def periodic(self) -> None:
-        # updates the PID controllers to go to the wanted position, be careful might be funky before we get the limit switch calibrated
+        # updates the PID controllers to go to the wanted position
         self.leftPIDController.setReference(self.desiredAngle, _rev.CANSparkMax.ControlType.kPosition)
         self.rightPIDController.setReference(self.desiredAngle, _rev.CANSparkMax.ControlType.kPosition)
         
@@ -60,5 +61,24 @@ class ArmSubsystem(commands2.Subsystem):
     
     def setDesiredAngle(self, kDesiredAngle: float):
         self.desiredAngle = kDesiredAngle
-
+    '''
+    def __init__(self):
+        super().__init__()
+        #initialized
+        self.right = rev.CANSparkMax(RobotConfig.Arm.rightMotorCanID, _rev.CANSparkMax.MotorType.kBrushless)
+        self.left = rev.CANSparkMax(RobotConfig.Arm.leftMotorCanID, _rev.CANSparkMax.MotorType.kBrushless)
+        self.leftEncoder = self.left.getEncoder()
+        #self.right.follow(self.left, True)
+    def periodic(self) -> None:
+        ''''''
+        # print(f"Left Motor Position: {self.leftEncoder.getPosition()}")
+        # print(f"Left Motor Voltage: {self.left.getBusVoltage()}")
+    def onA(self):
+        print("Running arm motors")
+        self.left.set(-0.9)
+        #self.right.set(0.9)
+    
+    def stop(self):
+        print("stopping arm motors")
+        self.left.set(0)
     
