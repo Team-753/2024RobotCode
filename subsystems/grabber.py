@@ -12,6 +12,7 @@ class grabberSubsystem(commands2.Subsystem):
         # sets motors for grabber. For CAN IDs, use RobotConfig
         self.bottomMotor = rev.CANSparkMax(RobotConfig.grabber.bottomMotorCANID, _rev.CANSparkMax.MotorType.kBrushless)
         self.topMotor = rev.CANSparkMax(RobotConfig.grabber.topMotorCANID, _rev.CANSparkMax.MotorType.kBrushless)
+        self.shooterEncoder = self.topMotor.getEncoder()
         #self.topMotor.follow(self.bottomMotor, False)
         #self.sensor = wpilib.DigitalInput(RobotConfig.grabber.sensorDIOID)
         global released
@@ -39,9 +40,16 @@ class grabberSubsystem(commands2.Subsystem):
     def outtakeSlow(self) -> None:
         print("1 Outtake")
         # TODO: Code to shoot the ring based on command speed
-        self.bottomMotor.set(RobotConfig.grabber.outtakeS)
+        self.topMotor.set(RobotConfig.grabber.outtakeF*-1)
+        self.shooterVelocity = self.shooterEncoder.getVelocity()
+        print(self.shooterVelocity)
     def outtakeFast(self) -> None:
         print("2 Outtake")
+        if abs(self.shooterVelocity) >= 400:
+            self.topMotor.set(RobotConfig.grabber.outtakeF*-1)
+            self.bottomMotor.set(RobotConfig.grabber.outtakeF)
+        else:
+            print("Not enough RPM")
         # Ramp up with button, then shoot after 3+ seconds on button press
         #self.bottomMotor.set(RobotConfig.grabber.outtakeF)
         '''if var + 3 > wpilib.Timer.get():
@@ -51,3 +59,4 @@ class grabberSubsystem(commands2.Subsystem):
             print("Doesn't Work!!!")'''
     def idle(self) -> None:
         self.bottomMotor.set(RobotConfig.grabber.idle)
+        self.topMotor.set(RobotConfig.grabber.idle)

@@ -7,7 +7,7 @@ from rev import _rev
 
 class ArmSubsystem(commands2.Subsystem):
     
-    '''kMotorToArmDegrees = 360 / (2.5 * 20) # each rotation of the motor is 7.2 degrees
+    kMotorToArmDegrees = 360 / (2.5 * 20) # each rotation of the motor is 7.2 degrees
     kMotorToArmDegreeVelocity = kMotorToArmDegrees / 60 # each rotation of the motor is 7.2 degrees
     def __init__(self) -> None:
         """ This is ran once, it returns NOTHING """
@@ -68,7 +68,7 @@ class ArmSubsystem(commands2.Subsystem):
         self.right = rev.CANSparkMax(RobotConfig.Arm.rightMotorCanID, _rev.CANSparkMax.MotorType.kBrushless)
         self.left = rev.CANSparkMax(RobotConfig.Arm.leftMotorCanID, _rev.CANSparkMax.MotorType.kBrushless)
         self.leftEncoder = self.left.getEncoder()
-        #self.right.follow(self.left, True)
+        self.right.follow(self.left, True)
     def periodic(self) -> None:
         ''''''
         # print(f"Left Motor Position: {self.leftEncoder.getPosition()}")
@@ -81,4 +81,4 @@ class ArmSubsystem(commands2.Subsystem):
     def stop(self):
         print("stopping arm motors")
         self.left.set(0)
-    
+    '''

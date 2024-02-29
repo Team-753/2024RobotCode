@@ -42,26 +42,26 @@ class RobotContainer:
         # For now, arm uses A for Amp preset
         
         #self.auxController.getAButtonPressed(cmd.runOnce(lambda self.arm.setDesiredAngle(RobotConfig.armConstants.Amp)))
-        #self.buttonA = self.auxController.a()
-        #self.buttonA.onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Amp)))
         self.buttonA = self.auxController.a()
-        self.buttonA.whileTrue(up(self.arm))
-        #self.auxController.a(self.auxController).onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Amp)))
+        #self.buttonA.onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Amp)))
+        #.buttonA = self.auxController.a()
+        #self.buttonA.whileTrue(up(self.arm))
+        self.buttonA.onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Amp)))
         #self.auxController.A(armEvents.amp(self))
         # For now, arm uses B for Home preset
         
-        #self.buttonB = self.auxController.b()
-        #self.buttonB.onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Home)))
+        self.buttonB = self.auxController.b()
+        self.buttonB.onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Home)))
         
         # For now, arm uses X for Speaker preset
         
-        #self.buttonX = self.auxController.x()
-        #self.buttonX.onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Speaker)))
+        self.buttonX = self.auxController.x()
+        self.buttonX.onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Speaker)))
         
         # For now, arm uses Y for Source preset
         
-        #self.buttonY = self.auxController.y()
-        #self.buttonY.onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Source)))
+        self.buttonY = self.auxController.y()
+        self.buttonY.onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Source)))
         
         
     def getAutonomousCommand(self):
