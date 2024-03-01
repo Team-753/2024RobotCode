@@ -92,8 +92,7 @@ class grabber:
     bottomMotorCANID = 11
     topMotorCANID = 12
     intake = -0.5
-    outtakeS = 0.5
-    outtakeF = 1
+    outtake = 0.5
     idle = 0
     sensorDIOID = 3
 

@@ -1,5 +1,4 @@
 import rev
-import wpilib
 from wpimath import kinematics, geometry
 import math
 from rev import _rev

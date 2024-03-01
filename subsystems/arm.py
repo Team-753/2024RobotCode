@@ -51,9 +51,9 @@ class ArmSubsystem(commands2.Subsystem):
         self.rightEncoder.setPosition(self.desiredAngle / self.kMotorToArmDegrees)
         
     def periodic(self) -> None:
-        # updates the PID controllers to go to the wanted position, be careful might be funky before we get the limit switch calibrated
-        self.leftPIDController.setReference(self.desiredAngle, _rev.CANSparkMax.ControlType.kPosition)
-        self.rightPIDController.setReference(self.desiredAngle, _rev.CANSparkMax.ControlType.kPosition)
+        # updates the PID controllers to go to the wanted position
+        '''self.leftPIDController.setReference(self.desiredAngle, _rev.CANSparkMax.ControlType.kPosition)
+        self.rightPIDController.setReference(self.desiredAngle, _rev.CANSparkMax.ControlType.kPosition)'''
         
         wpilib.SmartDashboard.putNumber("Left Motor Angle Degrees: ", self.leftEncoder.getPosition())
         wpilib.SmartDashboard.putNumber("Right Motor Angle Degrees: ", self.rightEncoder.getPosition())

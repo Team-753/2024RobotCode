@@ -38,7 +38,7 @@ class MyRobot(commands2.TimedCommandRobot):
         pass
         
     def autonomousPeriodic(self):
-        """ Loops during autonomous, nothing should really go here as autonomous is all auto-commnand based. """
+        """ Loops during autonomous, nothing should really go here as autonomous is all auto-command based. """
         pass
     
     def autonomousExit(self) -> None:

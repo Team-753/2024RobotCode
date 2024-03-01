@@ -106,6 +106,11 @@ class DriveTrainSubsystem(commands2.Subsystem):
         self.frontRight.setState(swerveModuleStates[1])
         self.rearLeft.setState(swerveModuleStates[2])
         self.rearRight.setState(swerveModuleStates[3])
+        xSpeed, ySpeed, zSpeed = (kinematics[0] * self.kMaxSpeed,
+                                  kinematics[1] * self.kMaxSpeed,
+                                  kinematics[2] * self.kMaxAngularVelocity * RobotConfig.DriveConstants.RobotSpeeds.manualRotationSpeedFactor)
+        self.setSwerveStates(xSpeed, ySpeed, zSpeed, self.poseEstimator.getEstimatedPosition())
+        
 
     def joystickDrive(self, inputs: tuple[float]) -> None:
         xSpeed, ySpeed, zSpeed = (inputs[0] * self.kMaxSpeed, 
@@ -175,6 +180,9 @@ class DriveTrainSubsystem(commands2.Subsystem):
     
     def getCurrentPose(self):
         return self.poseEstimator.getEstimatedPosition()
+
+    def setChassisSpeed(self, speed):
+        return None
 
     '''def periodic(self) -> None:
         if self.LimelightTable.getNumber('getpipe', 0) == 0: # 0 being our apriltag pipeline
