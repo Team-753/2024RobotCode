@@ -24,6 +24,7 @@ from pathplannerlib.auto import PathPlannerAuto
 class RobotContainer:
     """ Basically does everything. Yeah... """
     #--------------------------------------------------------------------------------
+    #Autonomous Auto Select
     folderPath = os.path.dirname(os.path.abspath(__file__))
     tempAutoList = os.listdir(os.path.join(folderPath, 'deploy/pathplanner/paths'))
     autoList = []
@@ -50,7 +51,7 @@ class RobotContainer:
         #self.climber.goUp()
         self.configureButtonBindings()
     #--------------------------------------------------------------------------------
-    def autonomousChooser(self): #where you choose which auto to use, but we will most likely have one auto
+    #Configure Auto Settings
         self.autonomousChooser = wpilib.SendableChooser()
         self.autonomousChooser.setDefaultOption("Only Taxi", "Only Taxi")
         for pathName in self.autoList:
@@ -98,6 +99,7 @@ class RobotContainer:
         #self.auxController.a().whileTrue(cmd.run(lambda: self.climber.goDown(ClimberSubsystem)))
         #self.auxController.b().whileTrue(cmd.run(lambda: self.climber.goUp(ClimberSubsystem)))'''
     #-----------------------------------------------------------------------------------------------   
+    #Autonomous Start Protocol
     def getAutonomousCommand(self):
         
         """ Logic for what will run in autonomous mode. Returning anything but a command will result in nothing happening in autonomous. """
