@@ -95,7 +95,10 @@ class RobotContainer:
         
         """ Logic for what will run in autonomous mode. Returning anything but a command will result in nothing happening in autonomous. """
         pathName = self.autonomousChooser.getSelected()
-        return PathPlannerAuto(pathName)
+        if pathName == "Only Score Note": 
+            commands2.command()
+        else:
+            return PathPlannerAuto(pathName)
     #-----------------------------------------------------------------------------------------------   
     def disabledInit(self):
         pass
