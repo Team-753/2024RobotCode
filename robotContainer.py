@@ -53,7 +53,7 @@ class RobotContainer:
     #--------------------------------------------------------------------------------
     #Configure Auto Settings
         self.autonomousChooser = wpilib.SendableChooser()
-        self.autonomousChooser.setDefaultOption("Only Score Note", "Only Only Score Note")
+        self.autonomousChooser.setDefaultOption("Only Score Note", "Only Score Note")
         for pathName in self.autoList:
             self.autonomousChooser.addOption(pathName, pathName)
         wpilib.SmartDashboard.putData("Autonomous Chooser", self.autonomousChooser)
