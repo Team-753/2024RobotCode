@@ -49,7 +49,14 @@ class RobotContainer:
         """
         #self.climber.goUp()
         self.configureButtonBindings()
-        
+    #--------------------------------------------------------------------------------
+    def autonomousChooser(self): #where you choose which auto to use, but we will most likely have one auto
+        self.autonomousChooser = wpilib.SendableChooser()
+        self.autonomousChooser.setDefaultOption("Only Taxi", "Only Taxi")
+        for pathName in self.autoList:
+            self.autonomousChooser.addOption(pathName, pathName)
+        wpilib.SmartDashboard.putData("Autonomous Chooser", self.autonomousChooser)
+    #--------------------------------------------------------------------------------    
     def configureButtonBindings(self):
         """ Sets up the button command bindings for the controllers. """
         '''self.auxController.leftTrigger().whileTrue(empty(self.grabber))
@@ -120,14 +127,5 @@ class RobotContainer:
     
     def testPeriodic(self):
         pass
-    #--------------------------------------------------------------------------------
-    #Auto autonomousChooser page 
-    def autonomousChooser(self): #where you choose which auto to use, but we will most likely have one auto
-        self.autonomousChooser = wpilib.SendableChooser()
-        self.autonomousChooser.setDefaultOption("Only Taxi", "Only Taxi")
-        for pathName in self.autoList:
-            self.autonomousChooser.addOption(pathName, pathName)
-        wpilib.SmartDashboard.putData("Autonomous Chooser", self.autonomousChooser)
-    #--------------------------------------------------------------------------------
-
+   
     
