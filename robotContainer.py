@@ -1,18 +1,36 @@
 import RobotConfig
 import commands2
-from commands2 import button, cmd, command
+import math
+import wpilib
+import pathplannerlib
+import os
+from commands.turnToCommand import TurnToCommand
+from wpimath import geometry, kinematics, estimator
+from commands2 import button, cmd
 from subsystems.driveTrain import DriveTrainSubsystem
-from subsystems.arm import ArmSubsystem
 from commands.defaultDriveCommand import DefaultDriveCommand
 from subsystems.arm import ArmSubsystem
-from subsystems.grabber import grabberSubsystem
 from subsystems.climber import ClimberSubsystem
-from commands.climberCommands import climberGoesDown, climberGoesUp
+from subsystems.grabber import grabberSubsystem
+from commands.climberCommands import climberEvents
+from commands.ArmCommands import ArmSpeaker
+from commands.ArmCommands import grabberEvents
+from commands.ArmCommands import grab
+from commands.ArmCommands import empty
 from commands.ArmCommands import armEvents
+from pathplannerlib.auto import PathPlannerAuto
+
 #from commands.ArmCommands import grabberEvents
 class RobotContainer:
     """ Basically does everything. Yeah... """
-    
+    #--------------------------------------------------------------------------------
+    #Autonomous Auto Select
+    folderPath = os.path.dirname(os.path.abspath(__file__))
+    tempAutoList = os.listdir(os.path.join(folderPath, 'deploy/pathplanner/paths'))
+    autoList = []
+    for pathName in tempAutoList:
+            autoList.append(pathName.removesuffix(".path"))
+    #--------------------------------------------------------------------------------
     def __init__(self) -> None:
         # importing our JSON settings and converting it to global python dictionary.
         
@@ -32,7 +50,14 @@ class RobotContainer:
         """
         #self.climber.goUp()
         self.configureButtonBindings()
-        
+    #--------------------------------------------------------------------------------
+    #Configure Auto Settings
+        self.autonomousChooser = wpilib.SendableChooser()
+        self.autonomousChooser.setDefaultOption("Only Score Note", "Only Score Note")
+        for pathName in self.autoList:
+            self.autonomousChooser.addOption(pathName, pathName)
+        wpilib.SmartDashboard.putData("Autonomous Chooser", self.autonomousChooser)
+    #--------------------------------------------------------------------------------    
     def configureButtonBindings(self):
         """ Sets up the button command bindings for the controllers. """
         '''self.auxController.leftTrigger().whileTrue(empty(self.grabber))
@@ -73,10 +98,17 @@ class RobotContainer:
         self.auxController.b().onFalse(cmd.runOnce(lambda: self.climber.stationary()))
         #self.auxController.a().whileTrue(cmd.run(lambda: self.climber.goDown(ClimberSubsystem)))
         #self.auxController.b().whileTrue(cmd.run(lambda: self.climber.goUp(ClimberSubsystem)))'''
-        
+    #-----------------------------------------------------------------------------------------------   
+    #Autonomous Start Protocol
     def getAutonomousCommand(self):
-        """ Logic for what will run in autonomous mode. Returning anything but a command will result in nothing happening in autonomous. """
         
+        """ Logic for what will run in autonomous mode. Returning anything but a command will result in nothing happening in autonomous. """
+        pathName = self.autonomousChooser.getSelected()
+        if pathName == "Only Score Note": 
+            return commands2.command()
+        else:
+            return PathPlannerAuto(pathName)
+    #-----------------------------------------------------------------------------------------------   
     def disabledInit(self):
         pass
     
@@ -97,5 +129,5 @@ class RobotContainer:
     
     def testPeriodic(self):
         pass
-    
+   
     
