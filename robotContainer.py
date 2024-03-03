@@ -54,6 +54,7 @@ class RobotContainer:
     #Configure Auto Settings
         self.autonomousChooser = wpilib.SendableChooser()
         self.autonomousChooser.setDefaultOption("Only Score Note", "Only Score Note")
+        self.autonomousChooser.addOption("Only Taxi", "Only Taxi")
         for pathName in self.autoList:
             self.autonomousChooser.addOption(pathName, pathName)
         wpilib.SmartDashboard.putData("Autonomous Chooser", self.autonomousChooser)
@@ -105,6 +106,8 @@ class RobotContainer:
         """ Logic for what will run in autonomous mode. Returning anything but a command will result in nothing happening in autonomous. """
         pathName = self.autonomousChooser.getSelected()
         if pathName == "Only Score Note": 
+            return commands2.command()
+        elif pathName == "Only Taxi"  #Depending on the robot's functionality we might have to taxi only
             return commands2.command()
         else:
             return PathPlannerAuto(pathName)
