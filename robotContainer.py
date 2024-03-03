@@ -107,7 +107,7 @@ class RobotContainer:
         pathName = self.autonomousChooser.getSelected()
         if pathName == "Only Score Note": 
             return commands2.command()
-        elif pathName == "Only Taxi"  #Depending on the robot's functionality we might have to taxi only
+        elif pathName == "Only Taxi":  #Depending on the robot's functionality we might have to taxi only
             return commands2.command()
         else:
             return PathPlannerAuto(pathName)
