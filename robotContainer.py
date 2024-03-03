@@ -91,15 +91,6 @@ class RobotContainer:
         wpilib.SmartDashboard.putData("Autonomous Chooser", self.autonomousChooser)
 
     def getAutonomousCommand(self):
-        self.KINEMATICS = kinematics.SwerveDrive4Kinematics(geometry.Translation2d(float(self.trackWidth / 2), float(self.wheelBase / 2)), geometry.Translation2d(float(self.trackWidth / 2), float(-self.wheelBase / 2)), geometry.Translation2d(float(-self.trackWidth / 2), float(self.wheelBase / 2)), geometry.Translation2d(float(-self.trackWidth / 2), float(-self.wheelBase / 2)))
-
-        self.poseEstimator = estimator.SwerveDrive4PoseEstimator(kinematics._kinematics.SwerveDrive4Kinematics(geometry.Translation2d(self.trackWidth / 2, self.wheelBase / 2), geometry.Translation2d(self.trackWidth / 2, -self.wheelBase / 2), geometry.Translation2d(-self.trackWidth / 2, self.wheelBase / 2), geometry.Translation2d(-self.trackWidth / 2, -self.wheelBase / 2)), 
-            self.getNAVXRotation2d(), 
-            self.getSwerveModulePositions(), 
-            geometry.Pose2d(0, 0, geometry.Rotation2d(math.pi)), 
-            self.stateStdDevs,
-            self.visionMeasurementStdDevs)
-
         pathName = self.autonomousChooser.getSelected()
         if pathName == "Taxi":
             return commands2.SequentialCommandGroup(self.eventMap.get("Only Taxi"), 
