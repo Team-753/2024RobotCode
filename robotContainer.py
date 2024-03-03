@@ -32,11 +32,16 @@ class RobotContainer:
         self.arm = ArmSubsystem()
         self.climber = ClimberSubsystem()
         self.grabber = grabberSubsystem()
+        self.autoList = list.insert("deploy/pathplanner")
+        self.limitSwitch = wpilib.DigitalInput(self.config[ArmSubsystem]["LimitSwitchID"]) #unless we decide agianst the limit switch
         """
         Setting our default commands, these are commands similar to the "periodic()" functions that 
         are ran every loop but only when another command IS NOT running on the subsystem hence the
         "default" keyword.
         """
+        for pathName in self.autoList:
+            self.autonomousChooser.addOption(pathName, pathName)
+
         self.configureButtonBindings()
         
     def configureButtonBindings(self):
@@ -79,24 +84,44 @@ class RobotContainer:
         self.driveTrain.setDefaultCommand(DefaultDriveCommand(self.driveTrain))
     
     def testPeriodic(self):
-        pass
+        wpilib.SmartDashboard.putBoolean("Arm Limit Switch", self.limitSwitch.get())
 
-    def autonomousChooser(self): #where you choose which auto to use, but we will most likely have one auto
+        if self.limitSwitch.get(): # is the switch pressed
+            self.arm
+  
+    def configureAutonomousChooser(self): #where you choose which auto to use, but we will most likely have one auto
         self.autonomousChooser = wpilib.SendableChooser()
         self.autonomousChooser.setDefaultOption("Only Taxi", "Only Taxi")
-        self.autonomousChooser.addOption("Only Place", "Only Place")
-        self.autonomousChooser.addOption("Taxi&Place1", "Taxi&Place1")
+       # self.autonomousChooser.addOption("Only Place", "Only Place")
+        #self.autonomousChooser.addOption("Taxi&Place1", "Taxi&Place1")
         for pathName in self.autoList:
             self.autonomousChooser.addOption(pathName, pathName)
         wpilib.SmartDashboard.putData("Autonomous Chooser", self.autonomousChooser)
 
     def getAutonomousCommand(self):
-        pathName = self.autonomousChooser.getSelected()
-        if pathName == "Taxi":
-            return commands2.SequentialCommandGroup(self.eventMap.get("Only Taxi"), 
-            TurnToCommand(self.driveTrain, self.poseEstimator, geometry.Rotation2d(math.pi / 4)))
+        from pathplannerlib.path import PathPlannerPath
+        from pathplannerlib.auto import AutoBuilder
+        from pathplannerlib.commands import FollowPathHolonomic
+        from pathplannerlib.config import HolonomicPathFollowerConfig, ReplanningConfig, PIDConstants
+
+        path = PathPlannerPath.fromPathFile('Only Taxi')
+
+        return AutoBuilder.followPath(path);
         
-        elif pathName == "Only Place":
-            return commands2.SequentialCommandGroup(self.eventMap.get("Only Place"),
-            TurnToCommand(self.driveTrain, self.poseEstimator, geometry.Rotation2d(math.pi / 4)))
+    ''' Temporarily removed for the sake of no errors since it's unfinished code
+      def followPathCommand(self, pathName: str):
+        from pathplannerlib.path import PathPlannerPath
+        from pathplannerlib.auto import AutoBuilder
+        from pathplannerlib.commands import FollowPathHolonomic
+        from pathplannerlib.config import HolonomicPathFollowerConfig, ReplanningConfig, PIDConstants
+        from wpilib import DriverStation
+
+        path = PathPlannerPath.fromPathFile(pathName)
+        return FollowPathHolonomic(
+            path,
+            self.getPose,
+
+
+        )'''
+
         
