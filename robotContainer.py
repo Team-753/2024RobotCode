@@ -99,29 +99,7 @@ class RobotContainer:
         wpilib.SmartDashboard.putData("Autonomous Chooser", self.autonomousChooser)
 
     def getAutonomousCommand(self):
-        from pathplannerlib.path import PathPlannerPath
-        from pathplannerlib.auto import AutoBuilder
-        from pathplannerlib.commands import FollowPathHolonomic
-        from pathplannerlib.config import HolonomicPathFollowerConfig, ReplanningConfig, PIDConstants
+        pass
 
-        path = PathPlannerPath.fromPathFile('Only Taxi')
-
-        return AutoBuilder.followPath(path);
-        
-    ''' Temporarily removed for the sake of no errors since it's unfinished code
-      def followPathCommand(self, pathName: str):
-        from pathplannerlib.path import PathPlannerPath
-        from pathplannerlib.auto import AutoBuilder
-        from pathplannerlib.commands import FollowPathHolonomic
-        from pathplannerlib.config import HolonomicPathFollowerConfig, ReplanningConfig, PIDConstants
-        from wpilib import DriverStation
-
-        path = PathPlannerPath.fromPathFile(pathName)
-        return FollowPathHolonomic(
-            path,
-            self.getPose,
-
-
-        )'''
 
         
