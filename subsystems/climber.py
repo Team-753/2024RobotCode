@@ -113,14 +113,16 @@ class ClimberSubsystem(commands2.Subsystem):
         print("going down")
 
     def getPosition(self):
-        print(self.Position)
+        #print(self.Position)
         #self.Position = float(self.leftMotor.get_position())
-        return self.Position
+        #return self.Position
+        pass
     
     def stationary(self):
         '''self.rightMotor.set_control(phoenix6.controls.NeutralOut)
         self.leftMotor.set_control(self.leftMotorController.with_output(0))'''
-        self.Position = self.getPosition()
+        #self.Position = self.getPosition()
+        pass
 
     '''def reZero(self):
         self.zeroed = False'''
