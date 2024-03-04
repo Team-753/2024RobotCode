@@ -122,10 +122,15 @@ class ClimberSubsystem(commands2.Subsystem):
         '''self.rightMotor.set_control(phoenix6.controls.NeutralOut)
         self.leftMotor.set_control(self.leftMotorController.with_output(0))'''
         #self.Position = self.getPosition()
-        pass
+        self.rightMotor.setIdleMode(_rev.CANSparkBase.IdleMode.kCoast)
+        self.rightMotor.set(0)
+        self.leftMotor.setIdleMode(_rev.CANSparkBase.IdleMode.kCoast)
+        self.rightMotor.set(0)
+
 
     '''def reZero(self):
         self.zeroed = False'''
 
-    def setPosition(self):
-        pass
+    def setVelocity(self, kvelocity):
+        self.rightMotor.set(kvelocity)
+        self.leftMotor.set(kvelocity)

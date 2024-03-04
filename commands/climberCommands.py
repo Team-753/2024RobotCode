@@ -7,10 +7,16 @@ class climberGoesUp(commands2.Command):
         super().__init__()
         self.addRequirements(kClimberSubsystem)
         self.climber = kClimberSubsystem
+        
+    def initialize(self):
+        self.climber.goUp()
     
     def execute(self):
         print ("going up")
-        self.climber.goUp()
+
+    def end(self, interrupted: bool):
+        self.climber.stationary
+        
       
     
 class climberGoesDown(commands2.Command):
@@ -19,8 +25,14 @@ class climberGoesDown(commands2.Command):
         self.addRequirements(kClimberSubsystem)
         self.climber = kClimberSubsystem
 
+    def initialize(self):
+        self.climber.goDown()
+
     def execute(self):
         print("going down")
-        self.climber.goDown()
+
+    def end(self, interrupted: bool):
+        self.climber.stationary()
+       
         
 
