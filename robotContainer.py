@@ -99,6 +99,11 @@ class RobotContainer:
         self.auxController.b().onFalse(cmd.runOnce(lambda: self.climber.stationary()))
         #self.auxController.a().whileTrue(cmd.run(lambda: self.climber.goDown(ClimberSubsystem)))
         #self.auxController.b().whileTrue(cmd.run(lambda: self.climber.goUp(ClimberSubsystem)))'''
+
+        #these climber controls might actually work
+        self.auxController.pov(0).onTrue(cmd.runOnce(lambda: self.climber.goUp()))
+        self.auxController.pov(180).onTrue(cmd.runOnce(lambda: self.climber.goDown()))
+        self.auxController.pov(-1).onTrue(cmd.runOnce(lambda: self.climber.stationary()))
     #-----------------------------------------------------------------------------------------------   
     #Autonomous Start Protocol
     def getAutonomousCommand(self):

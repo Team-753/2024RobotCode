@@ -51,8 +51,8 @@ class ClimberSubsystem(commands2.Subsystem):
         self.leftPIDController.setFF(self.config.climberPIDs.leftMotorPIDs.kF)
         self.leftPIDController.setOutputRange(-1, 1)
 
-        self.rightMotor.setSmartCurrentLimit(35)
-        self.leftMotor.setSmartCurrentLimit(35)
+        self.rightMotor.setSmartCurrentLimit(50)
+        self.leftMotor.setSmartCurrentLimit(50)
 
         self.rightMotor.burnFlash()
         self.leftMotor.burnFlash()
@@ -99,8 +99,6 @@ class ClimberSubsystem(commands2.Subsystem):
         self.rightSoleniod.set(True)
         self.rightMotor.set(0.5) # assuming positive is up
         self.leftMotor.set(0.5)
-        self.leftSoleniod.set(False)
-        self.rightSoleniod.set(False)
         print("going up")
 
     def goDown(self):
@@ -108,6 +106,8 @@ class ClimberSubsystem(commands2.Subsystem):
         #print(str(self.Position) + "from down")
         '''self.leftMotor.set_control(self.leftMotorController.with_output(self.Position))
         self.rightMotor.set_control(self.rightMotorController.with_output(self.Position))'''
+        self.leftSoleniod.set(False)
+        self.rightSoleniod.set(False)
         self.rightMotor.set(-0.5)
         self.leftMotor.set(-0.5)
         print("going down")

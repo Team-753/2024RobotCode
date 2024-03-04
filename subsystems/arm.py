@@ -43,7 +43,7 @@ class ArmSubsystem(commands2.Subsystem):
         self.rightPIDController.setD(0)
         self.rightPIDController.setFF(0)
         self.rightPIDController.setOutputRange(-1,1)
-        self.rightArm.setSmartCurrentLimit(35)
+        self.rightArm.setSmartCurrentLimit(50)
         self.rightArm.burnFlash()
         
         self.desiredAngle = 5 # degrees above the floor, this is a arbitrary guess
