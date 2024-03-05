@@ -26,10 +26,10 @@ class RobotContainer:
     #--------------------------------------------------------------------------------
     #Autonomous Auto Select
     folderPath = os.path.dirname(os.path.abspath(__file__))
-    tempAutoList = os.listdir(os.path.join(folderPath, 'deploy/pathplanner/paths'))
+    tempAutoList = os.listdir(os.path.join(folderPath, 'deploy/pathplanner/autos'))
     autoList = []
     for pathName in tempAutoList:
-            autoList.append(pathName.removesuffix(".path"))
+            autoList.append(pathName.removesuffix(".auto"))
     #--------------------------------------------------------------------------------
     def __init__(self) -> None:
         # importing our JSON settings and converting it to global python dictionary.
