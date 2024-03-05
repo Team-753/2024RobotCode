@@ -12,11 +12,11 @@ from commands.defaultDriveCommand import DefaultDriveCommand
 from subsystems.arm import ArmSubsystem
 from subsystems.climber import ClimberSubsystem
 from subsystems.grabber import grabberSubsystem
-from commands.climberCommands import climberEvents
+from commands.climberCommands import climberGoesUp, climberGoesDown
 from commands.ArmCommands import ArmSpeaker
-from commands.ArmCommands import grabberEvents
-from commands.ArmCommands import grab
-from commands.ArmCommands import empty
+#from commands.ArmCommands import grabberEvents
+from commands.ArmCommands import grab, empty, emptySlow, ampEmpty
+#from commands.ArmCommands import empty
 from commands.ArmCommands import armEvents
 from pathplannerlib.auto import PathPlannerAuto
 
@@ -26,10 +26,10 @@ class RobotContainer:
     #--------------------------------------------------------------------------------
     #Autonomous Auto Select
     folderPath = os.path.dirname(os.path.abspath(__file__))
-    tempAutoList = os.listdir(os.path.join(folderPath, 'deploy/pathplanner/paths'))
+    '''tempAutoList = os.listdir(os.path.join(folderPath, 'deploy/pathplanner/paths'))
     autoList = []
     for pathName in tempAutoList:
-            autoList.append(pathName.removesuffix(".path"))
+            autoList.append(pathName.removesuffix(".path"))'''
     #--------------------------------------------------------------------------------
     def __init__(self) -> None:
         # importing our JSON settings and converting it to global python dictionary.
@@ -55,15 +55,16 @@ class RobotContainer:
         self.autonomousChooser = wpilib.SendableChooser()
         self.autonomousChooser.setDefaultOption("Only Score Note", "Only Score Note")
         self.autonomousChooser.addOption("Only Taxi", "Only Taxi")
-        for pathName in self.autoList:
+        '''for pathName in self.autoList:
             self.autonomousChooser.addOption(pathName, pathName)
-        wpilib.SmartDashboard.putData("Autonomous Chooser", self.autonomousChooser)
+        wpilib.SmartDashboard.putData("Autonomous Chooser", self.autonomousChooser)'''
     #--------------------------------------------------------------------------------    
     def configureButtonBindings(self):
         """ Sets up the button command bindings for the controllers. """
-        '''self.auxController.leftTrigger().whileTrue(empty(self.grabber))
+        self.auxController.leftTrigger().whileTrue(empty(self.grabber))
         self.auxController.leftBumper().whileTrue(emptySlow(self.grabber))
-        self.auxController.rightTrigger().whileTrue(grab(self.grabber))'''
+        self.auxController.rightTrigger().whileTrue(grab(self.grabber))
+        self.auxController.rightBumper().whileTrue(ampEmpty(self.grabber))
         # TODO: Check presets
         # For now, arm uses A for Amp preset
         #self.auxController.a().onTrue(armEvents.amp(self.arm))
@@ -101,9 +102,11 @@ class RobotContainer:
         #self.auxController.b().whileTrue(cmd.run(lambda: self.climber.goUp(ClimberSubsystem)))'''
 
         #these climber controls might actually work
-        self.auxController.pov(0).onTrue(cmd.runOnce(lambda: self.climber.goUp()))
+        '''self.auxController.pov(0).onTrue(cmd.runOnce(lambda: self.climber.goUp()))
         self.auxController.pov(180).onTrue(cmd.runOnce(lambda: self.climber.goDown()))
-        self.auxController.pov(-1).onTrue(cmd.runOnce(lambda: self.climber.stationary()))
+        self.auxController.pov(-1).onTrue(cmd.runOnce(lambda: self.climber.stationary()))'''
+        self.auxController.pov(0).onTrue(climberGoesUp(self.climber))
+        self.auxController.pov(180).onTrue(climberGoesDown(self.climber))
     #-----------------------------------------------------------------------------------------------   
     #Autonomous Start Protocol
     def getAutonomousCommand(self):

@@ -28,9 +28,11 @@ class Arm:
     limitSwitch2RIO = 1
 
 class Climber:
-    leftMotorCanID = 13
-    rightMotorCanID = 14
+    leftMotorCanID = 14
+    rightMotorCanID = 13
     limitSwitchID = 0
+    rightSolenoidChannel = 0
+    leftSolenoidChannel = 1
 
 class DriveConstants:
     class Joystick:
@@ -44,7 +46,7 @@ class DriveConstants:
     class RobotSpeeds:
         maxSpeed = 4.8
         maxAcceleration = 4
-        manualRotationSpeedFactor = 1
+        manualRotationSpeedFactor = 0.6
         
     class PoseConstants:
         class translationPIDConstants:

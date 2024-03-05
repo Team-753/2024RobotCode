@@ -176,8 +176,8 @@ class DriveTrainSubsystem(commands2.Subsystem):
     def getCurrentPose(self):
         return self.poseEstimator.getEstimatedPosition()
 
-    '''def periodic(self) -> None:
-        if self.LimelightTable.getNumber('getpipe', 0) == 0: # 0 being our apriltag pipeline
+    def periodic(self) -> None:
+        '''if self.LimelightTable.getNumber('getpipe', 0) == 0: # 0 being our apriltag pipeline
             if self.LimelightTable.getNumber('tv', 0) == 1: # are there any valid targets
                 if self.alliance == wpilib.DriverStation.Alliance.kBlue:
                     botPoseData = self.LimelightTable.getNumberArray('botpose_wpiblue', [0,0,0,0,0,0,0])
@@ -185,7 +185,7 @@ class DriveTrainSubsystem(commands2.Subsystem):
                     botPoseData = self.LimelightTable.getNumberArray('botpose_wpired', [0,0,0,0,0,0,0])
                 botPose2D = geometry.Pose2d(geometry.Translation2d(botPoseData[0], botPoseData[1]), geometry.Rotation2d(botPoseData[5]))
                 latency = botPoseData[6]
-                self.poseEstimator.addVisionMeasurement(botPose2D, latency)
+                self.poseEstimator.addVisionMeasurement(botPose2D, latency)'''
         self.poseEstimator.update(
             self.getNAVXRotation2d(),
-            self.getSwerveModulePositions())'''
+            self.getSwerveModulePositions())

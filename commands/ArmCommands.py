@@ -22,7 +22,7 @@ class grab(commands2.Command):
         self.grabber.intake()
     def end(self, interuppted: bool) -> None:
         self.grabber.idle()
-class emptyFast(commands2.Command):
+class empty(commands2.Command):
     def __init__(self, kGrabber: grabberSubsystem) -> None:
         super().__init__()
         self.grabber = kGrabber
@@ -42,6 +42,16 @@ class emptySlow(commands2.Command):
         self.grabber.outtakeSlow()
     def end(self, interuppted: bool) -> None:
         self.grabber.idle()    
+class ampEmpty(commands2.Command):
+    def __init__(self, kGrabber: grabberSubsystem) -> None:
+        super().__init__()
+        self.grabber = kGrabber
+    def initialize(self) -> None:
+        pass
+    def execute(self) -> None:
+        self.grabber.inOuttake()
+    def end(self, kGrabber: grabberSubsystem) -> None:
+        self.grabber.idle
 class armEvents(commands2.Command):
     '''
     This command is completely broken for a multitude of reasons, do not attempt to use it. 

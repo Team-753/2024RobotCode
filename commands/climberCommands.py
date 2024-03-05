@@ -15,7 +15,7 @@ class climberGoesUp(commands2.Command):
         print ("going up")
 
     def end(self, interrupted: bool):
-        self.climber.stationary
+        self.climber.stationary()
         
       
     

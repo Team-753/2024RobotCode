@@ -13,8 +13,8 @@ class ClimberSubsystem(commands2.Subsystem):
     def __init__(self):
         super().__init__()
         self.targetValue = 0
-        self.leftSoleniod = wpilib.Solenoid(moduleType=wpilib.PneumaticsModuleType.REVPH, channel= 0)
-        self.rightSoleniod = wpilib.Solenoid(moduleType= wpilib.PneumaticsModuleType.REVPH, channel= 1)
+        self.leftSoleniod = wpilib.Solenoid(moduleType=wpilib.PneumaticsModuleType.REVPH, channel= 1)
+        self.rightSoleniod = wpilib.Solenoid(moduleType= wpilib.PneumaticsModuleType.REVPH, channel= 0)
         self.encoderConversionFactor = 2048 # this is just a temporary number need to find the real one
         self.gearRatio = 4 #gears are 4 to 1 so im assuming that this is four. will need to expierment with this to find the one inch of travel ratio
         self.config = RobotConfig
@@ -95,10 +95,10 @@ class ClimberSubsystem(commands2.Subsystem):
         #self.rightMotor.set_control(self.rightMotorController.with_position(self.Position))
         #print(str(self.rightMotor.get_position))
         #self.rightMotor.set_control(self.rightMotorController.with_position(self.Position)) #assuming this is not too fast and positive is up
-        self.leftSoleniod.set(True)
-        self.rightSoleniod.set(True)
+        #self.leftSoleniod.set(True)
+        self.rightSoleniod.set(False)
         self.rightMotor.set(0.5) # assuming positive is up
-        self.leftMotor.set(0.5)
+        #self.leftMotor.set(0.5)
         print("going up")
 
     def goDown(self):
@@ -106,10 +106,10 @@ class ClimberSubsystem(commands2.Subsystem):
         #print(str(self.Position) + "from down")
         '''self.leftMotor.set_control(self.leftMotorController.with_output(self.Position))
         self.rightMotor.set_control(self.rightMotorController.with_output(self.Position))'''
-        self.leftSoleniod.set(False)
+        #self.leftSoleniod.set(False)
         self.rightSoleniod.set(False)
         self.rightMotor.set(-0.5)
-        self.leftMotor.set(-0.5)
+        #self.leftMotor.set(-0.5)
         print("going down")
 
     def getPosition(self):
@@ -124,8 +124,8 @@ class ClimberSubsystem(commands2.Subsystem):
         #self.Position = self.getPosition()
         self.rightMotor.setIdleMode(_rev.CANSparkBase.IdleMode.kCoast)
         self.rightMotor.set(0)
-        self.leftMotor.setIdleMode(_rev.CANSparkBase.IdleMode.kCoast)
-        self.rightMotor.set(0)
+        #self.leftMotor.setIdleMode(_rev.CANSparkBase.IdleMode.kCoast)
+        #self.leftMotor.set(0)
 
 
     '''def reZero(self):
@@ -133,4 +133,4 @@ class ClimberSubsystem(commands2.Subsystem):
 
     def setVelocity(self, kvelocity):
         self.rightMotor.set(kvelocity)
-        self.leftMotor.set(kvelocity)
+        #self.leftMotor.set(kvelocity)
