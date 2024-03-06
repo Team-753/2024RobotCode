@@ -46,7 +46,7 @@ class DriveConstants:
     class RobotSpeeds:
         maxSpeed = 4.8
         maxAcceleration = 4
-        manualRotationSpeedFactor = 0.6
+        manualRotationSpeedFactor = 0.2
         
     class PoseConstants:
         class translationPIDConstants:

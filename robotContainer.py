@@ -12,7 +12,7 @@ from commands.defaultDriveCommand import DefaultDriveCommand
 from subsystems.arm import ArmSubsystem
 from subsystems.climber import ClimberSubsystem
 from subsystems.grabber import grabberSubsystem
-from commands.climberCommands import climberGoesUp, climberGoesDown
+from commands.climberCommands import climberGoesUp, climberGoesDown, climberDoesntMove
 from commands.ArmCommands import ArmSpeaker
 #from commands.ArmCommands import grabberEvents
 from commands.ArmCommands import grab, empty, emptySlow, ampEmpty
@@ -105,8 +105,9 @@ class RobotContainer:
         '''self.auxController.pov(0).onTrue(cmd.runOnce(lambda: self.climber.goUp()))
         self.auxController.pov(180).onTrue(cmd.runOnce(lambda: self.climber.goDown()))
         self.auxController.pov(-1).onTrue(cmd.runOnce(lambda: self.climber.stationary()))'''
-        self.auxController.pov(0).onTrue(climberGoesUp(self.climber))
-        self.auxController.pov(180).onTrue(climberGoesDown(self.climber))
+        self.auxController.pov(0).whileTrue(climberGoesUp(self.climber))
+        self.auxController.pov(180).whileTrue(climberGoesDown(self.climber))
+        #self.auxController.pov(-1).onTrue(climberDoesntMove(self.climber))
     #-----------------------------------------------------------------------------------------------   
     #Autonomous Start Protocol
     def getAutonomousCommand(self):

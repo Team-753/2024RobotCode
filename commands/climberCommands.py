@@ -33,6 +33,19 @@ class climberGoesDown(commands2.Command):
 
     def end(self, interrupted: bool):
         self.climber.stationary()
-       
-        
+
+class climberDoesntMove(commands2.Command):
+    def __init__(self, kClimberSubsystem: ClimberSubsystem):
+        super().__init__()
+        self.addRequirements (kClimberSubsystem)
+        self.climber = kClimberSubsystem
+
+    def initialize(self):
+        self.climber.stationary()
+    
+    def execute(self):
+        print("stopping")
+
+    def end(self, interrupted: bool):
+        self.climber.stationary()
 

@@ -15,7 +15,7 @@ class ClimberSubsystem(commands2.Subsystem):
         self.targetValue = 0
         self.leftSoleniod = wpilib.Solenoid(moduleType=wpilib.PneumaticsModuleType.REVPH, channel= 1)
         self.rightSoleniod = wpilib.Solenoid(moduleType= wpilib.PneumaticsModuleType.REVPH, channel= 0)
-        self.encoderConversionFactor = 2048 # this is just a temporary number need to find the real one
+        self.encoderConversionFactor = 20 # this is just a temporary number need to find the real one
         self.gearRatio = 4 #gears are 4 to 1 so im assuming that this is four. will need to expierment with this to find the one inch of travel ratio
         self.config = RobotConfig
         #self.xboxController = xboxController
@@ -61,27 +61,17 @@ class ClimberSubsystem(commands2.Subsystem):
         self.leftEncoder.setPosition(self.desiredPosition)
 
         # TODO add zeroing code
-        if self.limitSwitch.get():
-            #self.leftMotor.set_control(self.leftMotorController.with_output(0))
-            #self.rightMotor.set_control(self.rightMotorController.with_output(0))
-            #self.leftMotor.set_control(self.leftMotorController.with_output(self.targetValue/self.gearRatio))
-            #self.rightMotor.set_control(self.rightMotorController.with_output(self.targetValue/self.gearRatio))
+        '''if self.limitSwitch.get():
+            self.leftMotor.set(0)
+            self.rightMotor.set(0)
             self.zeroed = True
         
         else:
-            #self.leftMotor.set_control(self.leftMotorController.with_output(0.2))
-            #self.rightMotor.set_control(self.rightMotorController.with_output(-0.2))
-            #self.rightMotor.set(phoenix5.ControlMode.PercentOutput, -0.2)''' 
-            pass
+            self.leftMotor.set(-0.2)
+            self.rightMotor.set(-0.2)'''
 
     def periodic (self):
         wpilib.SmartDashboard.putBoolean("Climber Limit Switch", self.limitSwitch.get())
-        '''if not self.zeroed:
-           
-            else:
-                self.leftMotor.set_control(self.leftMotorController.with_velocity (-0.2))
-                self.rightMotor.set_control(self.rightMotorController.with_velocity(-0.2))
-                #self.rightMotor.set(phoenix5.ControlMode.PercentOutput, -0.2)'''
         #else:
         #self.rightMotor.set_control(self.request.with_position(self.targetValue * self.gearRatio))
         #self.leftMotorMotor.set_control(self.request.with_position(self.targetValue * self.gearRatio))
@@ -95,10 +85,12 @@ class ClimberSubsystem(commands2.Subsystem):
         #self.rightMotor.set_control(self.rightMotorController.with_position(self.Position))
         #print(str(self.rightMotor.get_position))
         #self.rightMotor.set_control(self.rightMotorController.with_position(self.Position)) #assuming this is not too fast and positive is up
-        #self.leftSoleniod.set(True)
+        self.rightMotor.set(0.1)
+        self.leftMotor.set(0.1)
+        self.leftSoleniod.set(False)
         self.rightSoleniod.set(False)
         self.rightMotor.set(0.5) # assuming positive is up
-        #self.leftMotor.set(0.5)
+        self.leftMotor.set(0.5)
         print("going up")
 
     def goDown(self):
@@ -109,7 +101,7 @@ class ClimberSubsystem(commands2.Subsystem):
         #self.leftSoleniod.set(False)
         self.rightSoleniod.set(False)
         self.rightMotor.set(-0.5)
-        #self.leftMotor.set(-0.5)
+        self.leftMotor.set(-0.5)
         print("going down")
 
     def getPosition(self):
@@ -124,8 +116,8 @@ class ClimberSubsystem(commands2.Subsystem):
         #self.Position = self.getPosition()
         self.rightMotor.setIdleMode(_rev.CANSparkBase.IdleMode.kCoast)
         self.rightMotor.set(0)
-        #self.leftMotor.setIdleMode(_rev.CANSparkBase.IdleMode.kCoast)
-        #self.leftMotor.set(0)
+        self.leftMotor.setIdleMode(_rev.CANSparkBase.IdleMode.kCoast)
+        self.leftMotor.set(0)
 
 
     '''def reZero(self):
@@ -133,4 +125,4 @@ class ClimberSubsystem(commands2.Subsystem):
 
     def setVelocity(self, kvelocity):
         self.rightMotor.set(kvelocity)
-        #self.leftMotor.set(kvelocity)
+        self.leftMotor.set(kvelocity)
