@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.3929974013794195,
-      "y": 1.815517477188801
+      "x": 1.36086297850199,
+      "y": 6.956236908194216
     },
-    "rotation": 179.1089937160569
+    "rotation": 178.9769698113323
   },
   "command": {
     "type": "sequential",
@@ -14,25 +14,19 @@
         {
           "type": "path",
           "data": {
+            "pathName": "Score Note 2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Move 2"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
             "pathName": "Taxi 1"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Transition1"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Score Note 1"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Move"
           }
         }
       ]
