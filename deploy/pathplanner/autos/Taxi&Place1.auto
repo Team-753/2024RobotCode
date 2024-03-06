@@ -1,0 +1,43 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.3929974013794195,
+      "y": 1.815517477188801
+    },
+    "rotation": 179.1089937160569
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Taxi 1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Transition1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Score Note 1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Move"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
