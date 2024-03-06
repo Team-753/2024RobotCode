@@ -94,7 +94,8 @@ class RobotContainer:
         #self.joystickButtonFive.whileTrue(climberGoesDown())
         
         #these are the semi working climber controls
-        '''self.auxController.a().onTrue(cmd.runOnce(lambda: self.climber.goUp()))
+        '''
+        self.auxController.a().onTrue(cmd.runOnce(lambda: self.climber.goUp()))
         self.auxController.a().onFalse(cmd.runOnce(lambda:self.climber.stationary()))
         self.auxController.b().onTrue(cmd.runOnce(lambda: self.climber.goDown()))
         self.auxController.b().onFalse(cmd.runOnce(lambda: self.climber.stationary()))
