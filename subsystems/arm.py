@@ -61,11 +61,13 @@ class ArmSubsystem(commands2.Subsystem):
         wpilib.SmartDashboard.putNumber("Left Motor Angle Degrees: ", self.leftEncoder.getPosition())
         wpilib.SmartDashboard.putNumber("Right Motor Angle Degrees: ", self.rightEncoder.getPosition())
         if(self.bottomLimit.get()):
-            self.stop()
-            pass
+            #self.stop()
+            wpilib.SmartDashboard.putBoolean("Bottom Limit", True)
+            #pass
         elif(self.topLimit.get()):
-            self.stop()
-            pass
+            #self.stop()
+            wpilib.SmartDashboard.putBoolean("Top Limit", True)
+            #pass
     def setDesiredAngle(self, kDesiredAngle: float):
         self.desiredAngle = kDesiredAngle
         print(kDesiredAngle)
