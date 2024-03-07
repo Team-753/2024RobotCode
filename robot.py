@@ -1,6 +1,7 @@
 import wpilib
 import commands2
 from robotContainer import RobotContainer
+from wpilib.cameraserver import CameraServer
 
 class MyRobot(commands2.TimedCommandRobot):
     
@@ -11,6 +12,8 @@ class MyRobot(commands2.TimedCommandRobot):
         """ Robot initation code goes here, though the vast majority will be in the robot container file. """
         self.robotContainer = RobotContainer()
         self.autoCommand = commands2.Command()
+        camera = wpilib.CameraServer()
+        camera.launch()
         
     def disabledInit(self) -> None:
         """ Runs when the robot is disabled. """
