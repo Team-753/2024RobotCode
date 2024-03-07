@@ -22,8 +22,8 @@ class SwerveModules:
         turnMotorID = 8
 
 class Arm:
-    #leftMotorCanID = 11
-    #rightMotorCanID = 12
+    leftMotorCanID = 9
+    rightMotorCanID = 10
     limitSwitch1RIO = 0
     limitSwitch2RIO = 1
 
@@ -82,14 +82,15 @@ class FieldConstants:
     speakerZMeters = 2.05
     speakerXMeters = 0.225
 class armConstants:
-    Speaker = 1
-    Amp = 0.5
-    Home = -0.5
-    Source = -1
-class GrabberConfig:
+    Speaker = -10
+    Amp = -125
+    Home = -185
+    Source = -145
+class grabber:
     bottomMotorCANID = 11
     topMotorCANID = 12
-    intake = -0.5
-    outtake = 0.5
+    intake = -0.10
+    outtakeS = -1.0
+    outtakeF = 1
     idle = 0
     sensorDIOID = 3

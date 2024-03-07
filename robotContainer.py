@@ -1,16 +1,17 @@
 import RobotConfig
-#import commands2
+import commands2
 from commands2 import button, cmd
 from subsystems.driveTrain import DriveTrainSubsystem
-#from subsystems.arm import ArmSubsystem
+from subsystems.arm import ArmSubsystem
 from commands.defaultDriveCommand import DefaultDriveCommand
-#from subsystems.arm import ArmSubsystem
+from subsystems.arm import ArmSubsystem
 from commands.ArmCommands import ArmSpeaker
-from commands.ArmCommands import armEvents
-from commands.ArmCommands import grab, empty
-from commands import GrabberCommands
+from commands.ArmCommands import up
+#from commands.ArmCommands import armEvents
+from commands.ArmCommands import grab, empty, emptySlow, up, ampEmpty, down
+from wpilib.cameraserver import CameraServer
 import wpilib
-from subsystems.grabber import GrabberSubsystem
+from subsystems.grabber import grabberSubsystem
 class RobotContainer:
     """ Basically does everything. Yeah... """
     
@@ -19,11 +20,11 @@ class RobotContainer:
         # initializing controllers
         self.joystick = button.CommandJoystick(RobotConfig.DriveConstants.Joystick.USB_ID)
         self.auxController = button.CommandXboxController(RobotConfig.DriveConstants.XBOX.USB_ID)
-        #self.auxController =  wpilib.XboxController(RobotConfig.DriveConstants.XBOX.USB_ID)
         # initializing subsystems
         self.driveTrain = DriveTrainSubsystem(self.joystick)
-        self.grabber = GrabberSubsystem()
-        #self.arm = ArmSubsystem()
+        self.grabber = grabberSubsystem()
+        self.arm = ArmSubsystem()
+        #self.arm.setDesiredAngle(5)
         """
         Setting our default commands, these are commands similar to the "periodic()" functions that 
         are ran every loop but only when another command IS NOT running on the subsystem hence the
@@ -33,21 +34,43 @@ class RobotContainer:
         
     def configureButtonBindings(self):
         """ Sets up the button command bindings for the controllers. """
-        self.auxController.leftTrigger().whileTrue(GrabberCommands.Intake(self.grabber))
-        self.auxController.rightTrigger().whileTrue(GrabberCommands.SlowEject(self.grabber)) 
-        #self.auxController.leftTrigger().onFalse(grabberEvents.idle()) NOTE: These are not necessary
-        #self.auxController.rightTrigger().onFalse(grabberEvents.idle()) NOTE: These are not necessary
+        self.auxController.leftTrigger().whileTrue(empty(self.grabber))
+        #self.auxController.leftTrigger().whileTrue(print("left"))
+        #self.auxController.leftTrigger().whileTrue(cmd.run(lambda: self.grabber.outtakeFast))
+        self.auxController.leftBumper().whileTrue(emptySlow(self.grabber))
+        #self.auxController.leftBumper().whileTrue(cmd.)
+        self.auxController.rightTrigger().whileTrue(grab(self.grabber))
+        self.auxController.rightBumper().whileTrue(ampEmpty(self.grabber))
         # TODO: Check presets
         # For now, arm uses A for Amp preset
-        '''
-        self.auxController.A().onTrue(armEvents.amp())
+        
+        #self.upJoystick = self.auxController.getLeftY()
+        #self.upJoystick.whileTrue(up(self.arm))
+        #self.upJoystick
+        #print(self.upJoystick)
+        #self.auxController.getAButtonPressed(cmd.runOnce(lambda self.arm.setDesiredAngle(RobotConfig.armConstants.Amp)))
+        self.buttonA = self.auxController.a()
+        self.buttonA.onTrue(up(self.arm))
+        #.buttonA = self.auxController.a()
+        #self.buttonA.whileTrue(up(self.arm))
+        #self.buttonA.onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Amp)))
         #self.auxController.A(armEvents.amp(self))
         # For now, arm uses B for Home preset
-        self.auxController.B().onTrue(armEvents.home())
+        
+        self.buttonY = self.auxController.y()
+        #self.buttonB.onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Home)))
+        self.buttonY.onTrue(down(self.arm))
+        '''
         # For now, arm uses X for Speaker preset
-        self.auxController.X().onTrue(armEvents.speaker())
+        
+        self.buttonX = self.auxController.x()
+        self.buttonX.onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Speaker)))
+        
         # For now, arm uses Y for Source preset
-        self.auxController.Y().onTrue(armEvents.source())'''
+        
+        self.buttonY = self.auxController.y()
+        self.buttonY.onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Source)))
+        '''
         
     def getAutonomousCommand(self):
         """ Logic for what will run in autonomous mode. Returning anything but a command will result in nothing happening in autonomous. """
