@@ -68,9 +68,19 @@ class up(commands2.Command):
         super().__init__()
         self.arm = kArm
     def initialize(self):
-        pass
+        self.arm.GoUp()
     def execute(self):
-        self.arm.onA()
+        pass
+    def end(self, interuppted: bool) -> None:
+        self.arm.stop()
+class down(commands2.Command):
+    def __init__(self, kArm: ArmSubsystem) -> None:
+        super().__init__()
+        self.arm = kArm
+    def initialize(self):
+        self.arm.GoDown()
+    def execute(self):
+        pass
     def end(self, interuppted: bool) -> None:
         self.arm.stop()
 '''
