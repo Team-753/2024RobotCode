@@ -15,7 +15,8 @@ from subsystems.grabber import grabberSubsystem
 from commands.climberCommands import climberGoesUp, climberGoesDown, climberDoesntMove
 from commands.ArmCommands import ArmSpeaker
 #from commands.ArmCommands import grabberEvents
-from commands.ArmCommands import grab, empty, emptySlow, ampEmpty
+from commands.ArmCommands import grab, empty, emptySlow, up, ampEmpty, down
+from wpilib.cameraserver import CameraServer
 #from commands.ArmCommands import empty
 from commands.ArmCommands import armEvents
 from pathplannerlib.auto import PathPlannerAuto
@@ -64,27 +65,33 @@ class RobotContainer:
         self.auxController.leftTrigger().whileTrue(empty(self.grabber))
         self.auxController.leftBumper().whileTrue(emptySlow(self.grabber))
         self.auxController.rightTrigger().whileTrue(grab(self.grabber))
-        self.auxController.rightBumper().whileTrue(ampEmpty(self.grabber))
-        # TODO: Check presets
-        # For now, arm uses A for Amp preset
-        #self.auxController.a().onTrue(armEvents.amp(self.arm))
+        self.auxController.rightBumper().whileTrue(ampEmpty(self.grabber))#self.upJoystick = self.auxController.getLeftY()
+        #self.upJoystick.whileTrue(up(self.arm))
+        #self.upJoystick
+        #print(self.upJoystick)
+        #self.auxController.getAButtonPressed(cmd.runOnce(lambda self.arm.setDesiredAngle(RobotConfig.armConstants.Amp)))
         self.buttonA = self.auxController.a()
-        self.buttonA.onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Amp)))
+        self.buttonA.whileTrue(up(self.arm))
+        #.buttonA = self.auxController.a()
+        #self.buttonA.whileTrue(up(self.arm))
+        #self.buttonA.onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Amp)))
         #self.auxController.A(armEvents.amp(self))
         # For now, arm uses B for Home preset
-        #self.auxController.b().onTrue(armEvents.home(self.arm))
-        self.buttonB = self.auxController.b()
-        self.buttonB.onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Home)))
         
+        self.buttonY = self.auxController.y()
+        #self.buttonB.onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Home)))
+        self.buttonY.whileTrue(down(self.arm))
+        '''
         # For now, arm uses X for Speaker preset
-        #self.auxController.x().onTrue(armEvents.speaker(self.arm))
+        
         self.buttonX = self.auxController.x()
         self.buttonX.onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Speaker)))
         
         # For now, arm uses Y for Source preset
-        #self.auxController.y().onTrue(armEvents.source(self.arm))
+        
         self.buttonY = self.auxController.y()
         self.buttonY.onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Source)))
+        '''
         
         #temporary climber controls
         #self.joystickButtonFour.whileTrue(command.RepeatCommand(climberEvents.climberGoesUp()))
