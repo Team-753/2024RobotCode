@@ -9,14 +9,56 @@ class ArmSubsystem(commands2.Subsystem):
     
     kMotorToArmDegrees = 360 / (2.5 * 80) # each rotation of the motor is 7.2 degrees
     kMotorToArmDegreeVelocity = kMotorToArmDegrees / 60 # each rotation of the motor is 7.2 degrees
-    def __init__(self) -> None:
+    def __init__(self):
+        super().__init__()
+        #initialized
+        self.right = rev.CANSparkMax(RobotConfig.Arm.rightMotorCanID, _rev.CANSparkMax.MotorType.kBrushless)
+        self.leftArm = rev.CANSparkMax(RobotConfig.Arm.leftMotorCanID, _rev.CANSparkMax.MotorType.kBrushless)
+        self.bottomLimit = wpilib.DigitalInput(RobotConfig.Arm.limitSwitch1RIO)
+        self.topLimit = wpilib.DigitalInput(RobotConfig.Arm.limitSwitch2RIO)
+        self.right.restoreFactoryDefaults()
+        self.leftArm.restoreFactoryDefaults()
+        self.right.setSmartCurrentLimit(40)
+        self.leftArm.setSmartCurrentLimit(40)
+        #leftEncoder = self.left.getEncoder()
+        self.right.follow(self.leftArm, True)
+    def periodic(self) -> None:
+        wpilib.SmartDashboard.putNumber("Left Motor Output: ", self.leftArm.getBusVoltage())
+        wpilib.SmartDashboard.putNumber("Right Motor Output: ", self.right.getBusVoltage())
+        # print(f"Left Motor Position: {self.leftEncoder.getPosition()}")
+        # print(f"Left Motor Voltage: {self.leftArm.getBusVoltage()}")
+    def GoUp(self):
+        print("Running arm motors")
+        #self.leftArm.set(0.5)
+        #self.right.set(0.5)
+        self.leftArm.set(0.5)
+        #self.right.setVoltage(9)
+        if(self.bottomLimit.get()):
+            self.stop()
+        elif(self.topLimit.get()):
+            self.stop()
+    def GoDown(self):
+        print("Go Down")
+        self.leftArm.set(-0.5)
+        #self.right.setVoltage(-9)
+        if(self.bottomLimit.get()):
+            self.stop()
+        elif(self.topLimit.get()):
+            self.stop()
+    def stop(self):
+        print("stopping arm motors")
+        self.leftArm.set(0)
+        self.right.set(0)
+        '''def __init__(self) -> None:
         """ This is ran once, it returns NOTHING """
+        
         super().__init__()
         # Sets motors for arm commands
         self.leftArm = _rev.CANSparkMax(RobotConfig.Arm.leftMotorCanID, rev.CANSparkMax.MotorType.kBrushless)
         self.rightArm = _rev.CANSparkMax(RobotConfig.Arm.rightMotorCanID, _rev.CANSparkMax.MotorType.kBrushless)
         self.bottomLimit = wpilib.DigitalInput(RobotConfig.Arm.limitSwitch1RIO)
         self.topLimit = wpilib.DigitalInput(RobotConfig.Arm.limitSwitch2RIO)
+        ''''''
         #self.rightArm.follow(self.leftArm, True)
         self.leftArm.restoreFactoryDefaults()
         self.leftArm.setIdleMode(_rev.CANSparkMax.IdleMode.kCoast)
@@ -30,7 +72,7 @@ class ArmSubsystem(commands2.Subsystem):
         self.leftPIDController.setD(0)
         self.leftPIDController.setFF(0)
         self.leftPIDController.setOutputRange(-1,1)
-        self.leftArm.setSmartCurrentLimit(60)
+        self.leftArm.setSmartCurrentLimit(50)
         self.leftArm.burnFlash()
         
         self.rightArm.restoreFactoryDefaults()
@@ -46,10 +88,10 @@ class ArmSubsystem(commands2.Subsystem):
         self.rightPIDController.setD(0)
         self.rightPIDController.setFF(0)
         self.rightPIDController.setOutputRange(-1,1)
-        self.rightArm.setSmartCurrentLimit(60)
+        self.rightArm.setSmartCurrentLimit(50)
         self.rightArm.burnFlash()
         
-        self.desiredAngle = 0 # degrees above the floor, this is a arbitrary guess
+        self.desiredAngle = -90 # degrees above the floor, this is a arbitrary guess
         self.leftEncoder.setPosition(self.desiredAngle)
         self.rightEncoder.setPosition(self.desiredAngle)
         
@@ -61,35 +103,15 @@ class ArmSubsystem(commands2.Subsystem):
         wpilib.SmartDashboard.putNumber("Left Motor Angle Degrees: ", self.leftEncoder.getPosition())
         wpilib.SmartDashboard.putNumber("Right Motor Angle Degrees: ", self.rightEncoder.getPosition())
         if(self.bottomLimit.get()):
-            #self.stop()
+            self.setDesiredAngle(RobotConfig.armConstants.Home)
             wpilib.SmartDashboard.putBoolean("Bottom Limit", True)
             #pass
         elif(self.topLimit.get()):
             #self.stop()
+            self.setDesiredAngle(RobotConfig.armConstants.Speaker)
             wpilib.SmartDashboard.putBoolean("Top Limit", True)
             #pass
     def setDesiredAngle(self, kDesiredAngle: float):
         self.desiredAngle = kDesiredAngle
         print(kDesiredAngle)
-    '''
-    def __init__(self):
-        super().__init__()
-        #initialized
-        self.right = rev.CANSparkMax(RobotConfig.Arm.rightMotorCanID, _rev.CANSparkMax.MotorType.kBrushless)
-        self.leftArm = rev.CANSparkMax(RobotConfig.Arm.leftMotorCanID, _rev.CANSparkMax.MotorType.kBrushless)
-        #leftEncoder = self.left.getEncoder()
-        #self.right.follow(self.left, True)
-    def periodic(self) -> None:
-        ''''''
-        # print(f"Left Motor Position: {self.leftEncoder.getPosition()}")
-        # print(f"Left Motor Voltage: {self.leftArm.getBusVoltage()}")
-    def onA(self):
-        print("Running arm motors")
-        self.leftArm.set(1)
-        #self.right.set(-1)
-    def onB(self):
-        self.leftArm.set(-0.5)
-    '''
-    def stop(self):
-        print("stopping arm motors")
-        self.leftArm.set(0)
+        '''
