@@ -12,29 +12,28 @@ from commands.defaultDriveCommand import DefaultDriveCommand
 from subsystems.arm import ArmSubsystem
 from subsystems.climber import ClimberSubsystem
 from subsystems.grabber import grabberSubsystem
-from commands.climberCommands import climberGoesUp, climberGoesDown, climberDoesntMove
-from commands.ArmCommands import ArmSpeaker
+from commands.climberCommands import climberGoesUp, climberGoesDown, climberDoesntMove, rightClimberGoesUp, rightClimberGoesDown, leftClimberGoesDown, leftClimberGoesUp
+from commands.ArmCommands import ArmSpeaker 
 #from commands.ArmCommands import grabberEvents
-from commands.ArmCommands import grab, empty, emptySlow, up, ampEmpty, down
+from commands.ArmCommands import grab, empty, emptySlow, up, ampEmpty, down, manualShoot, ArmConfirmUp, AutoShootSpeaker
 from wpilib.cameraserver import CameraServer
 #from commands.ArmCommands import empty
-from commands.ArmCommands import armEvents
+#from commands.ArmCommands import armEvents
 from pathplannerlib.auto import PathPlannerAuto
-
+from commands.basicAuto import simpleAutoDrive
 #from commands.ArmCommands import grabberEvents
 class RobotContainer:
     """ Basically does everything. Yeah... """
     #--------------------------------------------------------------------------------
     #Autonomous Auto Select
     folderPath = os.path.dirname(os.path.abspath(__file__))
-    '''tempAutoList = os.listdir(os.path.join(folderPath, 'deploy/pathplanner/paths'))
+    tempAutoList = os.listdir(os.path.join(folderPath, 'deploy/pathplanner/autos'))
     autoList = []
     for pathName in tempAutoList:
-            autoList.append(pathName.removesuffix(".path"))'''
+            autoList.append(pathName.removesuffix(".auto"))
     #--------------------------------------------------------------------------------
     def __init__(self) -> None:
         # importing our JSON settings and converting it to global python dictionary.
-        
         # initializing controllers
         self.joystick = button.CommandJoystick(RobotConfig.DriveConstants.Joystick.USB_ID)
         self.auxController = button.CommandXboxController(RobotConfig.DriveConstants.XBOX.USB_ID)
@@ -44,6 +43,7 @@ class RobotContainer:
         self.arm = ArmSubsystem()
         self.climber = ClimberSubsystem()
         self.climber.stationary()
+        self.driveTrain.setDefaultCommand(DefaultDriveCommand(self.driveTrain))
         """
         Setting our default commands, these are commands similar to the "periodic()" functions that 
         are ran every loop but only when another command IS NOT running on the subsystem hence the
@@ -54,18 +54,19 @@ class RobotContainer:
     #--------------------------------------------------------------------------------
     #Configure Auto Settings
         self.autonomousChooser = wpilib.SendableChooser()
-        self.autonomousChooser.setDefaultOption("Only Score Note", "Only Score Note")
-        self.autonomousChooser.addOption("Only Taxi", "Only Taxi")
-        '''for pathName in self.autoList:
+        self.autonomousChooser.setDefaultOption("OnlyForward", "OnlyForward")
+        #self.autonomousChooser.addOption("Only Taxi", "Only Taxi")
+        for pathName in self.autoList:
             self.autonomousChooser.addOption(pathName, pathName)
-        wpilib.SmartDashboard.putData("Autonomous Chooser", self.autonomousChooser)'''
+        wpilib.SmartDashboard.putData("Autonomous Chooser", self.autonomousChooser)
     #--------------------------------------------------------------------------------    
     def configureButtonBindings(self):
         """ Sets up the button command bindings for the controllers. """
-        self.auxController.leftTrigger().whileTrue(empty(self.grabber))
-        self.auxController.leftBumper().whileTrue(emptySlow(self.grabber))
-        self.auxController.rightTrigger().whileTrue(grab(self.grabber))
-        self.auxController.rightBumper().whileTrue(ampEmpty(self.grabber))#self.upJoystick = self.auxController.getLeftY()
+        self.auxController.leftTrigger().whileTrue(grab(self.grabber))
+        self.auxController.leftBumper().whileTrue(ampEmpty(self.grabber))
+        self.auxController.rightTrigger().whileTrue(empty(self.grabber))
+        self.auxController.rightBumper().whileTrue(emptySlow(self.grabber))#self.upJoystick = self.auxController.getLeftY()
+        self.auxController.b().whileTrue(manualShoot(self.grabber))
         #self.upJoystick.whileTrue(up(self.arm))
         #self.upJoystick
         #print(self.upJoystick)
@@ -114,7 +115,11 @@ class RobotContainer:
         self.auxController.pov(180).onTrue(cmd.runOnce(lambda: self.climber.goDown()))
         self.auxController.pov(-1).onTrue(cmd.runOnce(lambda: self.climber.stationary()))'''
         self.auxController.pov(0).whileTrue(climberGoesUp(self.climber))
+        self.auxController.pov(45).whileTrue(leftClimberGoesUp(self.climber))
+        self.auxController.pov(135).whileTrue(leftClimberGoesDown(self.climber))
         self.auxController.pov(180).whileTrue(climberGoesDown(self.climber))
+        self.auxController.pov(225).whileTrue(rightClimberGoesDown(self.climber))
+        self.auxController.pov(315).whileTrue(rightClimberGoesUp(self.climber))
         #self.auxController.pov(-1).onTrue(climberDoesntMove(self.climber))
     #-----------------------------------------------------------------------------------------------   
     #Autonomous Start Protocol
@@ -122,30 +127,32 @@ class RobotContainer:
         
         """ Logic for what will run in autonomous mode. Returning anything but a command will result in nothing happening in autonomous. """
         pathName = self.autonomousChooser.getSelected()
-        if pathName == "Only Score Note": 
-            return commands2.command()
-        elif pathName == "Only Taxi":  #Depending on the robot's functionality we might have to taxi only
-            return commands2.command()
+        if pathName == "OnlyForward": 
+            #return commands2.SequentialCommandGroup(ArmConfirmUp, AutoShootSpeaker)
+            return commands2.SequentialCommandGroup(commands2.WaitCommand(12), simpleAutoDrive(self.driveTrain))
         else:
             return PathPlannerAuto(pathName)
+            
     #-----------------------------------------------------------------------------------------------   
     def disabledInit(self):
         pass
     
     def autonomousInit(self):
-        self.driveTrain.setDefaultCommand(cmd.run(lambda: None, [self.driveTrain])) # otherwise the robot will respond to joystick inputs during autonomous
+        #self.driveTrain.setDefaultCommand(cmd.run(lambda: commands2.Command, [self.driveTrain])) # otherwise the robot will respond to joystick inputs during autonomous
+        pass
     
     def autonomousPeriodic(self):
         pass
     
     def teleopInit(self):
-        self.driveTrain.setDefaultCommand(DefaultDriveCommand(self.driveTrain))     
+        #self.driveTrain.setDefaultCommand(DefaultDriveCommand(self.driveTrain))  
+        pass   
     
     def teleopPeriodic(self):
         pass
     
     def testInit(self):
-        self.driveTrain.setDefaultCommand(DefaultDriveCommand(self.driveTrain))
+        pass
     
     def testPeriodic(self):
         pass

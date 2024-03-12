@@ -28,7 +28,8 @@ class empty(commands2.Command):
         pass
     def execute(self) -> None:
         print("empty")
-        self.grabber.outtakeFast()
+        self.grabber.speakerShoot()
+        
     def end(self, interuppted: bool) -> None:
         self.grabber.idle()  
 class emptySlow(commands2.Command):
@@ -38,7 +39,7 @@ class emptySlow(commands2.Command):
     def initialize(self):
         pass
     def execute(self):
-        self.grabber.outtakeSlow()
+        self.grabber.speedUpShoot()
         print("empty slow")
     def end(self, interuppted: bool) -> None:
         self.grabber.idle()
@@ -49,10 +50,22 @@ class ampEmpty(commands2.Command):
     def initialize(self):
         pass
     def execute(self):
-        self.grabber.inOuttake()
+        self.grabber.ampShoot()
         print("Amp empty")
     def end(self, interruppted: bool) -> None:
         self.grabber.idle()
+
+class manualShoot(commands2.Command):
+    def __init__(self, kGrabber: grabberSubsystem) -> None:
+        super().__init__()
+        self.grabber = kGrabber
+    def initialize(self):
+        self.grabber.shoot()
+    def execute(self):
+        pass
+    def end(self, interrupted: bool):
+        self.grabber.idle()
+   
 class stop(commands2.Command):
     def __init__(self, kGrabber: grabberSubsystem) -> None:
         super().__init__()
@@ -83,7 +96,40 @@ class down(commands2.Command):
         pass
     def end(self, interuppted: bool) -> None:
         self.arm.stop()
-'''
+
+#######################################################################
+class AutoShootSpeaker(commands2.Command):
+    def __init(self, kGrabber: grabberSubsystem) -> None:
+        super().__init__()
+        self.grabber = kGrabber
+        self.timer = wpilib.Timer()
+    def initialize(self):
+        self.grabber.speedUpShoot
+    def execute(self) -> None:
+        self.grabber.idle()
+    def isFinished(self) -> bool:
+        if self.grabber.getReadyToShoot() and self.timer.get()==0: 
+            self.timer.start()
+        return self.timer.hasElapsed(0.5) 
+
+#######################################################################
+    
+class ArmConfirmUp(commands2.Command):
+    def __init__(self, kArm: ArmSubsystem) -> None:
+        super().__init__()
+        self.arm = kArm
+    def initialize(self) -> None:
+        self.arm.GoUp()
+    def isFinished(self) -> bool:
+        return self.arm.GetTopLimit()
+    def end(self, interuppted: bool) -> None:
+        self.arm.stop()
+#######################################################################
+            
+
+            
+
+"""
 class armEvents(commands2.Command):
     def __init__(self):
         super().__init__()
@@ -95,4 +141,5 @@ class armEvents(commands2.Command):
     def source(self) -> None:
         self.arm.source()
     def amp(self) -> None:
-        self.arm.amp()'''      
+        self.arm.amp()   
+"""

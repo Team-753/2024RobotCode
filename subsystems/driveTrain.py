@@ -26,7 +26,7 @@ class DriveTrainSubsystem(commands2.Subsystem):
         '''NetworkTables.initialize() # you use networktables to access limelight data
         self.LimelightTable = NetworkTables.getTable('limelight')''' # giving us access to the limelight's data as a variable
 
-        self.navx = navx.AHRS.create_spi(update_rate_hz=100)
+        self.navx = navx.AHRS.create_spi(update_rate_hz=60)
 
         self.kMaxSpeed = RobotConfig.DriveConstants.RobotSpeeds.maxSpeed
         self.kMaxAngularVelocity = RobotConfig.DriveConstants.RobotSpeeds.maxSpeed / math.hypot(RobotConfig.RobotDimensions.trackWidth / 2, RobotConfig.RobotDimensions.wheelBase / 2)
@@ -83,7 +83,7 @@ class DriveTrainSubsystem(commands2.Subsystem):
     def resetPose(self, poseToset: geometry.Pose2d) -> None:
         self.poseEstimator.resetPosition(self.getNAVXRotation2d(), self.getSwerveModulePositions(), poseToset)
     
-    def shouldFlipPath():
+    def shouldFlipPath(self):
         # Boolean supplier that controls when the path will be mirrored for the red alliance
         # This will flip the path being followed to the red side of the field.
         # THE ORIGIN WILL REMAIN ON THE BLUE SIDE

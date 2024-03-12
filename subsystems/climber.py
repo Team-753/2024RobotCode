@@ -13,13 +13,13 @@ class ClimberSubsystem(commands2.Subsystem):
     def __init__(self):
         super().__init__()
         self.targetValue = 0
-        self.leftSoleniod = wpilib.Solenoid(moduleType=wpilib.PneumaticsModuleType.REVPH, channel= 1)
-        self.rightSoleniod = wpilib.Solenoid(moduleType= wpilib.PneumaticsModuleType.REVPH, channel= 0)
+        self.leftSoleniod = wpilib.Solenoid(moduleType=wpilib.PneumaticsModuleType.CTREPCM, channel= 1)
+        self.rightSoleniod = wpilib.Solenoid(moduleType= wpilib.PneumaticsModuleType.CTREPCM, channel= 0)
         self.encoderConversionFactor = 20 # this is just a temporary number need to find the real one
         self.gearRatio = 4 #gears are 4 to 1 so im assuming that this is four. will need to expierment with this to find the one inch of travel ratio
         self.config = RobotConfig
         #self.xboxController = xboxController
-        self.limitSwitch = wpilib.DigitalInput(self.config.Climber.limitSwitchID)
+        #self.limitSwitch = wpilib.DigitalInput(self.config.Climber.limitSwitchID)
         self.rightMotor = _rev.CANSparkMax(self.config.Climber.rightMotorCanID, _rev.CANSparkMax.MotorType.kBrushless)
         self.leftMotor = _rev.CANSparkMax(self.config.Climber.leftMotorCanID, _rev.CANSparkMax.MotorType.kBrushless)
 
@@ -71,10 +71,17 @@ class ClimberSubsystem(commands2.Subsystem):
             self.rightMotor.set(-0.2)'''
 
     def periodic (self):
-        wpilib.SmartDashboard.putBoolean("Climber Limit Switch", self.limitSwitch.get())
+        #wpilib.SmartDashboard.putBoolean("Climber Limit Switch", self.limitSwitch.get())
         #else:
         #self.rightMotor.set_control(self.request.with_position(self.targetValue * self.gearRatio))
         #self.leftMotorMotor.set_control(self.request.with_position(self.targetValue * self.gearRatio))
+        pass
+
+    def preGoUp (self):
+        self.rightMotor.set(-0.1)
+        self.leftMotor.set(0.1)
+        pass
+        
 
     def goUp(self):
         #print (self.leftMotorController.with_velocity(10))
@@ -85,12 +92,12 @@ class ClimberSubsystem(commands2.Subsystem):
         #self.rightMotor.set_control(self.rightMotorController.with_position(self.Position))
         #print(str(self.rightMotor.get_position))
         #self.rightMotor.set_control(self.rightMotorController.with_position(self.Position)) #assuming this is not too fast and positive is up
-        self.rightMotor.set(0.1)
-        self.leftMotor.set(0.1)
-        self.leftSoleniod.set(False)
-        self.rightSoleniod.set(False)
+        
+        self.rightSoleniod.set(True)
+        self.leftSoleniod.set(True)
+        print('setting solenoid')
         self.rightMotor.set(0.5) # assuming positive is up
-        self.leftMotor.set(0.5)
+        self.leftMotor.set(-0.5)
         print("going up")
 
     def goDown(self):
@@ -98,10 +105,10 @@ class ClimberSubsystem(commands2.Subsystem):
         #print(str(self.Position) + "from down")
         '''self.leftMotor.set_control(self.leftMotorController.with_output(self.Position))
         self.rightMotor.set_control(self.rightMotorController.with_output(self.Position))'''
-        #self.leftSoleniod.set(False)
         self.rightSoleniod.set(False)
+        self.leftSoleniod.set(False)
         self.rightMotor.set(-0.5)
-        self.leftMotor.set(-0.5)
+        self.leftMotor.set(0.5)
         print("going down")
 
     def getPosition(self):
@@ -119,6 +126,33 @@ class ClimberSubsystem(commands2.Subsystem):
         self.leftMotor.setIdleMode(_rev.CANSparkBase.IdleMode.kCoast)
         self.leftMotor.set(0)
 
+    def rightGoUp(self):
+        self.rightSoleniod.set(True)
+        self.rightMotor.set(0.5)
+
+    def leftGoUp(self):
+        self.leftSoleniod.set(True)
+        self.leftMotor.set(-0.5)
+
+    def rightGoDown(self):
+        self.rightSoleniod.set(False)
+        self.rightMotor.set(-0.5)
+
+    def leftGoDown(self):
+        self.leftSoleniod.set(False)
+        self.leftMotor.set(0.5)
+
+    def rightPreGoUp (self):
+        self.rightMotor.set(-0.1)
+        #self.leftMotor.set(0.1)
+        pass
+
+    def leftPreGoUp (self):
+        #self.rightMotor.set(-0.1)
+        self.leftMotor.set(0.1)
+        pass
+
+    
 
     '''def reZero(self):
         self.zeroed = False'''
