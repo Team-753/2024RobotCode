@@ -20,7 +20,7 @@ from wpilib.cameraserver import CameraServer
 #from commands.ArmCommands import empty
 #from commands.ArmCommands import armEvents
 from pathplannerlib.auto import PathPlannerAuto
-from commands.basicAuto import simpleAutoDrive
+from commands.HardAuto import simpleAutoDrive, ModificationDrive
 #from commands.ArmCommands import grabberEvents
 class RobotContainer:
     """ Basically does everything. Yeah... """
@@ -55,7 +55,7 @@ class RobotContainer:
     #Configure Auto Settings
         self.autonomousChooser = wpilib.SendableChooser()
         self.autonomousChooser.setDefaultOption("OnlyForward", "OnlyForward")
-        #self.autonomousChooser.addOption("Only Taxi", "Only Taxi")
+        self.autonomousChooser.addOption("Experimental", "Experimental")
         for pathName in self.autoList:
             self.autonomousChooser.addOption(pathName, pathName)
         wpilib.SmartDashboard.putData("Autonomous Chooser", self.autonomousChooser)
@@ -130,6 +130,10 @@ class RobotContainer:
         if pathName == "OnlyForward": 
             #return commands2.SequentialCommandGroup(ArmConfirmUp, AutoShootSpeaker)
             return commands2.SequentialCommandGroup(commands2.WaitCommand(12), simpleAutoDrive(self.driveTrain))
+    
+        elif pathName == "Experimental": # Ryan Modification Area
+            return commands2.CommandGroup(ModificationDrive(self.driveTrain, .5, .5, 0, 2)) #Ryan's Modifications... Man, I love sketchy modifications
+
         else:
             return PathPlannerAuto(pathName)
             
