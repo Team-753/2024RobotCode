@@ -82,6 +82,9 @@ class DriveTrainSubsystem(commands2.Subsystem):
     
     def resetPose(self, poseToset: geometry.Pose2d) -> None:
         self.poseEstimator.resetPosition(self.getNAVXRotation2d(), self.getSwerveModulePositions(), poseToset)
+
+    def resetFieldOrient(self):
+        self.navx.reset()
     
     def shouldFlipPath(self):
         # Boolean supplier that controls when the path will be mirrored for the red alliance

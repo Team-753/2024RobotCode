@@ -8,11 +8,11 @@ from commands.turnToCommand import TurnToCommand
 from wpimath import geometry, kinematics, estimator
 from commands2 import button, cmd
 from subsystems.driveTrain import DriveTrainSubsystem
-from commands.defaultDriveCommand import DefaultDriveCommand
+from commands.defaultDriveCommand import DefaultDriveCommand, ResetNavx
 from subsystems.arm import ArmSubsystem
 from subsystems.climber import ClimberSubsystem
 from subsystems.grabber import grabberSubsystem
-from commands.climberCommands import climberGoesUp, climberGoesDown, climberDoesntMove, rightClimberGoesUp, rightClimberGoesDown, leftClimberGoesDown, leftClimberGoesUp
+from commands.climberCommands import oneClimberGoesDown, oneClimberGoesUp, bothClimbersGoUp, bothClimbersGoDown, JoystickControl, climberDoesntMove
 from commands.ArmCommands import ArmSpeaker 
 #from commands.ArmCommands import grabberEvents
 from commands.ArmCommands import grab, empty, emptySlow, up, ampEmpty, down, manualShoot, ArmConfirmUp, AutoShootSpeaker
@@ -21,6 +21,7 @@ from wpilib.cameraserver import CameraServer
 #from commands.ArmCommands import armEvents
 from pathplannerlib.auto import PathPlannerAuto
 from commands.basicAuto import simpleAutoDrive
+import RobotConfig as config
 #from commands.ArmCommands import grabberEvents
 class RobotContainer:
     """ Basically does everything. Yeah... """
@@ -41,9 +42,14 @@ class RobotContainer:
         self.grabber = grabberSubsystem()
         self.driveTrain = DriveTrainSubsystem(self.joystick)
         self.arm = ArmSubsystem()
-        self.climber = ClimberSubsystem()
-        self.climber.stationary()
+        self.rightClimber = ClimberSubsystem(config.Climber.rightMotorCanID, 0, False)
+        self.leftClimber = ClimberSubsystem(config.Climber.leftMotorCanID, 1, True)
+        self.rightClimber.stationary()
+        self.leftClimber.stationary()
         self.driveTrain.setDefaultCommand(DefaultDriveCommand(self.driveTrain))
+        
+        self.leftClimber.setDefaultCommand(JoystickControl(self.leftClimber, self.checkJoystickInput(self.auxController.getLeftY())))
+        self.rightClimber.setDefaultCommand(JoystickControl(self.rightClimber, self.checkJoystickInput(self.auxController.getRightY())))
         """
         Setting our default commands, these are commands similar to the "periodic()" functions that 
         are ran every loop but only when another command IS NOT running on the subsystem hence the
@@ -114,12 +120,15 @@ class RobotContainer:
         '''self.auxController.pov(0).onTrue(cmd.runOnce(lambda: self.climber.goUp()))
         self.auxController.pov(180).onTrue(cmd.runOnce(lambda: self.climber.goDown()))
         self.auxController.pov(-1).onTrue(cmd.runOnce(lambda: self.climber.stationary()))'''
-        self.auxController.pov(0).whileTrue(climberGoesUp(self.climber))
-        self.auxController.pov(45).whileTrue(leftClimberGoesUp(self.climber))
-        self.auxController.pov(135).whileTrue(leftClimberGoesDown(self.climber))
-        self.auxController.pov(180).whileTrue(climberGoesDown(self.climber))
-        self.auxController.pov(225).whileTrue(rightClimberGoesDown(self.climber))
-        self.auxController.pov(315).whileTrue(rightClimberGoesUp(self.climber))
+        self.auxController.pov(0).whileTrue(bothClimbersGoUp(self.rightClimber, self.leftClimber))
+        self.auxController.pov(45).whileTrue(oneClimberGoesUp(self.leftClimber))
+        self.auxController.pov(135).whileTrue(oneClimberGoesDown(self.leftClimber))
+        self.auxController.pov(180).whileTrue(bothClimbersGoDown(self.rightClimber, self.leftClimber))
+        self.auxController.pov(225).whileTrue(oneClimberGoesDown(self.rightClimber))
+        self.auxController.pov(315).whileTrue(oneClimberGoesUp(self.rightClimber))
+
+        self.joystickButtonFour = button.JoystickButton(self.joystick, 4)
+        self.joystickButtonFour.onTrue(ResetNavx(self.driveTrain))
         #self.auxController.pov(-1).onTrue(climberDoesntMove(self.climber))
     #-----------------------------------------------------------------------------------------------   
     #Autonomous Start Protocol
@@ -134,6 +143,13 @@ class RobotContainer:
             return PathPlannerAuto(pathName)
             
     #-----------------------------------------------------------------------------------------------   
+    def checkJoystickInput(self, kInput: float):
+        if abs(kInput) < 0.1:
+            kInput = 0
+        else:
+            kInput = kInput/2
+        return(kInput)
+
     def disabledInit(self):
         pass
     
