@@ -20,5 +20,4 @@ class ResetNavx(commands2.Command):
         self.driveTrain = driveTrainSubsystem
     
     def initialize(self):
-        self.driveTrain.resetFieldOrient()
-        self.driveTrain.resetPose(DriveTrainSubsystem, geometry.Pose2d())
+        self.driveTrain.resetPose(geometry.Pose2d())
