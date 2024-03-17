@@ -35,13 +35,21 @@ class ArmSubsystem(commands2.Subsystem):
         #self.right.set(0.5)
         self.leftArm.set(-0.5)
         #self.right.setVoltage(9)
+        '''
         if(self.topLimit.get()):
+            self.stop()
+        '''
+        if(self.bottomLimit.get()):
             self.stop()
     def GoDown(self):
         print("Go Down")
         self.leftArm.set(0.2)
         #self.right.setVoltage(-9)
+        '''
         if(self.bottomLimit.get()):
+            self.stop()
+        '''
+        if(self.topLimit.get()):
             self.stop()
     def stop(self):
         print("stopping arm motors")
