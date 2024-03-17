@@ -27,7 +27,7 @@ class grabberSubsystem(commands2.Subsystem):
         # TODO: code to get commands from drive station joysticks
         # sets bottom motor position and tells top motor to follow. Top motor IS inverted.
         self.shooterVelocity = self.shooterEncoder.getVelocity()
-        if abs(self.shooterVelocity) >= 400:
+        if abs(self.shooterVelocity) >= 540:
             self.readyToShoot = True
             wpilib.SmartDashboard.putBoolean("Ready to shoot", True)
         else:
@@ -41,7 +41,7 @@ class grabberSubsystem(commands2.Subsystem):
         if (abs(self.shooterEncoder.getVelocity()) > 0):
             self.ringIn = False
             wpilib.SmartDashboard.putBoolean("Ring in wrist", False)
-            self.rearMotor.set(RobotConfig.grabber.intake)
+            self.rearMotor.set(RobotConfig.grabber.intake*(1/12))
             self.frontMotor.set(RobotConfig.grabber.intake*-1)
         else:
             self.ringIn = True
@@ -56,7 +56,7 @@ class grabberSubsystem(commands2.Subsystem):
     def ampShoot(self) -> None:
         print("Intake Direction Shoot")
         # TODO: Code to intake ring
-        self.grabberMotorInverted(RobotConfig.grabber.outtakeS*-1)
+        self.grabberMotorInverted(RobotConfig.grabber.outtakeS*1)
         '''
         self.rearMotor.set(RobotConfig.grabber.outtakeS*-1)
         self.frontMotor.set(RobotConfig.grabber.outtakeS)
@@ -68,14 +68,12 @@ class grabberSubsystem(commands2.Subsystem):
         print(self.shooterVelocity)
     def speakerShoot(self) -> None:
         print("2 Outtake")
-        if self.readyToShoot == True:
-            self.grabberMotorInverted(RobotConfig.grabber.outtakeF*-1)
-            '''
+        self.grabberMotorInverted(RobotConfig.grabber.outtakeF*-1)
+        '''
             self.frontMotor.set(RobotConfig.grabber.outtakeF*-1)
             self.rearMotor.set(RobotConfig.grabber.outtakeF)
             '''
-        else:
-            print("Not enough RPM")
+        print("Not enough RPM")
         # Ramp up with button, then shoot after 3+ seconds on button press
         #self.bottomMotor.set(RobotConfig.grabber.outtakeF)
     def shoot(self) -> None:
