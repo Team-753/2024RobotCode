@@ -1,5 +1,6 @@
 import commands2
 from subsystems.driveTrain import DriveTrainSubsystem
+from wpimath import geometry
 
 class DefaultDriveCommand(commands2.Command):
     
@@ -20,3 +21,4 @@ class ResetNavx(commands2.Command):
     
     def initialize(self):
         self.driveTrain.resetFieldOrient()
+        self.driveTrain.resetPose(DriveTrainSubsystem, geometry.Pose2d())
