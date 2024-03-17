@@ -48,8 +48,8 @@ class RobotContainer:
         self.leftClimber.stationary()
         self.driveTrain.setDefaultCommand(DefaultDriveCommand(self.driveTrain))
         
-        self.leftClimber.setDefaultCommand(JoystickControl(self.leftClimber, self.checkJoystickInput(self.auxController.getLeftY())))
-        self.rightClimber.setDefaultCommand(JoystickControl(self.rightClimber, self.checkJoystickInput(self.auxController.getRightY())))
+        #self.leftClimber.setDefaultCommand(JoystickControl(self.leftClimber, self.checkJoystickInput(self.auxController.getLeftY())))
+        #self.rightClimber.setDefaultCommand(JoystickControl(self.rightClimber, self.checkJoystickInput(self.auxController.getRightY())))
         """
         Setting our default commands, these are commands similar to the "periodic()" functions that 
         are ran every loop but only when another command IS NOT running on the subsystem hence the
@@ -126,6 +126,11 @@ class RobotContainer:
         self.auxController.pov(180).whileTrue(bothClimbersGoDown(self.rightClimber, self.leftClimber))
         self.auxController.pov(225).whileTrue(oneClimberGoesDown(self.rightClimber))
         self.auxController.pov(315).whileTrue(oneClimberGoesUp(self.rightClimber))
+
+        self.auxController.axisGreaterThan(0, 0.2).whileTrue(oneClimberGoesUp(self.leftClimber))
+        self.auxController.axisLessThan(0, -0.2).whileTrue(oneClimberGoesDown(self.leftClimber))
+        self.auxController.axisGreaterThan(1, 0.2).whileTrue(oneClimberGoesUp(self.rightClimber))
+        self.auxController.axisLessThan(1, -0.2).whileTrue(oneClimberGoesDown(self.rightClimber))
 
         self.joystickButtonFour = button.JoystickButton(self.joystick, 4)
         self.joystickButtonFour.onTrue(ResetNavx(self.driveTrain))
