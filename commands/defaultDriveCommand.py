@@ -11,4 +11,12 @@ class DefaultDriveCommand(commands2.Command):
     
     def execute(self):
         self.driveTrain.joystickDrive(self.driveTrain.getJoystickInput())
+
+class ResetNavx(commands2.Command):
+    def __init__(self, driveTrainSubsystem: DriveTrainSubsystem):
+        super().__init__()
+        self.addRequirements(driveTrainSubsystem)
+        self.driveTrain = driveTrainSubsystem
     
+    def initialize(self):
+        self.driveTrain.resetFieldOrient()
