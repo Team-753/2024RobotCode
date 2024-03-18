@@ -82,6 +82,9 @@ class DriveTrainSubsystem(commands2.Subsystem):
     
     def resetPose(self, poseToset: geometry.Pose2d) -> None:
         self.poseEstimator.resetPosition(self.getNAVXRotation2d(), self.getSwerveModulePositions(), poseToset)
+
+    def resetFieldOrient(self):
+        self.navx.reset()
     
     def shouldFlipPath(self):
         # Boolean supplier that controls when the path will be mirrored for the red alliance
@@ -95,9 +98,9 @@ class DriveTrainSubsystem(commands2.Subsystem):
         is inverted, make all these values positive instead of negative. """
         constants = RobotConfig.DriveConstants.Joystick
         return (
-            -wpimath.applyDeadband(self.joystick.getY(), constants.yDeadband),
-            -wpimath.applyDeadband(self.joystick.getX(), constants.xDeadband),
-            -wpimath.applyDeadband(self.joystick.getZ(), constants.thetaDeadband)
+            -wpimath.applyDeadband(self.joystick.getY(), constants.yDeadband), #Adjust Deadbands
+            -wpimath.applyDeadband(self.joystick.getX(), constants.xDeadband), #Adjust Deadbands
+            -wpimath.applyDeadband(self.joystick.getZ(), constants.thetaDeadband) #Adjust Deadbands
         )
     
     def autoDrive(self, chassisSpeeds: kinematics.ChassisSpeeds):
@@ -108,8 +111,12 @@ class DriveTrainSubsystem(commands2.Subsystem):
         self.rearRight.setState(swerveModuleStates[3])
 
     def joystickDrive(self, inputs: tuple[float]) -> None:
-        xSpeed, ySpeed, zSpeed = (inputs[0] * self.kMaxSpeed, 
-                                  inputs[1] * self.kMaxSpeed, 
+        InvertFactor = 1 
+        #if self.alliance == DriverStation.Alliance.kRed:
+            #InvertFactor = -1
+    
+        xSpeed, ySpeed, zSpeed = (inputs[0] * self.kMaxSpeed * InvertFactor, 
+                                  inputs[1] * self.kMaxSpeed * InvertFactor, 
                                   inputs[2] * self.kMaxAngularVelocity * RobotConfig.DriveConstants.RobotSpeeds.manualRotationSpeedFactor)
         self.setSwerveStates(xSpeed, ySpeed, zSpeed, self.poseEstimator.getEstimatedPosition())
             

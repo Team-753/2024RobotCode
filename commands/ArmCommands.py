@@ -54,7 +54,17 @@ class ampEmpty(commands2.Command):
         print("Amp empty")
     def end(self, interruppted: bool) -> None:
         self.grabber.idle()
-
+class slowIntake(commands2.Command):
+    def __init__(self, kGrabber: grabberSubsystem) -> None:
+        super().__init__()
+        self.grabber = kGrabber
+    def initialize(self):
+        pass
+    def execute(self):
+        self.grabber.intakeSlow()
+        print("Slow Intake")
+    def end(self, interruppted: bool) -> None:
+        self.grabber.idle()
 class manualShoot(commands2.Command):
     def __init__(self, kGrabber: grabberSubsystem) -> None:
         super().__init__()
