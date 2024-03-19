@@ -130,9 +130,9 @@ class RobotContainer:
         self.auxController.axisGreaterThan(0, 0.2).whileTrue(oneClimberGoesUp(self.leftClimber))
         self.auxController.axisLessThan(0, -0.2).whileTrue(oneClimberGoesDown(self.leftClimber))
         self.auxController.axisGreaterThan(1, 0.2).whileTrue(oneClimberGoesUp(self.rightClimber))
-        self.auxController.axisLessThan(1, -0.2).whileTrue(oneClimberGoesDown(self.rightClimber))
+        self.auxController.axisLessThan(0, -0.2).whileTrue(oneClimberGoesDown(self.rightClimber))
 
-        self.joystickButtonFour = button.JoystickButton(self.joystick, 4)
+        self.joystickButtonFour = self.joystick.button(4)
         self.joystickButtonFour.onTrue(ResetNavx(self.driveTrain))
         #self.auxController.pov(-1).onTrue(climberDoesntMove(self.climber))
     #-----------------------------------------------------------------------------------------------   
