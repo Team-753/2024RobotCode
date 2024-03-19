@@ -1,7 +1,9 @@
+# imports
 import wpilib
 import commands2
 from subsystems.arm import ArmSubsystem
 from subsystems.grabber import grabberSubsystem
+# Does nothing
 class ArmSpeaker(commands2.Command):
     def __init__(self):
         super().__init__()
@@ -9,6 +11,7 @@ class ArmSpeaker(commands2.Command):
     def execute(self) -> None:
         #self.arm.goToSpeaker(self)
         pass
+# intakes a note.
 class grab(commands2.Command):
     def __init__(self, kGrabber: grabberSubsystem) -> None:
         super().__init__()
@@ -20,6 +23,8 @@ class grab(commands2.Command):
         print("intaking")
     def end(self, interuppted: bool) -> None:
         self.grabber.idle()
+
+# empties a note after rev
 class empty(commands2.Command):
     def __init__(self, kGrabber: grabberSubsystem) -> None:
         super().__init__()
@@ -31,7 +36,8 @@ class empty(commands2.Command):
         self.grabber.speakerShoot()
         
     def end(self, interuppted: bool) -> None:
-        self.grabber.idle()  
+        self.grabber.idle() 
+# revs up arm to shoot
 class emptySlow(commands2.Command):
     def __init__(self, kGrabber: grabberSubsystem) -> None:
         super().__init__()
@@ -43,6 +49,7 @@ class emptySlow(commands2.Command):
         print("empty slow")
     def end(self, interuppted: bool) -> None:
         self.grabber.idle()
+# empties the other way.
 class ampEmpty(commands2.Command):
     def __init__(self, kGrabber: grabberSubsystem) -> None:
         super().__init__()
@@ -54,6 +61,7 @@ class ampEmpty(commands2.Command):
         print("Amp empty")
     def end(self, interruppted: bool) -> None:
         self.grabber.idle()
+# Intakes slowly
 class slowIntake(commands2.Command):
     def __init__(self, kGrabber: grabberSubsystem) -> None:
         super().__init__()
@@ -65,6 +73,7 @@ class slowIntake(commands2.Command):
         print("Slow Intake")
     def end(self, interruppted: bool) -> None:
         self.grabber.idle()
+#  Manually shoots
 class manualShoot(commands2.Command):
     def __init__(self, kGrabber: grabberSubsystem) -> None:
         super().__init__()
@@ -75,7 +84,7 @@ class manualShoot(commands2.Command):
         pass
     def end(self, interrupted: bool):
         self.grabber.idle()
-   
+# Stops grabber
 class stop(commands2.Command):
     def __init__(self, kGrabber: grabberSubsystem) -> None:
         super().__init__()
@@ -86,6 +95,7 @@ class stop(commands2.Command):
         self.grabber.idle()
     def end(self):
         pass
+# Moves arm up
 class up(commands2.Command):
     def __init__(self, kArm: ArmSubsystem) -> None:
         super().__init__()
@@ -96,6 +106,7 @@ class up(commands2.Command):
         pass
     def end(self, interuppted: bool) -> None:
         self.arm.stop()
+# Moves arm down
 class down(commands2.Command):
     def __init__(self, kArm: ArmSubsystem) -> None:
         super().__init__()
