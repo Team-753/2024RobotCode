@@ -141,14 +141,14 @@ class RobotContainer:
             return commands2.SequentialCommandGroup(commands2.WaitCommand(12), simpleAutoDrive(self.driveTrain))
     
         elif pathName == "Experimental": # Ryan Modification Area
-<<<<<<< HEAD
+
             return ModificationDrive(self.driveTrain, .5, 0, 0, 2) #Ryan's Modifications... Man, I love sketchy modifications
 
-=======
+
             #Yeah, this is a mess. Testing required. 
             return commands2.SequentialCommandGroup (ModificationDrive(self.driveTrain, 0.5, 0, 0, 0.5), ModificationDrive(self.driveTrain, 0, 0, 0, 2),ModificationDrive(self.driveTrain, -0.5, 0, 0, .5 )) #Ryan's Modifications... Man, I love sketchy modifications
             
->>>>>>> b897532d22badbaab20a68ba5605368268ad3606
+
         else:
             return PathPlannerAuto(pathName)
             
