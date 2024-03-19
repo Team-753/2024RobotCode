@@ -78,7 +78,7 @@ class RobotContainer:
         #print(self.upJoystick)
         #self.auxController.getAButtonPressed(cmd.runOnce(lambda self.arm.setDesiredAngle(RobotConfig.armConstants.Amp)))
         self.buttonA = self.auxController.a()
-        self.buttonA.whileTrue(up(self.arm))
+        self.buttonA.whileTrue(down(self.arm))
         #.buttonA = self.auxController.a()
         #self.buttonA.whileTrue(up(self.arm))
         #self.buttonA.onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Amp)))
@@ -87,7 +87,7 @@ class RobotContainer:
         
         self.buttonY = self.auxController.y()
         #self.buttonB.onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Home)))
-        self.buttonY.whileTrue(down(self.arm))
+        self.buttonY.whileTrue(up(self.arm))
         '''
         # For now, arm uses X for Speaker preset
         

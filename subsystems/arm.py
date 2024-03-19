@@ -12,46 +12,55 @@ class ArmSubsystem(commands2.Subsystem):
     def __init__(self):
         super().__init__()
         #initialized
+        #sets up right and left motors
         self.rightArm = rev.CANSparkMax(RobotConfig.Arm.rightMotorCanID, _rev.CANSparkMax.MotorType.kBrushless)
         self.leftArm = rev.CANSparkMax(RobotConfig.Arm.leftMotorCanID, _rev.CANSparkMax.MotorType.kBrushless)
+        # configures limit switches
         self.bottomLimit = wpilib.DigitalInput(RobotConfig.Arm.limitSwitch1RIO)
         self.topLimit = wpilib.DigitalInput(RobotConfig.Arm.limitSwitch2RIO)
         self.rightArm.restoreFactoryDefaults()
         self.leftArm.restoreFactoryDefaults()
         self.rightArm.setSmartCurrentLimit(40)
         self.leftArm.setSmartCurrentLimit(40)
+        # BRAKE MODE!!!
         self.rightArm.setIdleMode(_rev.CANSparkMax.IdleMode.kBrake)
         self.leftArm.setIdleMode(_rev.CANSparkMax.IdleMode.kBrake)
         #leftEncoder = self.left.getEncoder()
         self.rightArm.follow(self.leftArm, True)
     def periodic(self) -> None:
+        # SmartDashboard Stuff
         wpilib.SmartDashboard.putNumber("Left Motor Output: ", self.leftArm.getBusVoltage())
         wpilib.SmartDashboard.putNumber("Right Motor Output: ", self.rightArm.getBusVoltage())
         # print(f"Left Motor Position: {self.leftEncoder.getPosition()}")
         # print(f"Left Motor Voltage: {self.leftArm.getBusVoltage()}")
     def GoUp(self):
+        # Move arm up at 50% power
         print("Running arm motors")
         #self.leftArm.set(0.5)
         #self.right.set(0.5)
-        self.leftArm.set(-0.5)
+        self.leftArm.set(0.5)
         #self.right.setVoltage(9)
         '''
         if(self.topLimit.get()):
             self.stop()
-        '''
+        ''''''
         if(self.bottomLimit.get()):
             self.stop()
+            '''
     def GoDown(self):
+        # Run arm down at 20% power
         print("Go Down")
-        self.leftArm.set(0.2)
+        self.leftArm.set(-0.2)
         #self.right.setVoltage(-9)
-        '''
+        
         if(self.bottomLimit.get()):
             self.stop()
         '''
         if(self.topLimit.get()):
             self.stop()
+            '''
     def stop(self):
+        # Pretty self explanatory...
         print("stopping arm motors")
         self.leftArm.set(0)
         self.rightArm.set(0)
