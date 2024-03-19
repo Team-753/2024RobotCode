@@ -127,7 +127,7 @@ class RobotContainer:
         self.auxController.pov(225).whileTrue(oneClimberGoesDown(self.rightClimber))
         self.auxController.pov(315).whileTrue(oneClimberGoesUp(self.rightClimber))
 
-        self.joystickButtonFour = button.JoystickButton(self.joystick, 4)
+        self.joystickButtonFour = self.joystick.button(4)
         self.joystickButtonFour.onTrue(ResetNavx(self.driveTrain))
         #self.auxController.pov(-1).onTrue(climberDoesntMove(self.climber))
     #-----------------------------------------------------------------------------------------------   
