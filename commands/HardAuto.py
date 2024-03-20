@@ -30,7 +30,7 @@ class simpleAutoDrive(commands2.Command):
 #HardAuto reffers to autos built into the machine, not using PathPlanner
 #This modification is designed to create an "easy" HardAuto
 
-class ModificationDrive(commands2.Command):
+class HardAuto(commands2.Command):
     
     def __init__(self, driveTrainSubsysten: DriveTrainSubsystem, X: float, Y: float, Z: float, Duration: float):
         super().__init__()

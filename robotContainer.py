@@ -20,7 +20,7 @@ from wpilib.cameraserver import CameraServer
 #from commands.ArmCommands import empty
 #from commands.ArmCommands import armEvents
 from pathplannerlib.auto import PathPlannerAuto
-from commands.basicAuto import simpleAutoDrive, ModificationDrive
+from commands.HardAuto import simpleAutoDrive, HardAuto
 import RobotConfig as config
 #from commands.ArmCommands import grabberEvents
 class RobotContainer:
@@ -149,20 +149,20 @@ class RobotContainer:
         #Experimental Auto, X,Y,Z values in ModificationDrive determine joystick input, and the final float is to determine how long it is executed. 
         elif pathName == "E Taxi": # Ryan Modification Area
              
-            return commands2.SequentialCommandGroup (ModificationDrive(self.driveTrain, 1, 0, 0, 0.5), ModificationDrive(self.driveTrain, 0, 0, 0, 2),ModificationDrive(self.driveTrain, -1, 0, 0, .5 )) #Ryan's Modifications... Man, I love sketchy modifications
+            return commands2.SequentialCommandGroup (HardAuto(self.driveTrain, 1, 0, 0, 0.5), HardAuto(self.driveTrain, 0, 0, 0, 2),HardAuto(self.driveTrain, -1, 0, 0, .5 )) #Ryan's Modifications... Man, I love sketchy modifications
         
         elif pathName == "E Right Blue Auto": 
             
-            return commands2.SequentialCommandGroup (ArmConfirmUp, AutoShootSpeaker, ModificationDrive(self.driveTrain, -1, 0, 0, 3),ModificationDrive(self.driveTrain, 0, 0, 1, .5 )) 
+            return commands2.SequentialCommandGroup (ArmConfirmUp, AutoShootSpeaker, HardAuto(self.driveTrain, -1, 0, 0, 3),HardAuto(self.driveTrain, 0, 0, 1, .5 )) 
         
         elif pathName == "E Left Blue Auto": 
             pass
         elif pathName == "E Right Red Auto": 
-            return commands2.SequentialCommandGroup (ArmConfirmUp, AutoShootSpeaker, ModificationDrive(self.driveTrain, -1, 0, 0, 3),ModificationDrive(self.driveTrain, 0, 0, 1, .5 )) 
+            return commands2.SequentialCommandGroup (ArmConfirmUp, AutoShootSpeaker, HardAuto(self.driveTrain, -1, 0, 0, 3),HardAuto(self.driveTrain, 0, 0, 1, .5 )) 
         elif pathName == "E Left Red Auto": 
             pass
         elif pathName == "Experimental":
-            return commands2.SequentialCommandGroup (ArmConfirmUp, AutoShootSpeaker, ModificationDrive(self.driveTrain, 0, 0, .5, 2),ModificationDrive(self.driveTrain, 0, 0, 0, 1 )) 
+            return commands2.SequentialCommandGroup (ArmConfirmUp, AutoShootSpeaker, HardAuto(self.driveTrain, 0, 0, .5, 2),HardAuto(self.driveTrain, 0, 0, 0, 1 )) 
             
         else:
             return PathPlannerAuto(pathName)
