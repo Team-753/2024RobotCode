@@ -66,6 +66,7 @@ class RobotContainer:
         self.autonomousChooser.addOption("E Left Blue Auto", "E Left Blue Auto")
         self.autonomousChooser.addOption("E Right Red Auto", "E Right Red Auto")
         self.autonomousChooser.addOption("E Left Red Auto", "E Left Red Auto")
+        self.autonomousChooser.addOption("Experimental", "Experimental")
         #for pathName in self.autoList:
             #self.autonomousChooser.addOption(pathName, pathName)
         wpilib.SmartDashboard.putData("Autonomous Chooser", self.autonomousChooser)
@@ -160,6 +161,9 @@ class RobotContainer:
             return commands2.SequentialCommandGroup (ModificationDrive(self.driveTrain, -1, 0, 0, 3),ModificationDrive(self.driveTrain, 0, 0, 1, .5 )) 
         elif pathName == "E Left Red Auto": 
             pass
+        elif pathName == "Experimental":
+            return commands2.SequentialCommandGroup (ModificationDrive(self.driveTrain, 0, 0, .5, 2),ModificationDrive(self.driveTrain, 0, 0, 0, 1 )) 
+            
         else:
             return PathPlannerAuto(pathName)
             
