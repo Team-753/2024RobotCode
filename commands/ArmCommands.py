@@ -133,6 +133,7 @@ class AutoShootSpeaker(commands2.Command):
     def isFinished(self) -> bool:
         if self.timer.get() == 2:
             self.grabber.shoot
+        return True
     def end(self, interuppted: bool) -> None:
         self.grabber.idle
         
