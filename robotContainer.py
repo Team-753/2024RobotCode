@@ -149,7 +149,7 @@ class RobotContainer:
         #Experimental Auto, X,Y,Z values in ModificationDrive determine joystick input, and the final float is to determine how long it is executed. 
         elif pathName == "E Taxi": # Ryan Modification Area
              
-            return commands2.SequentialCommandGroup (HardAuto(self.driveTrain, 1, 0, 0, 0.5), HardAuto(self.driveTrain, 0, 0, 0, 2),HardAuto(self.driveTrain, -1, 0, 0, .5 )) #Ryan's Modifications... Man, I love sketchy modifications
+            return commands2.SequentialCommandGroup (HardAuto(self.driveTrain, 1, 0, 0, 2), HardAuto(self.driveTrain, 0, 0, 0, 2),HardAuto(self.driveTrain, -1, 0, 0, 2)) #Ryan's Modifications... Man, I love sketchy modifications
         
         elif pathName == "E Right Blue Auto": 
             
