@@ -125,13 +125,17 @@ class AutoShootSpeaker(commands2.Command):
         self.grabber = kGrabber
         self.timer = wpilib.Timer()
     def initialize(self):
-        self.grabber.speedUpShoot
+        self.timer.reset
+        self.timer.start
+        self.grabber.speakerShoot
     def execute(self) -> None:
-        self.grabber.idle()
+        pass
     def isFinished(self) -> bool:
-        if self.grabber.getReadyToShoot() and self.timer.get()==0: 
-            self.timer.start()
-        return self.timer.hasElapsed(0.5) 
+        if self.timer == 2:
+            self.grabber.shoot
+    def end(self, interuppted: bool) -> None:
+        self.grabber.idle
+        
 
 #######################################################################
     
