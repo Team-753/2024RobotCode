@@ -13,7 +13,7 @@ from subsystems.arm import ArmSubsystem
 from subsystems.climber import ClimberSubsystem
 from subsystems.grabber import grabberSubsystem
 from commands.climberCommands import oneClimberGoesDown, oneClimberGoesUp, bothClimbersGoUp, bothClimbersGoDown, JoystickControl, climberDoesntMove
-from commands.ArmCommands import ArmSpeaker 
+from commands.ArmCommands import ArmSpeaker, AutoShootSpeaker, ArmConfirmUp
 #from commands.ArmCommands import grabberEvents
 from commands.ArmCommands import grab, empty, emptySlow, up, ampEmpty, down, manualShoot, ArmConfirmUp, AutoShootSpeaker
 from wpilib.cameraserver import CameraServer
@@ -153,16 +153,16 @@ class RobotContainer:
         
         elif pathName == "E Right Blue Auto": 
             
-            return commands2.SequentialCommandGroup (ModificationDrive(self.driveTrain, -1, 0, 0, 3),ModificationDrive(self.driveTrain, 0, 0, 1, .5 )) 
+            return commands2.SequentialCommandGroup (ArmConfirmUp, AutoShootSpeaker, ModificationDrive(self.driveTrain, -1, 0, 0, 3),ModificationDrive(self.driveTrain, 0, 0, 1, .5 )) 
         
         elif pathName == "E Left Blue Auto": 
             pass
         elif pathName == "E Right Red Auto": 
-            return commands2.SequentialCommandGroup (ModificationDrive(self.driveTrain, -1, 0, 0, 3),ModificationDrive(self.driveTrain, 0, 0, 1, .5 )) 
+            return commands2.SequentialCommandGroup (ArmConfirmUp, AutoShootSpeaker, ModificationDrive(self.driveTrain, -1, 0, 0, 3),ModificationDrive(self.driveTrain, 0, 0, 1, .5 )) 
         elif pathName == "E Left Red Auto": 
             pass
         elif pathName == "Experimental":
-            return commands2.SequentialCommandGroup (ModificationDrive(self.driveTrain, 0, 0, .5, 2),ModificationDrive(self.driveTrain, 0, 0, 0, 1 )) 
+            return commands2.SequentialCommandGroup (ArmConfirmUp, AutoShootSpeaker, ModificationDrive(self.driveTrain, 0, 0, .5, 2),ModificationDrive(self.driveTrain, 0, 0, 0, 1 )) 
             
         else:
             return PathPlannerAuto(pathName)
