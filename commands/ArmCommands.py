@@ -116,7 +116,7 @@ class AutoShootSpeaker(commands2.Command):
     def initialize(self):
         self.grabber.speedUpShoot
     def execute(self) -> None:
-        self.grabber.idle()
+        pass
     def isFinished(self) -> bool:
         if self.grabber.getReadyToShoot() and self.timer.get()==0: 
             self.timer.start()
