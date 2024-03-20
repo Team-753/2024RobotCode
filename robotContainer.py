@@ -20,7 +20,7 @@ from wpilib.cameraserver import CameraServer
 #from commands.ArmCommands import empty
 #from commands.ArmCommands import armEvents
 from pathplannerlib.auto import PathPlannerAuto
-from commands.basicAuto import simpleAutoDrive
+from commands.basicAuto import simpleAutoDrive, ModificationDrive
 import RobotConfig as config
 #from commands.ArmCommands import grabberEvents
 class RobotContainer:
@@ -48,8 +48,8 @@ class RobotContainer:
         self.leftClimber.stationary()
         self.driveTrain.setDefaultCommand(DefaultDriveCommand(self.driveTrain))
         
-        #self.leftClimber.setDefaultCommand(JoystickControl(self.leftClimber, self.checkJoystickInput(self.auxController.getLeftY())))
-        #self.rightClimber.setDefaultCommand(JoystickControl(self.rightClimber, self.checkJoystickInput(self.auxController.getRightY())))
+        self.leftClimber.setDefaultCommand(JoystickControl(self.leftClimber, self.checkJoystickInput(self.auxController.getLeftY())))
+        self.rightClimber.setDefaultCommand(JoystickControl(self.rightClimber, self.checkJoystickInput(self.auxController.getRightY())))
         """
         Setting our default commands, these are commands similar to the "periodic()" functions that 
         are ran every loop but only when another command IS NOT running on the subsystem hence the
@@ -61,9 +61,13 @@ class RobotContainer:
     #Configure Auto Settings
         self.autonomousChooser = wpilib.SendableChooser()
         self.autonomousChooser.setDefaultOption("OnlyForward", "OnlyForward")
-        #self.autonomousChooser.addOption("Only Taxi", "Only Taxi")
-        for pathName in self.autoList:
-            self.autonomousChooser.addOption(pathName, pathName)
+        self.autonomousChooser.addOption("E Taxi", "E Taxi")
+        self.autonomousChooser.addOption("E Right Blue Auto", "E Right Blue Auto")
+        self.autonomousChooser.addOption("E Left Blue Auto", "E Left Blue Auto")
+        self.autonomousChooser.addOption("E Right Red Auto", "E Right Red Auto")
+        self.autonomousChooser.addOption("E Left Red Auto", "E Left Red Auto")
+        #for pathName in self.autoList:
+            #self.autonomousChooser.addOption(pathName, pathName)
         wpilib.SmartDashboard.putData("Autonomous Chooser", self.autonomousChooser)
     #--------------------------------------------------------------------------------    
     def configureButtonBindings(self):
@@ -78,7 +82,7 @@ class RobotContainer:
         #print(self.upJoystick)
         #self.auxController.getAButtonPressed(cmd.runOnce(lambda self.arm.setDesiredAngle(RobotConfig.armConstants.Amp)))
         self.buttonA = self.auxController.a()
-        self.buttonA.whileTrue(down(self.arm))
+        self.buttonA.whileTrue(up(self.arm))
         #.buttonA = self.auxController.a()
         #self.buttonA.whileTrue(up(self.arm))
         #self.buttonA.onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Amp)))
@@ -87,7 +91,7 @@ class RobotContainer:
         
         self.buttonY = self.auxController.y()
         #self.buttonB.onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Home)))
-        self.buttonY.whileTrue(up(self.arm))
+        self.buttonY.whileTrue(down(self.arm))
         '''
         # For now, arm uses X for Speaker preset
         
@@ -127,11 +131,6 @@ class RobotContainer:
         self.auxController.pov(225).whileTrue(oneClimberGoesDown(self.rightClimber))
         self.auxController.pov(315).whileTrue(oneClimberGoesUp(self.rightClimber))
 
-        self.auxController.axisGreaterThan(0, 0.2).whileTrue(oneClimberGoesUp(self.leftClimber))
-        self.auxController.axisLessThan(0, -0.2).whileTrue(oneClimberGoesDown(self.leftClimber))
-        self.auxController.axisGreaterThan(1, 0.2).whileTrue(oneClimberGoesUp(self.rightClimber))
-        self.auxController.axisLessThan(0, -0.2).whileTrue(oneClimberGoesDown(self.rightClimber))
-
         self.joystickButtonFour = self.joystick.button(4)
         self.joystickButtonFour.onTrue(ResetNavx(self.driveTrain))
         #self.auxController.pov(-1).onTrue(climberDoesntMove(self.climber))
@@ -142,8 +141,25 @@ class RobotContainer:
         """ Logic for what will run in autonomous mode. Returning anything but a command will result in nothing happening in autonomous. """
         pathName = self.autonomousChooser.getSelected()
         if pathName == "OnlyForward": 
-            #return commands2.SequentialCommandGroup(ArmConfirmUp, AutoShootSpeaker)
+        
             return commands2.SequentialCommandGroup(commands2.WaitCommand(12), simpleAutoDrive(self.driveTrain))
+        
+        
+        #Experimental Auto, X,Y,Z values in ModificationDrive determine joystick input, and the final float is to determine how long it is executed. 
+        elif pathName == "E Taxi": # Ryan Modification Area
+             
+            return commands2.SequentialCommandGroup (ModificationDrive(self.driveTrain, 1, 0, 0, 0.5), ModificationDrive(self.driveTrain, 0, 0, 0, 2),ModificationDrive(self.driveTrain, -1, 0, 0, .5 )) #Ryan's Modifications... Man, I love sketchy modifications
+        
+        elif pathName == "E Right Blue Auto": 
+            
+            return commands2.SequentialCommandGroup (ModificationDrive(self.driveTrain, -1, 0, 0, 3),ModificationDrive(self.driveTrain, 0, 0, 1, .5 )) 
+        
+        elif pathName == "E Left Blue Auto": 
+            pass
+        elif pathName == "E Right Red Auto": 
+            return commands2.SequentialCommandGroup (ModificationDrive(self.driveTrain, -1, 0, 0, 3),ModificationDrive(self.driveTrain, 0, 0, 1, .5 )) 
+        elif pathName == "E Left Red Auto": 
+            pass
         else:
             return PathPlannerAuto(pathName)
             
