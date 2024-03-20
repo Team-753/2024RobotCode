@@ -120,7 +120,7 @@ class down(commands2.Command):
 
 #######################################################################
 class AutoShootSpeaker(commands2.Command):
-    def __init(self, kGrabber: grabberSubsystem) -> None:
+    def __init__(self, kGrabber: grabberSubsystem) -> None:
         super().__init__()
         self.grabber = kGrabber
         self.timer = wpilib.Timer()
@@ -128,7 +128,7 @@ class AutoShootSpeaker(commands2.Command):
         self.timer.reset()
         self.grabber.speakerShoot()
     def execute(self) -> None:
-        if self.grabber.readyToShoot == True and self.timer.get() == 0:
+        if self.grabber.getReadyToShoot == True and self.timer.get() == 0:
             self.grabber.shoot()
             self.timer.start()
             
