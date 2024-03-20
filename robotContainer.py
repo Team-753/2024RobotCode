@@ -20,7 +20,9 @@ from wpilib.cameraserver import CameraServer
 #from commands.ArmCommands import empty
 #from commands.ArmCommands import armEvents
 from pathplannerlib.auto import PathPlannerAuto
+'''
 from commands.basicAuto import simpleAutoDrive, ModificationDrive
+'''
 import RobotConfig as config
 #from commands.ArmCommands import grabberEvents
 class RobotContainer:
@@ -48,8 +50,8 @@ class RobotContainer:
         self.leftClimber.stationary()
         self.driveTrain.setDefaultCommand(DefaultDriveCommand(self.driveTrain))
         
-        self.leftClimber.setDefaultCommand(JoystickControl(self.leftClimber, self.checkJoystickInput(self.auxController.getLeftY())))
-        self.rightClimber.setDefaultCommand(JoystickControl(self.rightClimber, self.checkJoystickInput(self.auxController.getRightY())))
+        #self.leftClimber.setDefaultCommand(JoystickControl(self.leftClimber, self.checkJoystickInput(self.auxController.getLeftY())))
+        #self.rightClimber.setDefaultCommand(JoystickControl(self.rightClimber, self.checkJoystickInput(self.auxController.getRightY())))
         """
         Setting our default commands, these are commands similar to the "periodic()" functions that 
         are ran every loop but only when another command IS NOT running on the subsystem hence the
@@ -131,6 +133,11 @@ class RobotContainer:
         self.auxController.pov(180).whileTrue(bothClimbersGoDown(self.rightClimber, self.leftClimber))
         self.auxController.pov(225).whileTrue(oneClimberGoesDown(self.rightClimber))
         self.auxController.pov(315).whileTrue(oneClimberGoesUp(self.rightClimber))
+        
+        self.auxController.axisGreaterThan(0, 0.2).onTrue(oneClimberGoesUp(self.leftClimber))
+        self.auxController.axisLessThan(0, -0.2).onTrue(oneClimberGoesDown(self.leftClimber))
+        self.auxController.axisGreaterThan(1, 0.2).onTrue(oneClimberGoesUp(self.rightClimber))
+        self.auxController.axisLessThan(1, -0.2).onTrue(oneClimberGoesDown(self.rightClimber))
 
         self.joystickButtonFour = self.joystick.button(4)
         self.joystickButtonFour.onTrue(ResetNavx(self.driveTrain))
@@ -138,7 +145,8 @@ class RobotContainer:
     #-----------------------------------------------------------------------------------------------   
     #Autonomous Start Protocol
     def getAutonomousCommand(self):
-        
+        pass
+        '''
         """ Logic for what will run in autonomous mode. Returning anything but a command will result in nothing happening in autonomous. """
         pathName = self.autonomousChooser.getSelected()
         if pathName == "OnlyForward": 
@@ -166,7 +174,7 @@ class RobotContainer:
             
         else:
             return PathPlannerAuto(pathName)
-            
+        '''
     #-----------------------------------------------------------------------------------------------   
     def checkJoystickInput(self, kInput: float):
         if abs(kInput) < 0.1:

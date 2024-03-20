@@ -93,7 +93,4 @@ class grabberSubsystem(commands2.Subsystem):
         self.frontMotor.set(RobotConfig.grabber.idle)
         '''
 
-#######################################################################
-    def getReadyToShoot(self):
-        return self.readyToShoot
-#######################################################################
+
