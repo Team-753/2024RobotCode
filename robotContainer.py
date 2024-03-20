@@ -67,8 +67,8 @@ class RobotContainer:
         self.autonomousChooser.addOption("E Right Red Auto", "E Right Red Auto")
         self.autonomousChooser.addOption("E Left Red Auto", "E Left Red Auto")
         self.autonomousChooser.addOption("Experimental", "Experimental")
-        #for pathName in self.autoList:
-            #self.autonomousChooser.addOption(pathName, pathName)
+        for pathName in self.autoList:
+            self.autonomousChooser.addOption(pathName, pathName)
         wpilib.SmartDashboard.putData("Autonomous Chooser", self.autonomousChooser)
     #--------------------------------------------------------------------------------    
     def configureButtonBindings(self):
