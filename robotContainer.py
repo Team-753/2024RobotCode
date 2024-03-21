@@ -121,7 +121,7 @@ class RobotContainer:
         elif pathName == "E Left Red Auto": 
             return cmd.none()
         elif pathName == "Experimental":
-            return commands2.SequentialCommandGroup (ArmConfirmUp(self.arm), AutoShootSpeaker(self.grabber))
+            return commands2.SequentialCommandGroup (ArmConfirmUp(self.grabber), AutoShootSpeaker(self.grabber))
             
         else:
             return PathPlannerAuto(pathName)
