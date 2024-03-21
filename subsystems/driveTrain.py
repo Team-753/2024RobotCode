@@ -55,6 +55,8 @@ class DriveTrainSubsystem(commands2.Subsystem):
                                                                 geometry.Pose2d(0, 0, geometry.Rotation2d(math.pi)), 
                                                                 self.stateStdDevs,
                                                                 self.visionMeasurementStdDevs)
+        self.field = wpilib.Field2d()
+        wpilib.SmartDashboard.putData("Field", self.field)
         
         # i just stole this from here verbatum: https://pathplanner.dev/pplib-build-an-auto.html#configure-autobuilder
         
@@ -189,6 +191,7 @@ class DriveTrainSubsystem(commands2.Subsystem):
                 botPose2D = geometry.Pose2d(geometry.Translation2d(botPoseData[0], botPoseData[1]), geometry.Rotation2d(botPoseData[5]))
                 latency = botPoseData[6]
                 self.poseEstimator.addVisionMeasurement(botPose2D, latency)'''
-        self.poseEstimator.update(
+        currentPose = self.poseEstimator.update(
             self.getNAVXRotation2d(),
             self.getSwerveModulePositions())
+        self.field.setRobotPose(currentPose)
