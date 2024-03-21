@@ -96,23 +96,23 @@ class stop(commands2.Command):
     def end(self):
         pass
 # Moves arm up
-class up(commands2.Command):
+class ArmDown(commands2.Command):
     def __init__(self, kArm: ArmSubsystem) -> None:
         super().__init__()
         self.arm = kArm
     def initialize(self):
-        self.arm.GoUp()
+        self.arm.goDown()
     def execute(self):
         pass
     def end(self, interuppted: bool) -> None:
         self.arm.stop()
 # Moves arm down
-class down(commands2.Command):
+class ArmUp(commands2.Command):
     def __init__(self, kArm: ArmSubsystem) -> None:
         super().__init__()
         self.arm = kArm
     def initialize(self):
-        self.arm.GoDown()
+        self.arm.GoUp()
     def execute(self):
         pass
     def end(self, interuppted: bool) -> None:

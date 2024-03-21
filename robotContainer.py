@@ -15,7 +15,7 @@ from subsystems.grabber import grabberSubsystem
 from commands.climberCommands import oneClimberGoesDown, oneClimberGoesUp, bothClimbersGoUp, bothClimbersGoDown, JoystickControl, climberDoesntMove
 from commands.ArmCommands import ArmSpeaker
 #from commands.ArmCommands import grabberEvents
-from commands.ArmCommands import grab, empty, emptySlow, up, ampEmpty, down, manualShoot, ArmConfirmUp, AutoShootSpeaker
+from commands.ArmCommands import grab, empty, emptySlow, ArmDown, ampEmpty, ArmUp, manualShoot, ArmConfirmUp, AutoShootSpeaker
 from wpilib.cameraserver import CameraServer
 #from commands.ArmCommands import empty
 #from commands.ArmCommands import armEvents
@@ -79,10 +79,10 @@ class RobotContainer:
         self.auxController.rightBumper().whileTrue(emptySlow(self.grabber))#self.upJoystick = self.auxController.getLeftY()
         # self.auxController.b().whileTrue(manualShoot(self.grabber)) NOTE: This code causes the robot code to error, the root lies in the shoot() function in the grabber code.
         self.buttonA = self.auxController.a()
-        self.buttonA.whileTrue(up(self.arm))
+        self.buttonA.whileTrue(ArmDown(self.arm))
         
         self.buttonY = self.auxController.y()
-        self.buttonY.whileTrue(down(self.arm))
+        self.buttonY.whileTrue(ArmUp(self.arm))
 
         self.auxController.pov(0).whileTrue(bothClimbersGoUp(self.rightClimber, self.leftClimber))
         self.auxController.pov(45).whileTrue(oneClimberGoesUp(self.leftClimber))
