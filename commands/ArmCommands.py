@@ -128,7 +128,7 @@ class AutoShootSpeaker(commands2.Command):
         self.timer.reset()
         self.grabber.speakerShoot()
     def execute(self) -> None:
-        if self.grabber.getReadyToShoot == True and self.timer.get() == 0:
+        if self.grabber.getReadyToShoot() == True and self.timer.get() == 0:
             self.grabber.shoot()
             self.timer.start()
             
