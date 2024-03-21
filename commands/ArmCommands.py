@@ -1,8 +1,13 @@
 # imports
 import wpilib
 import commands2
+import wpimath
+import math
+from wpimath import geometry
+from subsystems.driveTrain import DriveTrainSubsystem
 from subsystems.arm import ArmSubsystem
 from subsystems.grabber import grabberSubsystem
+
 # Does nothing
 class ArmSpeaker(commands2.Command):
     def __init__(self):
@@ -155,7 +160,19 @@ class ArmConfirmUp(commands2.Command):
     def end(self, interuppted: bool) -> None:
         self.arm.stop()
 #######################################################################
-            
+class ResetOrientation(commands2.Command):
+    def __init__(self, kDriveTrain:DriveTrainSubsystem) -> None: 
+        super().__init__()
+        self.DriveTrain = kDriveTrain
+    def initialize(self) -> None:
+        self.DriveTrain.resetPose(geometry.Pose2d(0,0,geometry.Rotation2d(math.pi)))
+    def isFinished(self) -> bool:
+        return True
+    def end(self, interuppte: bool)-> None:
+        pass
+
+
+#######################################################################
 
             
 
