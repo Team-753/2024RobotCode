@@ -93,12 +93,13 @@ class armConstants:
 class grabber:
     bottomMotorCANID = 11
     topMotorCANID = 12
-    intake = -0.5
+    intake = -0.3
     outtakeS = 0.5
     outtakeF = 1
     idle = 0
     sensorDIOID = 3
-
+    intakeS = -0.1
+    outtakeReallySlow = 0.2
 class climberPIDs:
     class leftMotorPIDs:
         kP = 0.1
