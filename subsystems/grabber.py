@@ -73,7 +73,7 @@ class grabberSubsystem(commands2.Subsystem):
         # Ramp up with button, then shoot after 3+ seconds on button press
         #self.bottomMotor.set(RobotConfig.grabber.outtakeF)
     def shoot(self) -> None:
-        self.grabberMotorInverted(RobotConfig.grabber.outtakeSS*-1)
+        self.grabberMotorInverted(RobotConfig.grabber.outtakeReallySlow*-1)
         '''
         self.frontMotor.set(RobotConfig.grabber.outtakeS*-.5)
         self.rearMotor.set(RobotConfig.grabber.outtakeS*.5)
