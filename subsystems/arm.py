@@ -42,17 +42,8 @@ class ArmSubsystem(commands2.Subsystem):
         if (self.bottomLimit.get()):
             self.stop()
         else:
-            self.leftArm.set(0.5)
-        # NOTE: We aren't doing limit switches anymore??
-        
-        #self.right.setVoltage(9)
-        '''
-        if(self.topLimit.get()):
-            self.stop()
-        ''''''
-        if(self.bottomLimit.get()):
-            self.stop()
-            '''
+            self.leftArm.set(0.2)
+            
     def GoUp(self):
         # Run arm down at 20% power
         
@@ -61,7 +52,7 @@ class ArmSubsystem(commands2.Subsystem):
         if(self.topLimit.get()):
             self.stop()
         else:
-            self.leftArm.set(-0.2)
+            self.leftArm.set(-0.5)
         '''
         if(self.topLimit.get()):
             self.stop()
