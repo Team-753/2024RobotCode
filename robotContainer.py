@@ -48,8 +48,8 @@ class RobotContainer:
         self.leftClimber.stationary()
         self.driveTrain.setDefaultCommand(DefaultDriveCommand(self.driveTrain))
         
-        self.leftClimber.setDefaultCommand(JoystickControl(self.leftClimber, self.checkJoystickInput(self.auxController.getLeftY())))
-        self.rightClimber.setDefaultCommand(JoystickControl(self.rightClimber, self.checkJoystickInput(self.auxController.getRightY())))
+        #s elf.leftClimber.setDefaultCommand(JoystickControl(self.leftClimber, self.checkJoystickInput(self.auxController.getLeftY())))
+        # self.rightClimber.setDefaultCommand(JoystickControl(self.rightClimber, self.checkJoystickInput(self.auxController.getRightY())))
         """
         Setting our default commands, these are commands similar to the "periodic()" functions that 
         are ran every loop but only when another command IS NOT running on the subsystem hence the
@@ -77,54 +77,13 @@ class RobotContainer:
         self.auxController.leftBumper().whileTrue(ampEmpty(self.grabber))
         self.auxController.rightTrigger().whileTrue(empty(self.grabber))
         self.auxController.rightBumper().whileTrue(emptySlow(self.grabber))#self.upJoystick = self.auxController.getLeftY()
-        self.auxController.b().whileTrue(manualShoot(self.grabber))
-        #self.upJoystick.whileTrue(up(self.arm))
-        #self.upJoystick
-        #print(self.upJoystick)
-        #self.auxController.getAButtonPressed(cmd.runOnce(lambda self.arm.setDesiredAngle(RobotConfig.armConstants.Amp)))
+        # self.auxController.b().whileTrue(manualShoot(self.grabber)) NOTE: This code causes the robot code to error, the root lies in the shoot() function in the grabber code.
         self.buttonA = self.auxController.a()
         self.buttonA.whileTrue(up(self.arm))
-        #.buttonA = self.auxController.a()
-        #self.buttonA.whileTrue(up(self.arm))
-        #self.buttonA.onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Amp)))
-        #self.auxController.A(armEvents.amp(self))
-        # For now, arm uses B for Home preset
         
         self.buttonY = self.auxController.y()
-        #self.buttonB.onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Home)))
         self.buttonY.whileTrue(down(self.arm))
-        '''
-        # For now, arm uses X for Speaker preset
-        
-        self.buttonX = self.auxController.x()
-        self.buttonX.onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Speaker)))
-        
-        # For now, arm uses Y for Source preset
-        
-        self.buttonY = self.auxController.y()
-        self.buttonY.onTrue(cmd.runOnce(lambda: self.arm.setDesiredAngle(RobotConfig.armConstants.Source)))
-        '''
-        
-        #temporary climber controls
-        #self.joystickButtonFour.whileTrue(command.RepeatCommand(climberEvents.climberGoesUp()))
-        #self.joystickButtonFive.whileTrue(command.RepeatCommand(climberEvents.climberGoesDown()))
 
-        #self.joystickButtonFour.whileTrue(climberGoesUp())
-        #self.joystickButtonFive.whileTrue(climberGoesDown())
-        
-        #these are the semi working climber controls
-        '''
-        self.auxController.a().onTrue(cmd.runOnce(lambda: self.climber.goUp()))
-        self.auxController.a().onFalse(cmd.runOnce(lambda:self.climber.stationary()))
-        self.auxController.b().onTrue(cmd.runOnce(lambda: self.climber.goDown()))
-        self.auxController.b().onFalse(cmd.runOnce(lambda: self.climber.stationary()))
-        #self.auxController.a().whileTrue(cmd.run(lambda: self.climber.goDown(ClimberSubsystem)))
-        #self.auxController.b().whileTrue(cmd.run(lambda: self.climber.goUp(ClimberSubsystem)))'''
-
-        #these climber controls might actually work
-        '''self.auxController.pov(0).onTrue(cmd.runOnce(lambda: self.climber.goUp()))
-        self.auxController.pov(180).onTrue(cmd.runOnce(lambda: self.climber.goDown()))
-        self.auxController.pov(-1).onTrue(cmd.runOnce(lambda: self.climber.stationary()))'''
         self.auxController.pov(0).whileTrue(bothClimbersGoUp(self.rightClimber, self.leftClimber))
         self.auxController.pov(45).whileTrue(oneClimberGoesUp(self.leftClimber))
         self.auxController.pov(135).whileTrue(oneClimberGoesDown(self.leftClimber))
@@ -134,7 +93,6 @@ class RobotContainer:
 
         self.joystickButtonFour = self.joystick.button(4)
         self.joystickButtonFour.onTrue(ResetNavx(self.driveTrain))
-        #self.auxController.pov(-1).onTrue(climberDoesntMove(self.climber))
     #-----------------------------------------------------------------------------------------------   
     #Autonomous Start Protocol
     def getAutonomousCommand(self):
@@ -154,16 +112,16 @@ class RobotContainer:
         
         elif pathName == "E Right Blue Auto": 
             
-            return commands2.SequentialCommandGroup (ArmConfirmUp, AutoShootSpeaker, HardAuto(self.driveTrain, -1, 0, 0, 1.5),HardAuto(self.driveTrain, 0, 0, .3, 1 )) 
+            return cmd.none() #commands2.SequentialCommandGroup (ArmConfirmUp, AutoShootSpeaker, HardAuto(self.driveTrain, -1, 0, 0, 1.5),HardAuto(self.driveTrain, 0, 0, .3, 1 )) 
         
         elif pathName == "E Left Blue Auto": 
-            pass
+            return cmd.none()
         elif pathName == "E Right Red Auto": 
-            return commands2.SequentialCommandGroup (ArmConfirmUp, AutoShootSpeaker, HardAuto(self.driveTrain, -1, 0, 0, 3),HardAuto(self.driveTrain, 0, 0, 1, .5 )) 
+            return cmd.none() # commands2.SequentialCommandGroup (ArmConfirmUp, AutoShootSpeaker, HardAuto(self.driveTrain, -1, 0, 0, 3),HardAuto(self.driveTrain, 0, 0, 1, .5 )) 
         elif pathName == "E Left Red Auto": 
-            pass
+            return cmd.none()
         elif pathName == "Experimental":
-            return commands2.SequentialCommandGroup (ArmConfirmUp(self.grabber), AutoShootSpeaker(self.grabber))
+            return commands2.SequentialCommandGroup (ArmConfirmUp(self.arm), AutoShootSpeaker(self.grabber))
             
         else:
             return PathPlannerAuto(pathName)

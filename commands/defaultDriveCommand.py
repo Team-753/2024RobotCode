@@ -21,3 +21,6 @@ class ResetNavx(commands2.Command):
     
     def initialize(self):
         self.driveTrain.resetPose(geometry.Pose2d())
+        
+    def isFinished(self) -> bool:
+        return True
