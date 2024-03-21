@@ -108,10 +108,9 @@ class RobotContainer:
         #TODO, Add field orient reset
         elif pathName == "E Taxi": # Ryan Modification Area
              
-            return commands2.SequentialCommandGroup (HardAuto(self.driveTrain, 0.7, 0, 0, .5), HardAuto(self.driveTrain, 0, 0, 0, 2),HardAuto(self.driveTrain, -0.7, 0, 0, .5)) #Ryan's Modifications... Man, I love sketchy modifications
+            return commands2.SequentialCommandGroup ( HardAuto(self.driveTrain, 0, 0, 0, 2), HardAuto(self.driveTrain, 0.7, 0, 0, 1), HardAuto) #Ryan's Modifications... Man, I love sketchy modifications
         
         elif pathName == "E Right Blue Auto": 
-            
             return cmd.none() #commands2.SequentialCommandGroup (ArmConfirmUp, AutoShootSpeaker, HardAuto(self.driveTrain, -1, 0, 0, 1.5),HardAuto(self.driveTrain, 0, 0, .3, 1 )) 
         
         elif pathName == "E Left Blue Auto": 
