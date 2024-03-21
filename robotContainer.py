@@ -13,7 +13,7 @@ from subsystems.arm import ArmSubsystem
 from subsystems.climber import ClimberSubsystem
 from subsystems.grabber import grabberSubsystem
 from commands.climberCommands import oneClimberGoesDown, oneClimberGoesUp, bothClimbersGoUp, bothClimbersGoDown, JoystickControl, climberDoesntMove
-from commands.ArmCommands import ArmSpeaker, AutoShootSpeaker, ArmConfirmUp
+from commands.ArmCommands import ArmSpeaker
 #from commands.ArmCommands import grabberEvents
 from commands.ArmCommands import grab, empty, emptySlow, up, ampEmpty, down, manualShoot, ArmConfirmUp, AutoShootSpeaker
 from wpilib.cameraserver import CameraServer
@@ -150,11 +150,11 @@ class RobotContainer:
         #TODO, Add field orient reset
         elif pathName == "E Taxi": # Ryan Modification Area
              
-            return commands2.SequentialCommandGroup (HardAuto(self.driveTrain, 1, 0, 0, 2), HardAuto(self.driveTrain, 0, 0, 0, 2),HardAuto(self.driveTrain, -1, 0, 0, 2)) #Ryan's Modifications... Man, I love sketchy modifications
+            return commands2.SequentialCommandGroup (HardAuto(self.driveTrain, 0.7, 0, 0, .5), HardAuto(self.driveTrain, 0, 0, 0, 2),HardAuto(self.driveTrain, -0.7, 0, 0, .5)) #Ryan's Modifications... Man, I love sketchy modifications
         
         elif pathName == "E Right Blue Auto": 
             
-            return commands2.SequentialCommandGroup (ArmConfirmUp, AutoShootSpeaker, HardAuto(self.driveTrain, -1, 0, 0, 3),HardAuto(self.driveTrain, 0, 0, 1, .5 )) 
+            return commands2.SequentialCommandGroup (ArmConfirmUp, AutoShootSpeaker, HardAuto(self.driveTrain, -1, 0, 0, 1.5),HardAuto(self.driveTrain, 0, 0, .3, 1 )) 
         
         elif pathName == "E Left Blue Auto": 
             pass
@@ -163,7 +163,7 @@ class RobotContainer:
         elif pathName == "E Left Red Auto": 
             pass
         elif pathName == "Experimental":
-            return commands2.SequentialCommandGroup (HardAuto(self.driveTrain, 0, 0, .5, 2),HardAuto(self.driveTrain, 0, 0, 0, 1 )) 
+            return commands2.SequentialCommandGroup (ArmConfirmUp(self.grabber), AutoShootSpeaker(self.grabber))
             
         else:
             return PathPlannerAuto(pathName)
