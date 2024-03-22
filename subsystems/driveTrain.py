@@ -52,7 +52,7 @@ class DriveTrainSubsystem(commands2.Subsystem):
         self.poseEstimator = estimator.SwerveDrive4PoseEstimator(kinematics._kinematics.SwerveDrive4Kinematics(geometry.Translation2d(self.trackWidth / 2, self.wheelBase / 2), geometry.Translation2d(self.trackWidth / 2, -self.wheelBase / 2), geometry.Translation2d(-self.trackWidth / 2, self.wheelBase / 2), geometry.Translation2d(-self.trackWidth / 2, -self.wheelBase / 2)), 
                                                                 self.getNAVXRotation2d(), 
                                                                 self.getSwerveModulePositions(), 
-                                                                geometry.Pose2d(0, 0, geometry.Rotation2d(math.pi)), 
+                                                                geometry.Pose2d(0, 0, geometry.Rotation2d(0)), 
                                                                 self.stateStdDevs,
                                                                 self.visionMeasurementStdDevs)
         self.field = wpilib.Field2d()

@@ -1,4 +1,8 @@
 import commands2
+import wpilib
+from wpimath import geometry
+import math
+
 from subsystems.driveTrain import DriveTrainSubsystem
 import wpilib
 
@@ -41,6 +45,7 @@ class HardAuto(commands2.Command):
         self.Y = Y # User input for Y
         self.Z = Z # User input for Z
         self.Duration = Duration # User defined time. When set, it compares to timer to stop the Auto. PLEASE SET THIS LOW 
+        
     
     def initialize(self):
         self.timer.reset()
@@ -58,3 +63,19 @@ class HardAuto(commands2.Command):
     def end(self, interrupted: bool):
         self.driveTrain.joystickDrive((0, 0, 0)) # Stop all movement
         self.timer.stop() # Safety precaution? 
+
+
+
+#################################################
+class ResetOrientation(commands2.Command):
+    def __init__(self, kDriveTrain:DriveTrainSubsystem, kStartingAngleDegrees: float) -> None: 
+        super().__init__()
+        self.DriveTrain = kDriveTrain
+        self.startingAngleDegrees = kStartingAngleDegrees
+    def initialize(self) -> None:
+        self.DriveTrain.resetPose(geometry.Pose2d(0,0,geometry.Rotation2d.fromDegrees(self.startingAngleDegrees)))
+    def isFinished(self) -> bool:
+        return True
+    def end(self, interuppte: bool)-> None:
+        pass
+#################################################

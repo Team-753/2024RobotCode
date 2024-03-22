@@ -20,7 +20,7 @@ from wpilib.cameraserver import CameraServer
 #from commands.ArmCommands import empty
 #from commands.ArmCommands import armEvents
 from pathplannerlib.auto import PathPlannerAuto
-from commands.HardAuto import simpleAutoDrive, HardAuto
+from commands.HardAuto import simpleAutoDrive, HardAuto, ResetOrientation
 
 import RobotConfig as config
 #from commands.ArmCommands import grabberEvents
@@ -131,8 +131,7 @@ class RobotContainer:
         elif pathName == "E Left Red Auto": 
             return cmd.none()
         elif pathName == "Experimental":
-            return commands2.SequentialCommandGroup (ArmConfirmUp(self.arm), AutoShootSpeaker(self.grabber))
-            
+            return ResetOrientation(self.driveTrain, 200)
         else:
             return PathPlannerAuto(pathName)
         
