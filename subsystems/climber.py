@@ -15,6 +15,7 @@ class ClimberSubsystem(commands2.Subsystem):
         super().__init__()
         self.targetValue = 0
         self.isInverted = isReversed
+        self.motorID = motorID
         self.Soleniod = wpilib.Solenoid(moduleType=wpilib.PneumaticsModuleType.CTREPCM, channel= solenoidID)
         #self.rightSoleniod = wpilib.Solenoid(moduleType= wpilib.PneumaticsModuleType.CTREPCM, channel= 0)
         self.encoderConversionFactor = 20 # this is just a temporary number need to find the real one
@@ -127,12 +128,14 @@ class ClimberSubsystem(commands2.Subsystem):
         #self.Position = self.getPosition()
         self.Motor.setIdleMode(_rev.CANSparkBase.IdleMode.kCoast)
         self.Motor.set(0)
-        #self.leftMotor.setIdleMode(_rev.CANSparkBase.IdleMode.kCoast)
+        wpilib.SmartDashboard.putNumber(f"{self.motorID} speed", 0)
+        #self.leftMotor.setIdleMode(_rev.CANSparkBase.IdleMode.kCoast) 
         #self.leftMotor.set(0)
 
     def goUp(self):
         self.Soleniod.set(True)
         self.Motor.set(0.5)
+        wpilib.SmartDashboard.putNumber(f"{self.motorID} speed" , 0.5)
 
     '''def leftGoUp(self):
         self.leftSoleniod.set(True)
@@ -141,6 +144,7 @@ class ClimberSubsystem(commands2.Subsystem):
     def goDown(self):
         self.Soleniod.set(False)
         self.Motor.set(-0.5)
+        wpilib.SmartDashboard.putNumber(f"{self.motorID} speed", -0.5)
 
     '''def leftGoDown(self):
         self.leftSoleniod.set(False)

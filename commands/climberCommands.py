@@ -79,6 +79,10 @@ class JoystickControl(commands2.Command):
         if abs(self.kspeed) > 0.1:
             print(self.kspeed)
         print(self.kspeed)
+        #wpilib.SmartDashboard.putNumber(f"{self.climber.motorID} speed", -0.5)
+
+    def end(self, interrupted: bool):
+        pass
     
 
         
@@ -121,6 +125,7 @@ class bothClimbersGoDown(commands2.Command):
 
     def execute(self):
         print("one going down")
+        #wpilib.SmartDashboard.putNumber(f"{self.rightClimber}")
 
     def end(self, interrupted: bool):
         self.rightClimber.stationary()
@@ -137,6 +142,7 @@ class oneClimberGoesDown(commands2.Command):
 
     def execute(self):
         print("one going down")
+        wpilib.SmartDashboard.putNumber(f"{self.climber.motorID} speed", -0.5)
 
     def end(self, interrupted: bool):
         self.climber.stationary()

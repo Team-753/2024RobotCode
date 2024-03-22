@@ -97,13 +97,13 @@ class RobotContainer:
         self.auxController.pov(225).whileTrue(oneClimberGoesDown(self.rightClimber))
         self.auxController.pov(315).whileTrue(oneClimberGoesUp(self.rightClimber))
         
-        self.auxController.axisGreaterThan(0, 0.2).onTrue(oneClimberGoesUp(self.leftClimber))
-        self.auxController.axisLessThan(0, -0.2).onTrue(oneClimberGoesDown(self.leftClimber))
-        self.auxController.axisGreaterThan(1, 0.2).onTrue(oneClimberGoesUp(self.rightClimber))
-        self.auxController.axisLessThan(1, -0.2).onTrue(oneClimberGoesDown(self.rightClimber))
+        self.auxController.axisGreaterThan(1, 0.2).whileTrue(oneClimberGoesDown(self.leftClimber))
+        self.auxController.axisLessThan(1, -0.2).whileTrue(oneClimberGoesUp(self.leftClimber))
+        self.auxController.axisGreaterThan(5, 0.2).whileTrue(oneClimberGoesDown(self.rightClimber))
+        self.auxController.axisLessThan(5, -0.2).whileTrue(oneClimberGoesUp(self.rightClimber))
 
         self.joystickButtonFour = self.joystick.button(4)
-        self.joystickButtonFour.onTrue(ResetNavx(self.driveTrain))
+        self.joystickButtonFour.whileTrue(ResetNavx(self.driveTrain))
     #-----------------------------------------------------------------------------------------------   
     #Autonomous Start Protocol
     def getAutonomousCommand(self):
