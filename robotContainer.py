@@ -20,13 +20,8 @@ from wpilib.cameraserver import CameraServer
 #from commands.ArmCommands import empty
 #from commands.ArmCommands import armEvents
 from pathplannerlib.auto import PathPlannerAuto
-<<<<<<< HEAD
-'''
-from commands.basicAuto import simpleAutoDrive, ModificationDrive
-'''
-=======
 from commands.HardAuto import simpleAutoDrive, HardAuto
->>>>>>> 0af38724656fa1fb1e4ff316890592552a392f38
+
 import RobotConfig as config
 #from commands.ArmCommands import grabberEvents
 class RobotContainer:
@@ -54,13 +49,13 @@ class RobotContainer:
         self.leftClimber.stationary()
         self.driveTrain.setDefaultCommand(DefaultDriveCommand(self.driveTrain))
         
-<<<<<<< HEAD
+
         #self.leftClimber.setDefaultCommand(JoystickControl(self.leftClimber, self.checkJoystickInput(self.auxController.getLeftY())))
         #self.rightClimber.setDefaultCommand(JoystickControl(self.rightClimber, self.checkJoystickInput(self.auxController.getRightY())))
-=======
+
         #s elf.leftClimber.setDefaultCommand(JoystickControl(self.leftClimber, self.checkJoystickInput(self.auxController.getLeftY())))
         # self.rightClimber.setDefaultCommand(JoystickControl(self.rightClimber, self.checkJoystickInput(self.auxController.getRightY())))
->>>>>>> 0af38724656fa1fb1e4ff316890592552a392f38
+
         """
         Setting our default commands, these are commands similar to the "periodic()" functions that 
         are ran every loop but only when another command IS NOT running on the subsystem hence the
@@ -113,7 +108,7 @@ class RobotContainer:
     #Autonomous Start Protocol
     def getAutonomousCommand(self):
         pass
-        '''
+        
         """ Logic for what will run in autonomous mode. Returning anything but a command will result in nothing happening in autonomous. """
         pathName = self.autonomousChooser.getSelected()
         if pathName == "OnlyForward": 
@@ -124,8 +119,7 @@ class RobotContainer:
         #Experimental Auto, X,Y,Z values in ModificationDrive determine joystick input, and the final float is to determine how long it is executed. 
         #TODO, Add field orient reset
         elif pathName == "E Taxi": # Ryan Modification Area
-             
-            return commands2.SequentialCommandGroup ( HardAuto(self.driveTrain, 0, 0, 0, 2), HardAuto(self.driveTrain, 0.7, 0, 0, 1), HardAuto) #Ryan's Modifications... Man, I love sketchy modifications
+            return commands2.SequentialCommandGroup (HardAuto(self.driveTrain, 0, 0, 0, 2), HardAuto(self.driveTrain, 0.7, 0, 0, 1)) #Ryan's Modifications... Man, I love sketchy modifications
         
         elif pathName == "E Right Blue Auto": 
             return cmd.none() #commands2.SequentialCommandGroup (ArmConfirmUp, AutoShootSpeaker, HardAuto(self.driveTrain, -1, 0, 0, 1.5),HardAuto(self.driveTrain, 0, 0, .3, 1 )) 
@@ -137,11 +131,11 @@ class RobotContainer:
         elif pathName == "E Left Red Auto": 
             return cmd.none()
         elif pathName == "Experimental":
-            return commands2.SequentialCommandGroup (ArmConfirmUp(self.grabber), AutoShootSpeaker(self.grabber))
+            return commands2.SequentialCommandGroup (ArmConfirmUp(self.arm), AutoShootSpeaker(self.grabber))
             
         else:
             return PathPlannerAuto(pathName)
-        '''
+        
     #-----------------------------------------------------------------------------------------------   
     def checkJoystickInput(self, kInput: float):
         if abs(kInput) < 0.1:

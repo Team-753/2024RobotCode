@@ -16,7 +16,15 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
-      "/SmartDashboard/Autonomous Chooser": "String Chooser"
+      "/SmartDashboard/Autonomous Chooser": "String Chooser",
+      "/SmartDashboard/Field": "Field2d"
+    },
+    "windows": {
+      "/SmartDashboard/Autonomous Chooser": {
+        "window": {
+          "visible": true
+        }
+      }
     }
   },
   "NetworkTables Info": {
