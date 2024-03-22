@@ -1,8 +1,13 @@
 # imports
 import wpilib
 import commands2
+import wpimath
+import math
+from wpimath import geometry
+from subsystems.driveTrain import DriveTrainSubsystem
 from subsystems.arm import ArmSubsystem
 from subsystems.grabber import grabberSubsystem
+
 # Does nothing
 class ArmSpeaker(commands2.Command):
     def __init__(self):
@@ -96,7 +101,18 @@ class stop(commands2.Command):
     def end(self):
         pass
 # Moves arm up
-class up(commands2.Command):
+class ArmDown(commands2.Command):
+    def __init__(self, kArm: ArmSubsystem) -> None:
+        super().__init__()
+        self.arm = kArm
+    def initialize(self):
+        self.arm.goDown()
+    def execute(self):
+        pass
+    def end(self, interuppted: bool) -> None:
+        self.arm.stop()
+# Moves arm down
+class ArmUp(commands2.Command):
     def __init__(self, kArm: ArmSubsystem) -> None:
         super().__init__()
         self.arm = kArm
@@ -106,36 +122,29 @@ class up(commands2.Command):
         pass
     def end(self, interuppted: bool) -> None:
         self.arm.stop()
-# Moves arm down
-class down(commands2.Command):
-    def __init__(self, kArm: ArmSubsystem) -> None:
-        super().__init__()
-        self.arm = kArm
-    def initialize(self):
-        self.arm.GoDown()
-    def execute(self):
-        pass
-    def end(self, interuppted: bool) -> None:
-        self.arm.stop()
 
 #######################################################################
 class AutoShootSpeaker(commands2.Command):
-    def __init(self, kGrabber: grabberSubsystem) -> None:
+    def __init__(self, kGrabber: grabberSubsystem) -> None:
         super().__init__()
         self.grabber = kGrabber
         self.timer = wpilib.Timer()
+        
     def initialize(self):
-        self.timer.reset
-        self.timer.start
-        self.grabber.speakerShoot
+        self.timer.reset()
+        self.grabber.speedUpShoot()
+        
     def execute(self) -> None:
-        pass
+        if self.grabber.speakerShoot() == True and self.timer.get() == 0:
+            self.grabber.shoot()
+            self.timer.start()
+            
     def isFinished(self) -> bool:
-        if self.timer.get() == 2:
-            self.grabber.shoot
-        return True
-    def end(self, interuppted: bool) -> None:
-        self.grabber.idle
+        if self.timer.hasElapsed(0.6):
+            return True
+    def end(self, interrupted: bool) -> None:
+        self.grabber.idle()
+        self.timer.stop()
         
 
 #######################################################################
@@ -151,7 +160,19 @@ class ArmConfirmUp(commands2.Command):
     def end(self, interuppted: bool) -> None:
         self.arm.stop()
 #######################################################################
-            
+class ResetOrientation(commands2.Command):
+    def __init__(self, kDriveTrain:DriveTrainSubsystem) -> None: 
+        super().__init__()
+        self.DriveTrain = kDriveTrain
+    def initialize(self) -> None:
+        self.DriveTrain.resetPose(geometry.Pose2d(0,0,geometry.Rotation2d(math.pi)))
+    def isFinished(self) -> bool:
+        return True
+    def end(self, interuppte: bool)-> None:
+        pass
+
+
+#######################################################################
 
             
 

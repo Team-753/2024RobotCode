@@ -31,37 +31,34 @@ class ArmSubsystem(commands2.Subsystem):
         # SmartDashboard Stuff
         wpilib.SmartDashboard.putNumber("Left Motor Output: ", self.leftArm.getBusVoltage())
         wpilib.SmartDashboard.putNumber("Right Motor Output: ", self.rightArm.getBusVoltage())
+        wpilib.SmartDashboard.putBoolean("Top Arm Limit Switch", self.topLimit.get())
+        wpilib.SmartDashboard.putBoolean("Bottom Arm Limit Switch", self.bottomLimit.get())
         # print(f"Left Motor Position: {self.leftEncoder.getPosition()}")
         # print(f"Left Motor Voltage: {self.leftArm.getBusVoltage()}")
-    def GoUp(self):
+    def goDown(self):
         # Move arm up at 50% power
-        print("Running arm motors")
         #self.leftArm.set(0.5)
         #self.right.set(0.5)
-        self.leftArm.set(0.5)
-        #self.right.setVoltage(9)
-        '''
-        if(self.topLimit.get()):
+        if (self.bottomLimit.get()):
             self.stop()
-        ''''''
-        if(self.bottomLimit.get()):
-            self.stop()
-            '''
-    def GoDown(self):
+        else:
+            self.leftArm.set(0.2)
+            
+    def GoUp(self):
         # Run arm down at 20% power
-        print("Go Down")
-        self.leftArm.set(-0.2)
+        
         #self.right.setVoltage(-9)
         
-        if(self.bottomLimit.get()):
+        if(self.topLimit.get()):
             self.stop()
+        else:
+            self.leftArm.set(-0.5)
         '''
         if(self.topLimit.get()):
             self.stop()
             '''
     def stop(self):
         # Pretty self explanatory...
-        print("stopping arm motors")
         self.leftArm.set(0)
         self.rightArm.set(0)
 

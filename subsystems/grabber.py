@@ -54,7 +54,6 @@ class grabberSubsystem(commands2.Subsystem):
         sleep(0.5)
         self.grabberMotorInverted(RobotConfig.grabber.idle)
     def ampShoot(self) -> None:
-        print("Intake Direction Shoot")
         # TODO: Code to intake ring
         self.grabberMotorInverted(RobotConfig.grabber.outtakeS*1)
         '''
@@ -62,23 +61,19 @@ class grabberSubsystem(commands2.Subsystem):
         self.frontMotor.set(RobotConfig.grabber.outtakeS)
         '''
     def speedUpShoot(self) -> None:
-        print("1 Outtake")
         # TODO: Code to shoot the ring based on command speed
         self.frontMotor.set(RobotConfig.grabber.outtakeF*-1)
         print(self.shooterVelocity)
     def speakerShoot(self) -> None:
-        print("2 Outtake")
         self.grabberMotorInverted(RobotConfig.grabber.outtakeF*-1)
         '''
             self.frontMotor.set(RobotConfig.grabber.outtakeF*-1)
             self.rearMotor.set(RobotConfig.grabber.outtakeF)
             '''
-        print("Not enough RPM")
         # Ramp up with button, then shoot after 3+ seconds on button press
         #self.bottomMotor.set(RobotConfig.grabber.outtakeF)
     def shoot(self) -> None:
-        print("3 Outtake")
-        self.grabberMotorInverted(RobotConfig.grabber.outtakeSS*-1)
+        self.grabberMotorInverted(RobotConfig.grabber.outtakeReallySlow*-1)
         '''
         self.frontMotor.set(RobotConfig.grabber.outtakeS*-.5)
         self.rearMotor.set(RobotConfig.grabber.outtakeS*.5)
