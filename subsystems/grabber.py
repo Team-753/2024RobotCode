@@ -41,7 +41,7 @@ class grabberSubsystem(commands2.Subsystem):
         if (abs(self.shooterEncoder.getVelocity()) > 0):
             self.ringIn = False
             wpilib.SmartDashboard.putBoolean("Ring in wrist", False)
-            self.rearMotor.set(RobotConfig.grabber.intake*(1/12))
+            self.rearMotor.set(RobotConfig.grabber.intake*(1/9))
             self.frontMotor.set(RobotConfig.grabber.intake*-1)
         else:
             self.ringIn = True
