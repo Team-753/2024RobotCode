@@ -117,6 +117,7 @@ class ArmUp(commands2.Command):
         super().__init__()
         self.arm = kArm
     def initialize(self):
+        print("Up")
         self.arm.GoUp()
     def execute(self):
         pass
@@ -133,14 +134,14 @@ class AutoShootSpeaker(commands2.Command):
     def initialize(self):
         self.timer.reset()
         self.grabber.speedUpShoot()
-        
+        self.timer.start()
     def execute(self) -> None:
-        if self.grabber.speakerShoot() == True and self.timer.get() == 0:
-            self.grabber.shoot()
-            self.timer.start()
+        if self.timer.get() >= 2:
+            self.grabber.speakerShoot()
+            
             
     def isFinished(self) -> bool:
-        if self.timer.hasElapsed(0.6):
+        if self.timer.hasElapsed(6):
             return True
     def end(self, interrupted: bool) -> None:
         self.grabber.idle()

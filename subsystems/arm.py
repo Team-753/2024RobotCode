@@ -48,11 +48,12 @@ class ArmSubsystem(commands2.Subsystem):
         # Run arm down at 20% power
         
         #self.right.setVoltage(-9)
-        
+        '''
         if(self.topLimit.get()):
             self.stop()
-        else:
-            self.leftArm.set(0.5)
+        else:'''
+        self.leftArm.set(0.5)
+            
         '''
         if(self.topLimit.get()):
             self.stop()

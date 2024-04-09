@@ -43,8 +43,8 @@ class RobotContainer:
         self.grabber = grabberSubsystem()
         self.driveTrain = DriveTrainSubsystem(self.joystick)
         self.arm = ArmSubsystem()
-        self.rightClimber = ClimberSubsystem(config.Climber.rightMotorCanID, 0, False)
-        self.leftClimber = ClimberSubsystem(config.Climber.leftMotorCanID, 1, True)
+        self.rightClimber = ClimberSubsystem(config.Climber.rightMotorCanID, 1, False)
+        self.leftClimber = ClimberSubsystem(config.Climber.leftMotorCanID, 0, True)
         self.rightClimber.stationary()
         self.leftClimber.stationary()
         self.driveTrain.setDefaultCommand(DefaultDriveCommand(self.driveTrain))
@@ -73,6 +73,7 @@ class RobotContainer:
         self.autonomousChooser.addOption("E Right Red Auto", "E Right Red Auto")
         self.autonomousChooser.addOption("E Left Red Auto", "E Left Red Auto")
         self.autonomousChooser.addOption("Experimental", "Experimental")
+        self.autonomousChooser.addOption("Only Shoot", "Only Shoot")
         for pathName in self.autoList:
             self.autonomousChooser.addOption(pathName, pathName)
         wpilib.SmartDashboard.putData("Autonomous Chooser", self.autonomousChooser)
@@ -97,10 +98,10 @@ class RobotContainer:
         self.auxController.pov(225).whileTrue(oneClimberGoesDown(self.rightClimber))
         self.auxController.pov(315).whileTrue(oneClimberGoesUp(self.rightClimber))
         
-        self.auxController.axisGreaterThan(1, 0.2).whileTrue(oneClimberGoesDown(self.leftClimber))
-        self.auxController.axisLessThan(1, -0.2).whileTrue(oneClimberGoesUp(self.leftClimber))
-        self.auxController.axisGreaterThan(5, 0.2).whileTrue(oneClimberGoesDown(self.rightClimber))
-        self.auxController.axisLessThan(5, -0.2).whileTrue(oneClimberGoesUp(self.rightClimber))
+        self.auxController.axisGreaterThan(5, 0.2).whileTrue(oneClimberGoesDown(self.leftClimber))
+        self.auxController.axisLessThan(5, -0.2).whileTrue(oneClimberGoesUp(self.leftClimber))
+        self.auxController.axisGreaterThan(1, 0.2).whileTrue(oneClimberGoesDown(self.rightClimber))
+        self.auxController.axisLessThan(1, -0.2).whileTrue(oneClimberGoesUp(self.rightClimber))
 
         self.joystickButtonFour = self.joystick.button(4)
         self.joystickButtonFour.whileTrue(ResetNavx(self.driveTrain))
@@ -119,19 +120,23 @@ class RobotContainer:
         #Experimental Auto, X,Y,Z values in ModificationDrive determine joystick input, and the final float is to determine how long it is executed. 
         #TODO, Add field orient reset
         elif pathName == "E Taxi": # Ryan Modification Area
-            return commands2.SequentialCommandGroup (HardAuto(self.driveTrain, 0, 0, 0, 2), HardAuto(self.driveTrain, 0.7, 0, 0, 1)) #Ryan's Modifications... Man, I love sketchy modifications
+            return commands2.SequentialCommandGroup (ResetOrientation(self.driveTrain, -240), ArmConfirmUp(self.arm), AutoShootSpeaker(self.grabber), HardAuto(self.driveTrain, 0, .2, 0, 0.75), HardAuto(self.driveTrain, 0.2, 0, 0, .75)) #Ryan's Modifications... Man, I love sketchy modifications
         
         elif pathName == "E Right Blue Auto": 
-            return cmd.none() #commands2.SequentialCommandGroup (ArmConfirmUp, AutoShootSpeaker, HardAuto(self.driveTrain, -1, 0, 0, 1.5),HardAuto(self.driveTrain, 0, 0, .3, 1 )) 
+            return commands2.SequentialCommandGroup (ResetOrientation(self.driveTrain, 135), ArmConfirmUp(self.arm), AutoShootSpeaker(self.grabber), HardAuto(self.driveTrain, 0, -0.2, 0, .7), HardAuto(self.driveTrain, .2, 0, 0, 1),ResetOrientation(self.driveTrain, 0))
         
-        elif pathName == "E Left Blue Auto": 
-            return cmd.none()
+        #$$
         elif pathName == "E Right Red Auto": 
-            return cmd.none() # commands2.SequentialCommandGroup (ArmConfirmUp, AutoShootSpeaker, HardAuto(self.driveTrain, -1, 0, 0, 3),HardAuto(self.driveTrain, 0, 0, 1, .5 )) 
-        elif pathName == "E Left Red Auto": 
-            return cmd.none()
+            return commands2.SequentialCommandGroup (ResetOrientation(self.driveTrain, 135), ArmConfirmUp(self.arm), AutoShootSpeaker(self.grabber), HardAuto(self.driveTrain, 0, -0.2, 0, .7), HardAuto(self.driveTrain, -0.2, 0, 0, 1))
+        #$$
+       
+        elif pathName == "Only Shoot":
+            #return  commands2.SequentialCommandGroup (ResetOrientation(self.driveTrain, 160),HardAuto(self.driveTrain, 0.2, 0, 0, .75))
+            return commands2.SequentialCommandGroup (ArmConfirmUp(self.arm), AutoShootSpeaker(self.grabber))
         elif pathName == "Experimental":
-            return ResetOrientation(self.driveTrain, 200)
+            #commands2.SequentialCommandGroup (ResetOrientation(self.driveTrain, 330),HardAuto(self.driveTrain, 0.0, 0, 0, .75))
+            
+            return commands2.SequentialCommandGroup (ResetOrientation(self.driveTrain, 135), ArmConfirmUp(self.arm), AutoShootSpeaker(self.grabber), HardAuto(self.driveTrain, 0, -0.2, 0, .7), HardAuto(self.driveTrain, .2, 0, 0, .5))
         else:
             return PathPlannerAuto(pathName)
         
