@@ -48,8 +48,6 @@ class HardAuto(commands2.Command):
         
     
     def initialize(self):
-        if wpilib.DriverStation.getAlliance() == wpilib.DriverStation.Alliance.kRed:
-            self.Y = self.Y * -1
         self.timer.reset()
         self.timer.start() # Start the timer so that isFinsihed can compare Duration and the Timer Command.
         
@@ -75,8 +73,6 @@ class ResetOrientation(commands2.Command):
         self.DriveTrain = kDriveTrain
         self.startingAngleDegrees = kStartingAngleDegrees
     def initialize(self) -> None:
-        if wpilib.DriverStation.getAlliance() == wpilib.DriverStation.Alliance.kRed: 
-           self.startingAngleDegrees = ((self.startingAngleDegrees - 180) * -1)
         self.DriveTrain.resetPose(geometry.Pose2d(0,0,geometry.Rotation2d.fromDegrees(self.startingAngleDegrees)))
     def isFinished(self) -> bool:
         return True
